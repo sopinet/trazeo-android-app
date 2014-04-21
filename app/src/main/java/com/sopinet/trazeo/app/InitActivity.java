@@ -25,7 +25,7 @@ public class InitActivity extends Activity {
         String email = myPrefs.email().get();
         if (email.equals("")) {
             // Primera vez - Login
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, LoginSimpleActivity_.class));
         } else {
             // Listado de Grupos
             startActivity(new Intent(this, MainActivity.class));

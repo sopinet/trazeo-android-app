@@ -9,5 +9,7 @@
     <string name="title_activity_init">InitActivity</string>
     <string name="dummy_button">Trazeo, checking access</string>
     <string name="dummy_content">Trazeo</string>
+    <string name="title_activity_login_simple">LoginSimpleActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

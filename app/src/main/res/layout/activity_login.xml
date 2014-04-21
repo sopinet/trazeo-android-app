@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+<!--
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/plus_sign_in_button"
                 android:layout_width="match_parent"
@@ -59,7 +60,7 @@
                     android:text="@string/plus_disconnect"/>
 
             </LinearLayout>
-
+-->
             <LinearLayout
                 android:id="@+id/email_login_form"
                 android:layout_width="match_parent"
