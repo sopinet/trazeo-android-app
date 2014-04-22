@@ -1,0 +1,121 @@
+package com.sopinet.trazeo.app;
+
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
+
+import com.ami.fundapter.BindDictionary;
+import com.ami.fundapter.FunDapter;
+import com.ami.fundapter.extractors.StringExtractor;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.sopinet.android.nethelper.SimpleContent;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
+
+import com.sopinet.trazeo.app.gson.Group;
+import com.sopinet.trazeo.app.gson.Groups;
+import com.sopinet.trazeo.app.gson.Login;
+import com.sopinet.trazeo.app.helpers.MyPrefs_;
+import com.sopinet.trazeo.app.helpers.Var;
+
+import java.lang.reflect.Type;
+import android.widget.ListView;
+
+@EActivity(R.layout.activity_select_group)
+public class SelectGroupActivity extends ActionBarActivity {
+    @Pref
+    MyPrefs_ myPrefs;
+
+    @ViewById
+    ListView listSelectGroup;
+
+    @AfterViews
+    void init() {
+        loadData();
+    }
+
+    @Background
+    void loadData() {
+        SimpleContent sc = new SimpleContent(this, "trazeo");
+        String data = "email="+myPrefs.email().get();
+        data += "&pass="+myPrefs.pass().get();
+        String result = "";
+        try {
+            result = sc.postUrlContent(Var.URL_API_GROUPS, data);
+        } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        }
+
+        final Type objectCPD = new TypeToken<Groups>(){}.getType();
+        Groups groups = new Gson().fromJson(result, objectCPD);
+
+        showData(groups);
+        //sc.postUrlContent()
+    }
+
+    @UiThread
+    void showData(Groups groups) {
+        BindDictionary<Group> dict = new BindDictionary<Group>();
+        dict.addStringField(R.id.name,
+                new StringExtractor<Group>() {
+
+                    @Override
+                    public String getStringValue(Group group, int position) {
+                        return group.name;
+                    }
+                });
+
+        dict.addStringField(R.id.description,
+                new StringExtractor<Group>() {
+                    @Override
+                    public String getStringValue(Group item, int position) {
+                        return "Paseo en curso";
+                    }
+                }
+        );
+
+        FunDapter<Group> adapter = new FunDapter<Group>(this, groups.data,
+                R.layout.group_list_item, dict);
+
+        listSelectGroup.setAdapter(adapter);
+
+        listSelectGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        });
+
+        Toast.makeText(this, "OK", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.select_group, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+}

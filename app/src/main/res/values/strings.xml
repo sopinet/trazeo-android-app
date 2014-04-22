@@ -11,5 +11,6 @@
     <string name="dummy_content">Trazeo</string>
     <string name="title_activity_login_simple">LoginSimpleActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_select_group">SelectGroupActivity</string>
 
 </resources>

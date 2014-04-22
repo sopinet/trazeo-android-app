@@ -28,7 +28,7 @@ public class InitActivity extends Activity {
             startActivity(new Intent(this, LoginSimpleActivity_.class));
         } else {
             // Listado de Grupos
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, SelectGroupActivity_.class));
         }
     }
 }

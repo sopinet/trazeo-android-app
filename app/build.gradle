@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion '19.0.3'
 
     defaultConfig {
         minSdkVersion 9
@@ -40,11 +40,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:19.0.1'
     compile 'com.android.support:support-v4:19.+'
     compile 'com.google.android.gms:play-services:4.2.42'
+    compile project(':NetHelper')
     // You must install or update the Google Repository through the SDK manager to use this dependency.
     // The Google Repository (separate from the corresponding library) can be found in the Extras category.
-    
     apt "org.androidannotations:androidannotations:3.0+"
-    compile "org.androidannotations:androidannotations-api:3.0+"
-    
+    compile 'org.androidannotations:androidannotations-api:3.0+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.google.code.gson:gson:2.2.4@jar'
+    compile 'com.github.amigold.fundapter2:library:1.01'
 }
