@@ -1,5 +1,6 @@
 package com.sopinet.trazeo.app;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -30,9 +31,13 @@ import android.util.Log;
 
 import java.lang.reflect.Type;
 
+import eu.inmite.android.lib.dialogs.SimpleDialogFragment;
+
 
 @EActivity(R.layout.activity_login)
 public class LoginSimpleActivity extends ActionBarActivity {
+    android.support.v4.app.DialogFragment wait;
+
     @ViewById
     Button email_sign_in_button;
 
@@ -57,6 +62,7 @@ public class LoginSimpleActivity extends ActionBarActivity {
 
     @Background
     void checkLogin() {
+        showDialog();
         SimpleContent sc = new SimpleContent(this, "trazeo", 0);
         String data = "email="+email.getText().toString();
         data += "&pass="+ StringHelper.md5(password.getText().toString());
@@ -75,14 +81,21 @@ public class LoginSimpleActivity extends ActionBarActivity {
     }
 
     @UiThread
+    void showDialog() {
+        wait = SimpleDialogFragment.createBuilder(this, getSupportFragmentManager()).hideDefaultButton(true).setMessage("Espere...").show();
+    }
+
+    @UiThread
     void showResult(Login login) {
+        wait.dismiss();
         if (login.state.equals("1")) {
             myPrefs.user_id().put(login.data.id);
             myPrefs.email().put(email.getText().toString());
             myPrefs.pass().put(StringHelper.md5(password.getText().toString()));
+            Toast.makeText(this, "Ok", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, SelectGroupActivity_.class));
         } else {
-            Toast.makeText(this, "Error login", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error login", Toast.LENGTH_SHORT).show();
         }
     }
 }

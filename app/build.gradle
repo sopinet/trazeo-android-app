@@ -48,4 +48,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.code.gson:gson:2.2.4@jar'
     compile 'com.github.amigold.fundapter2:library:1.01'
+    compile 'eu.inmite.android.lib:android-styled-dialogs:1.1.2@aar'
+    //compile 'com.github.johnkil.android-progressfragment:progressfragment:1.4.0'
+    //compile 'com.github.sopinet.android-nethelper:extra-abc:+'
+    //compile 'com.github.drnkn.android-progressswitcher:extra-abc:+'
 }
