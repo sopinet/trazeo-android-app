@@ -40,16 +40,22 @@ dependencies {
     compile 'com.android.support:appcompat-v7:19.0.1'
     compile 'com.android.support:support-v4:19.+'
     compile 'com.google.android.gms:play-services:4.2.42'
+    compile 'org.androidannotations:androidannotations-api:3.0.+'
+    compile 'com.google.code.gson:gson:2.2.4@jar'
+    compile 'com.github.amigold.fundapter2:library:1.01'
+    compile 'eu.inmite.android.lib:android-styled-dialogs:1.1.2@aar'
+    compile 'com.github.johnkil.android-progressfragment:progressfragment:1.4.0'
+    compile 'org.osmdroid:osmdroid-android:4.1'
+    compile 'org.slf4j:slf4j-log4j12:1.5.6'
+    //
+    //
     compile project(':NetHelper')
     // You must install or update the Google Repository through the SDK manager to use this dependency.
     // The Google Repository (separate from the corresponding library) can be found in the Extras category.
     apt "org.androidannotations:androidannotations:3.0+"
-    compile 'org.androidannotations:androidannotations-api:3.0+'
+    
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.code.gson:gson:2.2.4@jar'
-    compile 'com.github.amigold.fundapter2:library:1.01'
-    compile 'eu.inmite.android.lib:android-styled-dialogs:1.1.2@aar'
-    //compile 'com.github.johnkil.android-progressfragment:progressfragment:1.4.0'
-    //compile 'com.github.sopinet.android-nethelper:extra-abc:+'
-    //compile 'com.github.drnkn.android-progressswitcher:extra-abc:+'
+    //
+    //
+    //
 }

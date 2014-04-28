@@ -1,7 +1,9 @@
 package com.sopinet.trazeo.app;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +24,7 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import com.sopinet.trazeo.app.gson.CreateRide;
 import com.sopinet.trazeo.app.gson.Group;
 import com.sopinet.trazeo.app.gson.Groups;
 import com.sopinet.trazeo.app.gson.Login;
@@ -64,7 +67,7 @@ public class SelectGroupActivity extends ActionBarActivity {
     }
 
     @UiThread
-    void showData(Groups groups) {
+    void showData(final Groups groups) {
         BindDictionary<Group> dict = new BindDictionary<Group>();
         dict.addStringField(R.id.name,
                 new StringExtractor<Group>() {
@@ -92,11 +95,40 @@ public class SelectGroupActivity extends ActionBarActivity {
         listSelectGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                createRide(groups.data.get((int) l).id);
             }
         });
 
-        Toast.makeText(this, "OK", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Espere unos segundos mientras cargamos los datos de la Ruta...", Toast.LENGTH_LONG).show();
+    }
+
+
+    @Background
+    void createRide(String l) {
+        SimpleContent sc = new SimpleContent(this, "trazeo");
+        String data = "email="+myPrefs.email().get();
+        data += "&pass="+myPrefs.pass().get();
+        data += "&id_group="+l;
+        String result = "";
+
+        try {
+            result = sc.postUrlContent(Var.URL_API_RIDE_CREATE, data);
+        } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        }
+
+        Log.d("TEMA", result);
+
+        final Type objectCPD = new TypeToken<CreateRide>(){}.getType();
+        CreateRide createRide = new Gson().fromJson(result, objectCPD);
+
+        myPrefs.id_ride().put(createRide.data.id_ride);
+        goActivity();
+    }
+
+    @UiThread
+    void goActivity() {
+        startActivity(new Intent(SelectGroupActivity.this, MonitorActivity_.class));
     }
 
     @Override

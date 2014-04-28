@@ -1,7 +1,9 @@
 package com.sopinet.trazeo.app;
 
+import java.lang.reflect.Type;
 import java.util.Locale;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,8 +21,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.sopinet.android.nethelper.SimpleContent;
+import com.sopinet.trazeo.app.gson.CreateRide;
+import com.sopinet.trazeo.app.gson.MasterRide;
+import com.sopinet.trazeo.app.helpers.MyPrefs_;
+import com.sopinet.trazeo.app.helpers.Var;
+import com.sopinet.trazeo.app.osmlocpull.OsmLocPullService;
 
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.sharedpreferences.Pref;
+
+@EActivity(R.layout.activity_monitor)
+public class MonitorActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -36,10 +54,49 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      */
     ViewPager mViewPager;
 
+    /*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_monitor);
+    */
+
+    @Pref
+    MyPrefs_ myPrefs;
+
+    public static MasterRide ride;
+
+    String data = null;
+
+    @AfterViews
+    void init() {
+        loadData();
+    }
+
+    @Background
+    void loadData() {
+        SimpleContent sc = new SimpleContent(this, "trazeo", 3);
+        String data = "email="+myPrefs.email().get();
+        data += "&pass="+myPrefs.pass().get();
+        data += "&id_ride="+myPrefs.id_ride().get();
+        String result = "";
+
+        try {
+            result = sc.postUrlContent(Var.URL_API_RIDE_DATA, data);
+        } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        }
+
+        final Type objectCPD = new TypeToken<MasterRide>(){}.getType();
+        MonitorActivity.ride = new Gson().fromJson(result, objectCPD);
+
+        //myPrefs.id_ride().put(createRide.data.id_ride);
+        showData();
+    }
+
+    @UiThread
+    void showData() {
+        data = "id_ride="+myPrefs.id_ride().get()+"&email="+myPrefs.email().get()+"&pass="+myPrefs.pass().get();
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -74,14 +131,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
-    }
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.monitor, menu);
         return true;
     }
 
@@ -126,7 +183,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            if (position == 0) {
+                Log.d("GPSLOG", "MonitorActivity, sendtofrag: "+data);
+                return MonitorMapFragment.newInstance(data);
+            } else {
+                return MonitorDataFragment.newInstance();
+                //return PlaceholderFragment.newInstance(position + 1);
+            }
         }
 
         @Override
@@ -140,49 +203,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
+                    return getString(R.string.title_fragment_map).toUpperCase(l);
                 case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
+                    return getString(R.string.title_fragment_data).toUpperCase(l);
                 case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
+                    return getString(R.string.title_fragment_children).toUpperCase(l);
             }
             return null;
         }
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
-        }
-    }
-
 }
