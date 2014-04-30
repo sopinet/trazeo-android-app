@@ -4,7 +4,7 @@
     <string name="app_name">Trazeo</string>
     <string name="title_fragment_map">Mapa</string>
     <string name="title_fragment_data">Datos</string>
-    <string name="title_fragment_children">Section 3</string>
+    <string name="title_fragment_children">Niños</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_init">InitActivity</string>
     <string name="dummy_button">Trazeo, checking access</string>

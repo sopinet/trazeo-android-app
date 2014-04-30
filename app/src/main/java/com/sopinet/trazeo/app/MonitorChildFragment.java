@@ -5,10 +5,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.ami.fundapter.BindDictionary;
 import com.ami.fundapter.FunDapter;
 import com.ami.fundapter.extractors.StringExtractor;
+import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
 import com.fortysevendeg.swipelistview.SwipeListView;
 import com.sopinet.trazeo.app.gson.EChild;
 
@@ -54,6 +56,19 @@ public class MonitorChildFragment extends Fragment {
 
         // Asignamos el adaptador a la vista
         SwipeListView listChildren = (SwipeListView)root.findViewById(R.id.listChildren);
+
+        //listChildren.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+
+        listChildren.setSwipeListViewListener(new BaseSwipeListViewListener() {
+            @Override
+            public void onOpened(int position, boolean toRight) {
+            }
+
+            @Override
+            public void onClosed(int position, boolean fromRight) {
+            }
+        });
+
         listChildren.setAdapter(adapter);
 
         // Devolvemos la vista del Fragment

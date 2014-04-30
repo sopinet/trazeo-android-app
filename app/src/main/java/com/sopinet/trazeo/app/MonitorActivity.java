@@ -186,10 +186,13 @@ public class MonitorActivity extends ActionBarActivity implements ActionBar.TabL
             if (position == 0) {
                 Log.d("GPSLOG", "MonitorActivity, sendtofrag: "+data);
                 return MonitorMapFragment.newInstance(data);
-            } else {
+            } else if (position == 1) {
                 return MonitorDataFragment.newInstance();
-                //return PlaceholderFragment.newInstance(position + 1);
+            } else if (position == 2) {
+                return MonitorChildFragment.newInstance();
             }
+
+            return null;
         }
 
         @Override

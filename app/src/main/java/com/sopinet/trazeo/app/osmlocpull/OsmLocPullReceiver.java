@@ -72,7 +72,7 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
             }
 
             if (this.url != null) {
-                SimpleContent sc = new SimpleContent(context, "trazeo", 0);
+                SimpleContent sc = new SimpleContent(context, "trazeo", 3);
                 this.data += "&latitude=" + lat;
                 this.data += "&longitude=" + lon;
                 Log.d("TEMA", "DATA_SENDPOINT: "+this.data);

@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         swipe:swipeFrontView="@+id/front"
         swipe:swipeBackView="@+id/back"
-        swipe:swipeActionLeft="[reveal | dismiss]"
-        swipe:swipeActionRight="[reveal | dismiss]"
-        swipe:swipeMode="[none | both | right | left]"
-        swipe:swipeCloseAllItemsWhenMoveList="[true | false]"
-        swipe:swipeOpenOnLongPress="[true | false]"
-        swipe:swipeAnimationTime="[miliseconds]"
-        swipe:swipeOffsetLeft="[dimension]"
-        swipe:swipeOffsetRight="[dimension]"
+        swipe:swipeActionLeft="reveal"
+        swipe:swipeActionRight="reveal"
+        swipe:swipeMode="both"
+        swipe:swipeCloseAllItemsWhenMoveList="true"
+        swipe:swipeOpenOnLongPress="true"
+        swipe:swipeAnimationTime="100"
+        swipe:swipeOffsetLeft="60dp"
+        swipe:swipeOffsetRight="60dp"
         />
 
 </FrameLayout>

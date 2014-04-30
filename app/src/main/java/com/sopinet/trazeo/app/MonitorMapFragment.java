@@ -2,6 +2,7 @@ package com.sopinet.trazeo.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sopinet.trazeo.app.gson.EEvent;
 import com.sopinet.trazeo.app.gson.EPoint;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
@@ -95,10 +97,8 @@ public class MonitorMapFragment extends Fragment {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        // Pinto Ruta preestablecida
         RoadManager roadManager = new OSRMRoadManager();
-
-        //RoadManager roadManager = new MapQuestRoadManager("Fmjtd%7Cluur2q0rnq%2Cba%3Do5-9aaw00");
-        //roadManager.addRequestOption("routeType=bicycle");
         ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
 
         ArrayList<EPoint> points = MonitorActivity.ride.data.group.route.points;
@@ -118,7 +118,31 @@ public class MonitorMapFragment extends Fragment {
             roadOverlay = RoadManager.buildRoadOverlay(road, context);
             mapview.getOverlays().add(roadOverlay);
 
+            waypoints = new ArrayList<GeoPoint>();
             startPoint = endPoint;
+        }
+
+        // Pinto Ruta recorrida
+        ArrayList<EEvent> events = MonitorActivity.ride.data.events;
+        startPoint = null;
+        endPoint = null;
+        for(int o = 0; o < events.size();o++) {
+            startPoint = endPoint;
+            if (events.get(o).action.equals("point")) {
+                String[] coords = events.get(o).data.split(",");
+                Double latitudeI = Double.parseDouble(coords[0].replace("(", ""));
+                Double longitudeI = Double.parseDouble(coords[1].replace(")", ""));
+                endPoint = new GeoPoint(latitudeI, longitudeI);
+                if (startPoint != null) {
+                    waypoints = new ArrayList<GeoPoint>();
+                    waypoints.add(startPoint);
+                    waypoints.add(endPoint);
+                    road = roadManager.getRoad(waypoints);
+                    roadOverlay = RoadManager.buildRoadOverlay(road, context);
+                    roadOverlay.setColor(Color.GREEN);
+                    mapview.getOverlays().add(roadOverlay);
+                }
+            }
         }
 
         //Add MyLocationNewOverlay
@@ -129,11 +153,10 @@ public class MonitorMapFragment extends Fragment {
         myLocNewOver.setDrawAccuracyEnabled(true);
         mapview.getOverlays().add(myLocNewOver);
 
-        //MyLoc myLoc = new MyLoc(myLocNewOver);
-
-        // Actualizar
+        // Actualizamos Mapa
         mapview.invalidate();
 
+        // Establecemos Zoom
         mapview.getController().setZoom(14);
 
         Intent intent = new Intent(context, OsmLocPullService.class);
