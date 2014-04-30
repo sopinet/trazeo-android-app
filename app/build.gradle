@@ -36,6 +36,7 @@ apt {
     }
 }
 
+
 dependencies {
     compile 'com.android.support:appcompat-v7:19.0.1'
     compile 'com.android.support:support-v4:19.+'
@@ -53,9 +54,19 @@ dependencies {
     // You must install or update the Google Repository through the SDK manager to use this dependency.
     // The Google Repository (separate from the corresponding library) can be found in the Extras category.
     apt "org.androidannotations:androidannotations:3.0+"
-    
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //
     //
     //
+}
+
+repositories {
+    maven { url 'http://clinker.47deg.com/nexus/content/groups/public' }
+}
+
+dependencies {
+    compile ('com.fortysevendeg.swipelistview:swipelistview:1.0-SNAPSHOT@aar') {
+        transitive = true
+    }
 }

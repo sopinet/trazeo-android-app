@@ -2,7 +2,8 @@ package com.sopinet.trazeo.app.helpers;
 
 public class Var {
     //public static String URL_API = "http://dev.trazeo.es/";
-    public static String URL_API = "http://dev.trazeo.es/";
+    //public static String URL_API = "http://dev.trazeo.es/";
+    public static String URL_API = "http://192.168.1.149/trazeo-web/web/app_dev.php/";
     public static String URL_API_LOGIN = Var.URL_API + "api/login";
     public static String URL_API_GROUPS = Var.URL_API + "api/groups";
     public static String URL_API_RIDE_CREATE = Var.URL_API + "api/ride/createNew";

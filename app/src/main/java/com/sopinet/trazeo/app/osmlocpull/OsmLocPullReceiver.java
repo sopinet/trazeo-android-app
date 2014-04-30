@@ -149,7 +149,7 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
         }
         PendingIntent pi;
         pi = PendingIntent.getBroadcast(context, 0, i, FLAG_UPDATE_CURRENT);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 30 * 1, pi); // Millisec * Second * Minute (cada 30 Segundos)
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 10 * 1, pi); // Millisec * Second * Minute (cada 30 Segundos)
     }
 
     public void CancelLocPull(Context context)

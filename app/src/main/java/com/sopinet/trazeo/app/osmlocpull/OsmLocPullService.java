@@ -23,22 +23,26 @@ public class OsmLocPullService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        Bundle extras = intent.getExtras();
-        osmReceiver = new OsmLocPullReceiver();
-        osmReceiver.url = extras.getString("url");
-        osmReceiver.data = extras.getString("data");
-        Log.d("GPSLOG", "ServiceCommand: "+osmReceiver.data);
-        osmReceiver.SetLocPull(OsmLocPullService.this);
+        if (intent != null) {
+            Bundle extras = intent.getExtras();
+            osmReceiver = new OsmLocPullReceiver();
+            osmReceiver.url = extras.getString("url");
+            osmReceiver.data = extras.getString("data");
+            Log.d("GPSLOG", "ServiceCommand: " + osmReceiver.data);
+            osmReceiver.SetLocPull(OsmLocPullService.this);
+        }
         return START_STICKY;
     }
 
     public void onStart(Context context,Intent intent, int startId)
     {
-        Bundle extras = intent.getExtras();
-        osmReceiver = new OsmLocPullReceiver();
-        osmReceiver.url = extras.getString("url");
-        osmReceiver.data = extras.getString("data");
-        Log.d("GPSLOG", "Service: "+osmReceiver.data);
-        osmReceiver.SetLocPull(context);
+        if (intent != null) {
+            Bundle extras = intent.getExtras();
+            osmReceiver = new OsmLocPullReceiver();
+            osmReceiver.url = extras.getString("url");
+            osmReceiver.data = extras.getString("data");
+            Log.d("GPSLOG", "Service: " + osmReceiver.data);
+            osmReceiver.SetLocPull(context);
+        }
     }
 }
