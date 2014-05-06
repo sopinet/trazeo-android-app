@@ -11,6 +11,7 @@ import com.sopinet.trazeo.app.helpers.MyLoc;
 
 public class OsmLocPullService extends Service {
     OsmLocPullReceiver osmReceiver;
+    Context context;
 
     public OsmLocPullService() {
     }
@@ -24,6 +25,7 @@ public class OsmLocPullService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         if (intent != null) {
+            this.context = context;
             Bundle extras = intent.getExtras();
             osmReceiver = new OsmLocPullReceiver();
             osmReceiver.url = extras.getString("url");
@@ -37,6 +39,7 @@ public class OsmLocPullService extends Service {
     public void onStart(Context context,Intent intent, int startId)
     {
         if (intent != null) {
+            this.context = context;
             Bundle extras = intent.getExtras();
             osmReceiver = new OsmLocPullReceiver();
             osmReceiver.url = extras.getString("url");

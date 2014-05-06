@@ -3,4 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="height_list">90dp</dimen>
+    <dimen name="padding_default">8dp</dimen>
+
     </resources>

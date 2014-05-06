@@ -3,6 +3,9 @@ package com.sopinet.trazeo.app;
 import java.lang.reflect.Type;
 import java.util.Locale;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -28,16 +31,23 @@ import com.sopinet.trazeo.app.gson.CreateRide;
 import com.sopinet.trazeo.app.gson.MasterRide;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
+import com.sopinet.trazeo.app.osmlocpull.OsmLocPullReceiver;
 import com.sopinet.trazeo.app.osmlocpull.OsmLocPullService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import eu.inmite.android.lib.dialogs.ISimpleDialogListener;
+import eu.inmite.android.lib.dialogs.SimpleDialogFragment;
+
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+
 @EActivity(R.layout.activity_monitor)
-public class MonitorActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class MonitorActivity extends ActionBarActivity implements ISimpleDialogListener, ActionBar.TabListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -53,6 +63,9 @@ public class MonitorActivity extends ActionBarActivity implements ActionBar.TabL
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+
+    @Extra
+    String cancel;
 
     /*
     @Override
@@ -70,7 +83,47 @@ public class MonitorActivity extends ActionBarActivity implements ActionBar.TabL
 
     @AfterViews
     void init() {
+        if (cancel != null && cancel.equals("1")) {
+            showCancelDialog();
+        }
         loadData();
+    }
+
+    @UiThread
+    void showCancelDialog() {
+        SimpleDialogFragment wsure = (SimpleDialogFragment) SimpleDialogFragment.createBuilder(
+                this,
+                getSupportFragmentManager()).setTitle("Trazeo: Terminar paseo")
+                .setMessage("Se terminará su paseo actual, ¿está seguro?")
+                .setPositiveButtonText("Sí").setRequestCode(1)
+                .setNegativeButtonText("No").setRequestCode(1)
+                .show();
+    }
+
+    @Override
+    public void onPositiveButtonClicked(int requestCode) {
+        if (requestCode == 1) {
+            stopService(SelectGroupActivity.intentGPS);  // TODO: No estoy seguro de que esto sea necesario
+
+            String data_service = "email="+myPrefs.email().get();
+            data_service += "&pass="+myPrefs.pass().get();
+            data_service += "&id_ride="+myPrefs.id_ride().get();
+
+            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent i = new Intent(this, OsmLocPullReceiver.class);
+            i.putExtra("url", Var.URL_API_SENDPOSITION);
+            i.putExtra("data", data_service);
+
+            PendingIntent pi;
+            pi = PendingIntent.getBroadcast(this, 0, i, FLAG_UPDATE_CURRENT);
+            am.cancel(pi);
+        }
+    }
+
+    @Override
+    public void onNegativeButtonClicked(int requestCode) {
+        //
+        // this.cancel();
     }
 
     @Background
@@ -148,6 +201,9 @@ public class MonitorActivity extends ActionBarActivity implements ActionBar.TabL
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if (id == R.id.action_close) {
+            showCancelDialog();
+        }
         if (id == R.id.action_settings) {
             return true;
         }
@@ -189,7 +245,7 @@ public class MonitorActivity extends ActionBarActivity implements ActionBar.TabL
             } else if (position == 1) {
                 return MonitorDataFragment.newInstance();
             } else if (position == 2) {
-                return MonitorChildFragment.newInstance();
+                return MonitorChildFragment.newInstance(data);
             }
 
             return null;

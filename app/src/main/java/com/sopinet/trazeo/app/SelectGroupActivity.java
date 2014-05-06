@@ -1,5 +1,6 @@
 package com.sopinet.trazeo.app;
 
+import android.app.Service;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.sopinet.trazeo.app.gson.Groups;
 import com.sopinet.trazeo.app.gson.Login;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
+import com.sopinet.trazeo.app.osmlocpull.OsmLocPullService;
 
 import java.lang.reflect.Type;
 import android.widget.ListView;
@@ -41,6 +43,8 @@ public class SelectGroupActivity extends ActionBarActivity {
 
     @ViewById
     ListView listSelectGroup;
+
+    public static Intent intentGPS;
 
     @AfterViews
     void init() {
@@ -123,6 +127,16 @@ public class SelectGroupActivity extends ActionBarActivity {
         CreateRide createRide = new Gson().fromJson(result, objectCPD);
 
         myPrefs.id_ride().put(createRide.data.id_ride);
+
+        String data_service = "email="+myPrefs.email().get();
+        data_service += "&pass="+myPrefs.pass().get();
+        data_service += "&id_ride="+createRide.data.id_ride;
+
+        intentGPS = new Intent(this, OsmLocPullService.class);
+        intentGPS.putExtra("url", Var.URL_API_SENDPOSITION);
+        intentGPS.putExtra("data", data_service);
+        startService(intentGPS);
+
         goActivity();
     }
 

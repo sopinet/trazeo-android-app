@@ -2,9 +2,13 @@ package com.sopinet.trazeo.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.test.UiThreadTest;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 
 import com.ami.fundapter.BindDictionary;
@@ -12,12 +16,29 @@ import com.ami.fundapter.FunDapter;
 import com.ami.fundapter.extractors.StringExtractor;
 import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
 import com.fortysevendeg.swipelistview.SwipeListView;
+import com.sopinet.android.nethelper.SimpleContent;
 import com.sopinet.trazeo.app.gson.EChild;
+import com.sopinet.trazeo.app.helpers.ChildAdapter;
+import com.sopinet.trazeo.app.helpers.MyPrefs_;
+import com.sopinet.trazeo.app.helpers.Var;
 
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.sharedpreferences.Pref;
+
+@EFragment(R.layout.fragment_monitor_child)
 public class MonitorChildFragment extends Fragment {
+    private static final String Adata = "mdata";
+    private String mdata;
+
     // TODO: Rename and change types and number of parameters
-    public static MonitorChildFragment newInstance() {
-        return new MonitorChildFragment();
+    public static MonitorChildFragment newInstance(String data) {
+        MonitorChildFragment fragment = new MonitorChildFragment();
+        Bundle args = new Bundle();
+        args.putString(Adata, data);
+        fragment.setArguments(args);
+        return fragment;
     }
     public MonitorChildFragment() {
         // Required empty public constructor
@@ -26,6 +47,9 @@ public class MonitorChildFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mdata = getArguments().getString(Adata);
+        }
     }
 
     @Override
@@ -51,27 +75,62 @@ public class MonitorChildFragment extends Fragment {
             });
 
         // Creamos adaptador
-        FunDapter<EChild> adapter = new FunDapter<EChild>(getActivity(),
-                MonitorActivity.ride.data.group.childs, R.layout.child_item, dict);
+        //FunDapter<EChild> adapter = new FunDapter<EChild>(getActivity(),
+        //        MonitorActivity.ride.data.group.childs, R.layout.child_item, dict);
+
+        // Creamos adaptador
+        ChildAdapter adapter = new ChildAdapter(getActivity(),
+                R.layout.child_item, MonitorActivity.ride.data.group.childs);
 
         // Asignamos el adaptador a la vista
-        SwipeListView listChildren = (SwipeListView)root.findViewById(R.id.listChildren);
-
-        //listChildren.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-
-        listChildren.setSwipeListViewListener(new BaseSwipeListViewListener() {
-            @Override
-            public void onOpened(int position, boolean toRight) {
-            }
-
-            @Override
-            public void onClosed(int position, boolean fromRight) {
-            }
-        });
+        ListView listChildren = (ListView)root.findViewById(R.id.listChildren);
 
         listChildren.setAdapter(adapter);
 
+        listChildren.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                EChild echild = (EChild) adapterView.getItemAtPosition(position);
+                CheckBox checkbox = (CheckBox) view.findViewById(R.id.checkCHILD);
+                checkbox.setChecked(!checkbox.isChecked());
+                echild.setSelected(checkbox.isChecked());
+                changeChild(echild);
+            }
+        });
+
         // Devolvemos la vista del Fragment
         return root;
+    }
+
+    @Background
+    void changeChild(EChild echild) {
+        String url = "";
+        if (echild.isSelected()) {
+            url = Var.URL_API_CHILDIN;
+        } else {
+            url = Var.URL_API_CHILDOUT;
+        }
+
+        String data = mdata;
+        data += "&id_child="+echild.id;
+
+        String result = "";
+        SimpleContent sc = new SimpleContent(this.getActivity(), "trazeo", 3);
+        try {
+            result = sc.postUrlContent(url, data);
+        } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        }
+        Log.d("TEMA", result);
+    }
+
+    @UiThread
+    void changeChildShow(EChild echild) {
+        String msg = "";
+        if (echild.isSelected()) {
+            msg = "Niño registrado en este Paseo";
+        } else {
+            msg = "Niño desvinculado del paseo";
+        }
     }
 }

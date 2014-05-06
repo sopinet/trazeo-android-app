@@ -57,7 +57,6 @@ public class MonitorMapFragment extends Fragment {
         MonitorMapFragment fragment = new MonitorMapFragment();
         Bundle args = new Bundle();
         args.putString(Adata, data);
-        Log.d("TEMA", "DATA2: "+data);
         fragment.setArguments(args);
         return fragment;
     }
@@ -98,6 +97,7 @@ public class MonitorMapFragment extends Fragment {
         StrictMode.setThreadPolicy(policy);
 
         // Pinto Ruta preestablecida
+        /**
         RoadManager roadManager = new OSRMRoadManager();
         ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
 
@@ -144,8 +144,9 @@ public class MonitorMapFragment extends Fragment {
                 }
             }
         }
+         **/
 
-        //Add MyLocationNewOverlay
+        // Añado localización
         MyLocationNewOverlay myLocNewOver = new MyLocationNewOverlay(context, mapview);
 
         myLocNewOver.enableFollowLocation();
@@ -158,13 +159,6 @@ public class MonitorMapFragment extends Fragment {
 
         // Establecemos Zoom
         mapview.getController().setZoom(14);
-
-        Intent intent = new Intent(context, OsmLocPullService.class);
-        //intent.putExtra("com.sopinet.trazeo.app.helpers.MyLoc", myLoc);
-        intent.putExtra("url", Var.URL_API_SENDPOSITION);
-        intent.putExtra("data", mdata);
-        Log.d("GPSLOG", "Fragment: "+mdata);
-        context.startService(intent);
 
         // Send location
         // https://github.com/mendhak/gpslogger/blob/master/gpslogger/src/main/AndroidManifest.xml

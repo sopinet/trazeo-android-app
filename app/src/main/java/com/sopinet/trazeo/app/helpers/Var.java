@@ -9,4 +9,7 @@ public class Var {
     public static String URL_API_RIDE_CREATE = Var.URL_API + "api/ride/createNew";
     public static String URL_API_RIDE_DATA = Var.URL_API + "api/ride/data";
     public static String URL_API_SENDPOSITION = Var.URL_API + "api/ride/sendPosition";
+
+    public static String URL_API_CHILDIN = Var.URL_API + "api/ride/sendChildInRide";
+    public static String URL_API_CHILDOUT = Var.URL_API + "api/ride/sendChildOutRide";
 }

@@ -84,7 +84,8 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
                 } catch (SimpleContent.ApiException e) {
                     e.printStackTrace();
                 }
-                Log.d("TEMA", result);
+                // TODO: Result puede ser nulo, deberíamos revisarlo
+                //Log.d("TEMA", result);
 
 
 //                mBuilder.setContentText(result);
@@ -105,7 +106,7 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
     {
         mBuilder = new NotificationCompat.Builder(context);
 
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        TaskStackBuilder stackBuilder_go = TaskStackBuilder.create(context);
         /*
         dynamic class
 
@@ -116,36 +117,48 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
 			e.printStackTrace();
 		}
          */
-        // Estas clases podrían ser dinámicas
-        stackBuilder.addParentStack(MonitorActivity_.class);
-        Intent intent = new Intent(context, MonitorActivity_.class);
-        stackBuilder.addNextIntent(intent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
+        // TODO: Estas clases podrían ser dinámicas
+        stackBuilder_go.addParentStack(MonitorActivity_.class);
+        Intent intent_go = new Intent(context, MonitorActivity_.class);
+        stackBuilder_go.addNextIntent(intent_go);
+        PendingIntent resultPendingIntent_go =
+                stackBuilder_go.getPendingIntent(
                         0,
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
-        mBuilder.setContentIntent(resultPendingIntent);
+        mBuilder.setContentIntent(resultPendingIntent_go);
 
-        mBuilder.setContentTitle("Inicializando...");
+        mBuilder.setContentTitle("Trazeo");
         mBuilder.setSmallIcon(android.support.v7.appcompat.R.drawable.abc_ab_bottom_solid_dark_holo);
-        mBuilder.setNumber(12);
-        mBuilder.setProgress(100, 12, false);
-        mBuilder.setContentText("Empezando con el temita...");
+        //mBuilder.setNumber(12);
+        //mBuilder.setProgress(100, 12, false);
+        mBuilder.setContentText("Se encuentra en una ruta ACTIVA");
+
+        // Intent para CANCELAR Paseo
+        TaskStackBuilder stackBuilder_cancel = TaskStackBuilder.create(context);
+        stackBuilder_cancel.addParentStack(MonitorActivity_.class);
+        Intent intent_cancel = new Intent(context, MonitorActivity_.class);
+        intent_cancel.putExtra("cancel", "1");
+        stackBuilder_cancel.addNextIntent(intent_cancel);
+        PendingIntent resultPendingIntent_cancel =
+                stackBuilder_cancel.getPendingIntent(
+                        1,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Terminar Paseo", resultPendingIntent_cancel);
+
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // Debe haber un ID, el "id_raid" estaría bien
         notificationManager.notify(200, mBuilder.build());
 
 
-        AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+
+        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         //OsmLocPullReceiver osmLoc = new OsmLocPullReceiver(this.url, this.data);
         Intent i = new Intent(context, OsmLocPullReceiver.class);
-        Log.d("GPSLOG", "Set");
-        Log.d("GPSLOG", "Set: "+this.url);
         if (this.url != null) {
             i.putExtra("url", this.url);
             i.putExtra("data", this.data);
-            Log.d("GPSLOG", "SET!");
         }
         PendingIntent pi;
         pi = PendingIntent.getBroadcast(context, 0, i, FLAG_UPDATE_CURRENT);
@@ -155,9 +168,16 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
     public void CancelLocPull(Context context)
     {
         Log.d("GPSLOG", "Cancel");
-        Intent intent = new Intent(context, OsmLocPullReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(sender);
+
+        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        //OsmLocPullReceiver osmLoc = new OsmLocPullReceiver(this.url, this.data);
+        Intent i = new Intent(context, OsmLocPullReceiver.class);
+        if (this.url != null) {
+            i.putExtra("url", this.url);
+            i.putExtra("data", this.data);
+        }
+        PendingIntent pi;
+        pi = PendingIntent.getBroadcast(context, 0, i, FLAG_UPDATE_CURRENT);
+        am.cancel(pi);
     }
 }
