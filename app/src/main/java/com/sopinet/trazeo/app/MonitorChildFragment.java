@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.ami.fundapter.BindDictionary;
 import com.ami.fundapter.FunDapter;
@@ -121,16 +122,18 @@ public class MonitorChildFragment extends Fragment {
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
-        Log.d("TEMA", result);
+        changeChildShow(echild);
+        //Log.d("TEMA", result);
     }
 
     @UiThread
     void changeChildShow(EChild echild) {
         String msg = "";
         if (echild.isSelected()) {
-            msg = "Niño registrado en este Paseo";
+            msg = "("+echild.nick+")"+" Niño registrado en este Paseo";
         } else {
-            msg = "Niño desvinculado del paseo";
+            msg = "("+echild.nick+")"+" Niño desvinculado del Paseo";
         }
+        Toast.makeText(this.getActivity(), msg, Toast.LENGTH_LONG).show();
     }
 }

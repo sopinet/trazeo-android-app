@@ -63,7 +63,7 @@ public class LoginSimpleActivity extends ActionBarActivity {
     @Background
     void checkLogin() {
         showDialog();
-        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
+        SimpleContent sc = new SimpleContent(this, "trazeo", 1);
         String data = "email="+email.getText().toString();
         data += "&pass="+ StringHelper.md5(password.getText().toString());
         String result = "";

@@ -4,8 +4,11 @@ import java.lang.reflect.Type;
 import java.util.Locale;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -22,7 +25,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -81,8 +86,12 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     String data = null;
 
+    SimpleDialogFragment wait;
+
     @AfterViews
     void init() {
+        data = "id_ride="+myPrefs.id_ride().get()+"&email="+myPrefs.email().get()+"&pass="+myPrefs.pass().get();
+
         if (cancel != null && cancel.equals("1")) {
             showCancelDialog();
         }
@@ -100,11 +109,84 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
                 .show();
     }
 
+    @UiThread
+    void showDisconnectDialog() {
+        SimpleDialogFragment wsure = (SimpleDialogFragment) SimpleDialogFragment.createBuilder(
+                this,
+                getSupportFragmentManager()).setTitle("Trazeo: Desconectar")
+                .setMessage("Se terminará su paseo actual y desconectará su usuario de la aplicación, ¿está seguro?")
+                .setPositiveButtonText("Sí").setRequestCode(2)
+                .setNegativeButtonText("No").setRequestCode(2)
+                .show();
+    }
+
+    @UiThread
+    void showReportDialog() {
+        LayoutInflater li = LayoutInflater.from(this);
+        View reportDialog = li.inflate(R.layout.report_dialog, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setView(reportDialog);
+        final EditText userInput = (EditText) reportDialog.findViewById(R.id.editREPORT);
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // TODO: ENVIAR LA INFO AL SERVIDOR
+                                // get user input and set it to result
+                                // edit text
+                                //result.setText(userInput.getText());
+                                dialog.cancel();
+                                showWaitDialog();
+                                sendReport(userInput.getText().toString());
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        }
+                );
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
+
+    @Background
+    void sendReport(String text) {
+        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
+        String sdata = data;
+        sdata += "&text="+text;
+        String result = "";
+        try {
+            result = sc.postUrlContent(Var.URL_API_SENDREPORT, data);
+        } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        }
+        showReportOK();
+    }
+
+    @UiThread
+    void showReportOK() {
+        wait.dismiss();
+        Toast.makeText(this, "El reporte ha sido enviado con éxito.", Toast.LENGTH_LONG).show();
+    }
+
     @Override
     public void onPositiveButtonClicked(int requestCode) {
-        if (requestCode == 1) {
+        if (requestCode == 1 || requestCode == 2) {
+            // Mensaje de inicio de detención de PASEO
+            showWaitDialog();
+
             stopService(SelectGroupActivity.intentGPS);  // TODO: No estoy seguro de que esto sea necesario
 
+            // Cancelamos la ALARMA
             String data_service = "email="+myPrefs.email().get();
             data_service += "&pass="+myPrefs.pass().get();
             data_service += "&id_ride="+myPrefs.id_ride().get();
@@ -117,7 +199,47 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
             PendingIntent pi;
             pi = PendingIntent.getBroadcast(this, 0, i, FLAG_UPDATE_CURRENT);
             am.cancel(pi);
+
+            // Eliminamos las notificaciones
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(200);
+
+            // Deslogueamos (si es necesario)
+            if (requestCode == 2) {
+                myPrefs.email().put("");
+                myPrefs.pass().put("");
+                myPrefs.user_id().put("");
+            }
+
+            // Enviamos solicitud de fin de PASEO en Background
+            sendFinishRide();
         }
+    }
+
+    @Background
+    void sendFinishRide() {
+        SimpleContent sc = new SimpleContent(this, "trazeo", 1);
+        String result = "";
+
+        try {
+            result = sc.postUrlContent(Var.URL_API_RIDE_FINISH, data);
+        } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        }
+        Log.d("TEMA", result);
+
+        gotoSelect();
+    }
+
+    @UiThread
+    void showWaitDialog() {
+        wait = (SimpleDialogFragment) SimpleDialogFragment.createBuilder(this, getSupportFragmentManager()).hideDefaultButton(true).setMessage("Espere...").show();
+    }
+
+    @UiThread
+    void gotoSelect() {
+        Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(this, InitActivity_.class));
     }
 
     @Override
@@ -129,9 +251,6 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     @Background
     void loadData() {
         SimpleContent sc = new SimpleContent(this, "trazeo", 3);
-        String data = "email="+myPrefs.email().get();
-        data += "&pass="+myPrefs.pass().get();
-        data += "&id_ride="+myPrefs.id_ride().get();
         String result = "";
 
         try {
@@ -149,8 +268,6 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     @UiThread
     void showData() {
-        data = "id_ride="+myPrefs.id_ride().get()+"&email="+myPrefs.email().get()+"&pass="+myPrefs.pass().get();
-
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -204,8 +321,11 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         if (id == R.id.action_close) {
             showCancelDialog();
         }
-        if (id == R.id.action_settings) {
-            return true;
+        else if (id == R.id.action_disconnect) {
+            showDisconnectDialog();
+        }
+        else if (id == R.id.action_report) {
+            showReportDialog();
         }
         return super.onOptionsItemSelected(item);
     }

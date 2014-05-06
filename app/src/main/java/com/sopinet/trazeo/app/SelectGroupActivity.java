@@ -53,7 +53,7 @@ public class SelectGroupActivity extends ActionBarActivity {
 
     @Background
     void loadData() {
-        SimpleContent sc = new SimpleContent(this, "trazeo");
+        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
         String data = "email="+myPrefs.email().get();
         data += "&pass="+myPrefs.pass().get();
         String result = "";
@@ -103,13 +103,13 @@ public class SelectGroupActivity extends ActionBarActivity {
             }
         });
 
-        Toast.makeText(this, "Espere unos segundos mientras cargamos los datos de la Ruta...", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Espere unos segundos mientras cargamos los datos de la Ruta...", Toast.LENGTH_LONG).show();
     }
 
 
     @Background
     void createRide(String l) {
-        SimpleContent sc = new SimpleContent(this, "trazeo");
+        SimpleContent sc = new SimpleContent(this, "trazeo", 1);
         String data = "email="+myPrefs.email().get();
         data += "&pass="+myPrefs.pass().get();
         data += "&id_group="+l;
@@ -158,7 +158,11 @@ public class SelectGroupActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_disconnect) {
+            myPrefs.email().put("");
+            myPrefs.pass().put("");
+            myPrefs.user_id().put("");
+            startActivity(new Intent(this, LoginSimpleActivity_.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

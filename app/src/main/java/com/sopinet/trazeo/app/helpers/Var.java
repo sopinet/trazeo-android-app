@@ -12,4 +12,8 @@ public class Var {
 
     public static String URL_API_CHILDIN = Var.URL_API + "api/ride/sendChildInRide";
     public static String URL_API_CHILDOUT = Var.URL_API + "api/ride/sendChildOutRide";
+
+    public static String URL_API_RIDE_FINISH = Var.URL_API + "api/ride/finish";
+
+    public static String URL_API_SENDREPORT = Var.URL_API + "api/ride/report";
 }
