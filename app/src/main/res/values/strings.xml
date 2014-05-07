@@ -17,5 +17,6 @@
     <string name="action_disconnect">Desconectar</string>
     <string name="title_activity_finish_ride">FinishRideActivity</string>
     <string name="title_activity_see">SeeActivity</string>
+    <string name="about">Acerca de...</string>
 
 </resources>
