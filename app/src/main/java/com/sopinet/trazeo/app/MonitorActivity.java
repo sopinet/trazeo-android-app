@@ -94,6 +94,8 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     void init() {
         data = "id_ride="+myPrefs.id_ride().get()+"&email="+myPrefs.email().get()+"&pass="+myPrefs.pass().get();
 
+
+
         if (cancel != null && cancel.equals("1")) {
             showCancelDialog();
         }
@@ -199,7 +201,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
             // Mensaje de inicio de detención de PASEO
             showWaitDialog();
 
-            stopService(SelectGroupActivity.intentGPS);  // TODO: No estoy seguro de que esto sea necesario
+            // stopService(SelectGroupActivity.intentGPS);  // TODO: No estoy seguro de que esto sea necesario
 
             // Cancelamos la ALARMA
             String data_service = "email="+myPrefs.email().get();

@@ -26,7 +26,7 @@ public class InitActivity extends Activity {
     void init() {
         email = myPrefs.email().get();
 
-        final int SPLASH_DISPLAY_LENGHT = 1000;
+        final int SPLASH_DISPLAY_LENGHT = 2000;
 
         new Handler().postDelayed(new Runnable(){
             @Override
