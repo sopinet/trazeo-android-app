@@ -165,9 +165,22 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         SimpleContent sc = new SimpleContent(this, "trazeo", 0);
         String sdata = data;
         sdata += "&text="+text;
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        String lat = "";
+        String lon = "";
+        if (location != null) {
+            lat = String.valueOf(location.getLatitude());
+            lon = String.valueOf(location.getLongitude());
+        }
+
+        sdata += "&latitude="+lat;
+        sdata += "&longitude="+lon;
+
         String result = "";
         try {
-            result = sc.postUrlContent(Var.URL_API_SENDREPORT, data);
+            result = sc.postUrlContent(Var.URL_API_SENDREPORT, sdata);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
