@@ -1,5 +1,8 @@
 package com.sopinet.trazeo.app;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.test.UiThreadTest;
@@ -112,8 +115,19 @@ public class MonitorChildFragment extends Fragment {
             url = Var.URL_API_CHILDOUT;
         }
 
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        String lat = "";
+        String lon = "";
+        if (location != null) {
+            lat = String.valueOf(location.getLatitude());
+            lon = String.valueOf(location.getLongitude());
+        }
+
         String data = mdata;
         data += "&id_child="+echild.id;
+        data += "&latitude="+lat;
+        data += "&longitude="+lon;
 
         String result = "";
         SimpleContent sc = new SimpleContent(this.getActivity(), "trazeo", 3);

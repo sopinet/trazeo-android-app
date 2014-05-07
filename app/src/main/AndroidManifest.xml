@@ -47,10 +47,10 @@
             android:enabled="true"
             android:exported="true" >
         </service>
-
         <activity
-            android:name="com.sopinet.trazeo.app.FinishRideActivity"
-            android:label="@string/title_activity_finish_ride" >
+            android:name="com.sopinet.trazeo.app.SeeActivity_"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_see" >
         </activity>
     </application>
 

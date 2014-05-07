@@ -10,6 +10,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -221,8 +223,21 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         SimpleContent sc = new SimpleContent(this, "trazeo", 1);
         String result = "";
 
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        String lat = "";
+        String lon = "";
+        if (location != null) {
+            lat = String.valueOf(location.getLatitude());
+            lon = String.valueOf(location.getLongitude());
+        }
+
+        String fdata = data;
+        fdata += "&latitude="+lat;
+        fdata += "&longitude="+lon;
+
         try {
-            result = sc.postUrlContent(Var.URL_API_RIDE_FINISH, data);
+            result = sc.postUrlContent(Var.URL_API_RIDE_FINISH, fdata);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
