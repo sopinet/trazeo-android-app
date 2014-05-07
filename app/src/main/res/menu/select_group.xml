@@ -7,4 +7,9 @@
         android:title="@string/action_disconnect"
         android:orderInCategory="100"
         app:showAsAction="never" />
+
+    <item android:id="@+id/acerca_de"
+        android:title="@string/about"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>
