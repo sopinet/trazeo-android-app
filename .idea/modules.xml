@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/NetHelper/NetHelper.iml" filepath="$PROJECT_DIR$/NetHelper/NetHelper.iml" />
       <module fileurl="file://$PROJECT_DIR$/Trazeo.iml" filepath="$PROJECT_DIR$/Trazeo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/trazeo-android-app.iml" filepath="$PROJECT_DIR$/trazeo-android-app.iml" />
     </modules>
   </component>
 </project>
