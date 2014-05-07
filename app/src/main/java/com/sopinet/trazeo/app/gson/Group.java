@@ -4,5 +4,5 @@ public class Group {
     public String id = "";
     public String name = "";
     public String visibility = "";
-    public String hasRide = "";
+    public String hasride = "";
 }

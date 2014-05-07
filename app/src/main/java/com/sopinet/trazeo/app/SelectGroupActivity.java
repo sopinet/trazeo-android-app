@@ -86,7 +86,7 @@ public class SelectGroupActivity extends ActionBarActivity {
                 new StringExtractor<Group>() {
                     @Override
                     public String getStringValue(Group item, int position) {
-                        if (item.hasRide.equals("true")) {
+                        if (item.hasride.equals("true")) {
                             return "...Paseo en curso...";
                         } else {
                             return "Iniciar";
@@ -104,7 +104,7 @@ public class SelectGroupActivity extends ActionBarActivity {
         listSelectGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                createRide(groups.data.get((int) l).id, groups.data.get((int) l).hasRide);
+                createRide(groups.data.get((int) l).id, groups.data.get((int) l).hasride);
             }
         });
 
@@ -113,7 +113,7 @@ public class SelectGroupActivity extends ActionBarActivity {
 
 
     @Background
-    void createRide(String l, String hasRide) {
+    void createRide(String l, String hasride) {
         SimpleContent sc = new SimpleContent(this, "trazeo", 1);
         String data = "email="+myPrefs.email().get();
         data += "&pass="+myPrefs.pass().get();
@@ -133,7 +133,7 @@ public class SelectGroupActivity extends ActionBarActivity {
 
         myPrefs.id_ride().put(createRide.data.id_ride);
 
-        if (hasRide.equals("false")) {
+        if (hasride.equals("false")) {
             String data_service = "email=" + myPrefs.email().get();
             data_service += "&pass=" + myPrefs.pass().get();
             data_service += "&id_ride=" + createRide.data.id_ride;
@@ -156,7 +156,7 @@ public class SelectGroupActivity extends ActionBarActivity {
 
     @UiThread
     void goActivitySee() {
-        // TODO: Actividad, seguir
+        startActivity(new Intent(SelectGroupActivity.this, SeeActivity_.class));
     }
 
     @Override

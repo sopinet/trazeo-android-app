@@ -94,8 +94,8 @@ public class MonitorMapFragment extends Fragment {
         mapview.setBuiltInZoomControls(true);
         mapview.setTileSource(tileSource);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        //StrictMode.setThreadPolicy(policy);
 
         drawRoute(mapview, context);
         // Pinto Ruta preestablecida

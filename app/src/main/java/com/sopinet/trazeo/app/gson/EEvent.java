@@ -6,4 +6,5 @@ public class EEvent {
     public String data = "";
     public String created_at = "";
     public String updated_at = "";
+    public ELocation location;
 }
