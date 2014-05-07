@@ -71,6 +71,9 @@ public class SeeActivity extends ActionBarActivity {
         // Actualizamos Mapa
         mapview.invalidate();
 
+        // Establecemos Zoom
+        mapview.getController().setZoom(14);
+
         loadLastPoint();
     }
 
@@ -87,7 +90,9 @@ public class SeeActivity extends ActionBarActivity {
         final Type objectCPD = new TypeToken<LastPoint>(){}.getType();
         LastPoint lastPoint = new Gson().fromJson(result, objectCPD);
 
-        if (!lastPoint.data.id.equals(lastPointID)) {
+        if (lastPoint.data != null
+                && lastPoint.data.location != null
+                && !lastPoint.data.id.equals(lastPointID)) {
             lastPointID = lastPoint.data.id;
             showLastPoint(lastPoint);
         }
