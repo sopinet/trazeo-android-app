@@ -133,7 +133,9 @@ public class SelectGroupActivity extends ActionBarActivity {
 
         myPrefs.id_ride().put(createRide.data.id_ride);
 
-        if (hasride.equals("false")) {
+        if (hasride.equals("true")) {
+            goActivitySee();
+        } else {
             String data_service = "email=" + myPrefs.email().get();
             data_service += "&pass=" + myPrefs.pass().get();
             data_service += "&id_ride=" + createRide.data.id_ride;
@@ -144,8 +146,6 @@ public class SelectGroupActivity extends ActionBarActivity {
             startService(intentGPS);
 
             goActivityMonitor();
-        } else {
-            goActivitySee();
         }
     }
 

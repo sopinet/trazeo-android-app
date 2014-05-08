@@ -6,24 +6,32 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.NetworkOnMainThreadException;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.provider.AlarmClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.SimpleContent;
 import com.sopinet.trazeo.app.MonitorActivity;
 import com.sopinet.trazeo.app.MonitorActivity_;
+import com.sopinet.trazeo.app.R;
+import com.sopinet.trazeo.app.gson.LastPoint;
 import com.sopinet.trazeo.app.helpers.MyLoc;
 import com.sopinet.trazeo.app.helpers.Var;
 
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
+import java.lang.reflect.Type;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
@@ -85,6 +93,17 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
                 } catch (SimpleContent.ApiException e) {
                     e.printStackTrace();
                 }
+
+                Log.d("TEMA", result);
+
+                final Type objectCPD = new TypeToken<LastPoint>(){}.getType();
+                LastPoint lastPoint = new Gson().fromJson(result, objectCPD);
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                if (lastPoint != null && lastPoint.data != null) {
+                   preferences.getString("end_ride", lastPoint.data.updated_at);
+                }
+                // Log.d("TEMA", "HORA ACTUAL: "+lastPoint.data.updated_at);
                 // TODO: Result puede ser nulo, deberíamos revisarlo
                 //Log.d("TEMA", result);
 
@@ -130,10 +149,12 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
         mBuilder.setContentIntent(resultPendingIntent_go);
 
         mBuilder.setContentTitle("Trazeo");
-        mBuilder.setSmallIcon(android.support.v7.appcompat.R.drawable.abc_ab_bottom_solid_dark_holo);
+        mBuilder.setSmallIcon(R.drawable.mascota3);
         //mBuilder.setNumber(12);
         //mBuilder.setProgress(100, 12, false);
-        mBuilder.setContentText("Se encuentra en una ruta ACTIVA");
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String end_ride = preferences.getString("end_ride", "0");
+        mBuilder.setContentText("Se encuentra en una ruta ACTIVA "+end_ride);
 
         // Intent para CANCELAR Paseo
         TaskStackBuilder stackBuilder_cancel = TaskStackBuilder.create(context);
