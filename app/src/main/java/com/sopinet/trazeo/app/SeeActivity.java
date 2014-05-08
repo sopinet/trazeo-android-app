@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -66,8 +67,6 @@ public class SeeActivity extends ActionBarActivity {
         mapview.setBuiltInZoomControls(true);
         mapview.setTileSource(tileSource);
 
-        loadData();
-
         // Añado localización
         MyLocationNewOverlay myLocNewOver = new MyLocationNewOverlay(this, mapview);
 
@@ -83,7 +82,7 @@ public class SeeActivity extends ActionBarActivity {
         mapview.getController().setZoom(14);
 
         loadLastPoint();
-
+        loadData();
     }
 
     @Background
@@ -191,5 +190,17 @@ public class SeeActivity extends ActionBarActivity {
                 startPoint = endPoint;
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        handler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        handler.removeCallbacksAndMessages(null);
     }
 }
