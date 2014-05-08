@@ -1,5 +1,6 @@
 package com.sopinet.trazeo.app;
 
+import android.content.Context;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.SimpleContent;
+import com.sopinet.trazeo.app.gson.EPoint;
 import com.sopinet.trazeo.app.gson.LastPoint;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
@@ -21,6 +23,10 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.bonuspack.overlays.Marker;
+import org.osmdroid.bonuspack.overlays.Polyline;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
@@ -28,6 +34,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.logging.LogRecord;
 
 @EActivity(R.layout.activity_see)
@@ -60,6 +67,7 @@ public class SeeActivity extends ActionBarActivity {
         mapview.setBuiltInZoomControls(true);
         mapview.setTileSource(tileSource);
 
+        drawRoute(mapview, this);
         // Añado localización
         MyLocationNewOverlay myLocNewOver = new MyLocationNewOverlay(this, mapview);
 
@@ -133,5 +141,35 @@ public class SeeActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Background
+    void drawRoute(MapView mapview, Context context) {
+        RoadManager roadManager = new OSRMRoadManager();
+        ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+
+        ArrayList<EPoint> points = MonitorActivity.ride.data.group.route.points;
+
+        if (points.size() > 1) {
+            Double latitude = Double.valueOf(points.get(0).location.latitude);
+            Double longitude = Double.valueOf(points.get(0).location.longitude);
+            GeoPoint startPoint = new GeoPoint(latitude, longitude);
+            GeoPoint endPoint;
+            Road road;
+            Polyline roadOverlay;
+            for (int i = 1; i < points.size(); i++) {
+                waypoints.add(startPoint);
+                Double latitudeF = Double.parseDouble(points.get(i).location.latitude);
+                Double longitudeF = Double.parseDouble(points.get(i).location.longitude);
+                endPoint = new GeoPoint(latitudeF, longitudeF);
+                waypoints.add(endPoint);
+                road = roadManager.getRoad(waypoints);
+                roadOverlay = RoadManager.buildRoadOverlay(road, context);
+                mapview.getOverlays().add(roadOverlay);
+
+                waypoints = new ArrayList<GeoPoint>();
+                startPoint = endPoint;
+            }
+        }
     }
 }
