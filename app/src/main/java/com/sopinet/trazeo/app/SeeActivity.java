@@ -2,6 +2,8 @@ package com.sopinet.trazeo.app;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.SimpleContent;
 import com.sopinet.trazeo.app.gson.EPoint;
 import com.sopinet.trazeo.app.gson.LastPoint;
+import com.sopinet.trazeo.app.gson.MasterRide;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
 
@@ -83,6 +86,7 @@ public class SeeActivity extends ActionBarActivity {
         mapview.getController().setZoom(14);
 
         loadLastPoint();
+        loadData();
     }
 
     @Background
@@ -141,6 +145,24 @@ public class SeeActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Background
+    void loadData() {
+        SimpleContent sc = new SimpleContent(this, "trazeo", 3);
+        String result = "";
+
+        try {
+            result = sc.postUrlContent(Var.URL_API_RIDE_DATA, data);
+        } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        }
+
+        final Type objectCPD = new TypeToken<MasterRide>(){}.getType();
+        MonitorActivity.ride = new Gson().fromJson(result, objectCPD);
+
+        //myPrefs.id_ride().put(createRide.data.id_ride);
+        //showData();
     }
 
     @Background
