@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
@@ -54,9 +55,9 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
         wl.acquire();
 
         /**
-        MyLocationNewOverlay myLoc = new MyLocationNewOverlay(context, null);
-        String lat = String.valueOf(myLoc.getMyLocation().getLatitude());
-        String lon = String.valueOf(myLoc.getMyLocation().getLongitude());
+         MyLocationNewOverlay myLoc = new MyLocationNewOverlay(context, null);
+         String lat = String.valueOf(myLoc.getMyLocation().getLatitude());
+         String lon = String.valueOf(myLoc.getMyLocation().getLongitude());
          **/
         String lat = "0";
         String lon = "0";
@@ -87,21 +88,8 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
 
                 String result = "";
 
-                try {
-                    result = sc.postUrlContent(this.url, this.data);
-                } catch (SimpleContent.ApiException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("TEMA", result);
-
-                final Type objectCPD = new TypeToken<LastPoint>(){}.getType();
-                LastPoint lastPoint = new Gson().fromJson(result, objectCPD);
-
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                if (lastPoint != null && lastPoint.data != null) {
-                   preferences.getString("end_ride", lastPoint.data.updated_at);
-                }
+                final SendPositionTask positionTask = new SendPositionTask(result, sc, this.url, this.data, context);
+                positionTask.execute("");
                 // Log.d("TEMA", "HORA ACTUAL: "+lastPoint.data.updated_at);
                 // TODO: Result puede ser nulo, deberíamos revisarlo
                 //Log.d("TEMA", result);
@@ -200,5 +188,59 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
         PendingIntent pi;
         pi = PendingIntent.getBroadcast(context, 0, i, FLAG_UPDATE_CURRENT);
         am.cancel(pi);
+    }
+
+    private class SendPositionTask extends AsyncTask<String, Integer, String> {
+
+        private PowerManager.WakeLock mWakeLock;
+        Context context;
+        String result;
+        SimpleContent sc;
+        String url;
+        String data;
+
+        public SendPositionTask(String result, SimpleContent sc, String url, String data, Context context) {
+            this.result = result;
+            this.sc = sc;
+            this.url = url;
+            this.data = data;
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(String... sUrl) {
+            try {
+                this.result = this.sc.postUrlContent(this.url, this.data);
+            } catch (SimpleContent.ApiException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            PowerManager pm = (PowerManager) context
+                    .getSystemService(Context.POWER_SERVICE);
+            mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                    getClass().getName());
+            mWakeLock.acquire();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result != null && !result.equals("")) {
+                final Type objectCPD = new TypeToken<LastPoint>() {
+                }.getType();
+                LastPoint lastPoint = new Gson().fromJson(result, objectCPD);
+
+                if (lastPoint != null && lastPoint.data != null) {
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("end_ride", lastPoint.data.updated_at);
+                    editor.commit();
+                }
+            }
+        }
     }
 }
