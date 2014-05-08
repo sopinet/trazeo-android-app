@@ -93,16 +93,17 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
                     e.printStackTrace();
                 }
 
-                Log.d("TEMA", result);
+                if (result != null && !result.equals("")) {
+                    final Type objectCPD = new TypeToken<LastPoint>() {
+                    }.getType();
+                    LastPoint lastPoint = new Gson().fromJson(result, objectCPD);
 
-                final Type objectCPD = new TypeToken<LastPoint>(){}.getType();
-                LastPoint lastPoint = new Gson().fromJson(result, objectCPD);
-
-                if (lastPoint != null && lastPoint.data != null) {
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("end_ride", lastPoint.data.updated_at);
-                    editor.commit();
+                    if (lastPoint != null && lastPoint.data != null) {
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("end_ride", lastPoint.data.updated_at);
+                        editor.commit();
+                    }
                 }
                 // Log.d("TEMA", "HORA ACTUAL: "+lastPoint.data.updated_at);
                 // TODO: Result puede ser nulo, deberíamos revisarlo
