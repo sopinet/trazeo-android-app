@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:icon="@drawable/mascota3"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Trazeobar" >
+        android:theme="@style/Theme.Trazeobar">
         <activity
             android:name="com.sopinet.trazeo.app.InitActivity_"
             android:configChanges="orientation|keyboardHidden|screenSize"

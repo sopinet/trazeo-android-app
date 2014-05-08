@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.NetworkOnMainThreadException;
 import android.os.PowerManager;
 import android.provider.AlarmClock;
 import android.support.v4.app.NotificationCompat;
