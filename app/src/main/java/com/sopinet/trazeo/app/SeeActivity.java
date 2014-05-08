@@ -2,10 +2,7 @@ package com.sopinet.trazeo.app;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -38,7 +35,6 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.logging.LogRecord;
 
 @EActivity(R.layout.activity_see)
 public class SeeActivity extends ActionBarActivity {
@@ -70,7 +66,8 @@ public class SeeActivity extends ActionBarActivity {
         mapview.setBuiltInZoomControls(true);
         mapview.setTileSource(tileSource);
 
-        drawRoute(mapview, this);
+        loadData();
+
         // Añado localización
         MyLocationNewOverlay myLocNewOver = new MyLocationNewOverlay(this, mapview);
 
@@ -86,7 +83,7 @@ public class SeeActivity extends ActionBarActivity {
         mapview.getController().setZoom(14);
 
         loadLastPoint();
-        loadData();
+
     }
 
     @Background
@@ -163,9 +160,10 @@ public class SeeActivity extends ActionBarActivity {
 
         //myPrefs.id_ride().put(createRide.data.id_ride);
         //showData();
+        drawRoute(mapview, this);
     }
 
-    @Background
+    @UiThread
     void drawRoute(MapView mapview, Context context) {
         RoadManager roadManager = new OSRMRoadManager();
         ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
