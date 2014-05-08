@@ -142,6 +142,7 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
         // TODO: Estas clases podrían ser dinámicas
         stackBuilder_go.addParentStack(MonitorActivity_.class);
         Intent intent_go = new Intent(context, MonitorActivity_.class);
+        intent_go.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |   Intent.FLAG_ACTIVITY_SINGLE_TOP);
         stackBuilder_go.addNextIntent(intent_go);
         PendingIntent resultPendingIntent_go =
                 stackBuilder_go.getPendingIntent(
@@ -162,6 +163,7 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
         TaskStackBuilder stackBuilder_cancel = TaskStackBuilder.create(context);
         stackBuilder_cancel.addParentStack(MonitorActivity_.class);
         Intent intent_cancel = new Intent(context, MonitorActivity_.class);
+        intent_cancel.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |   Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent_cancel.putExtra("cancel", "1");
         stackBuilder_cancel.addNextIntent(intent_cancel);
         PendingIntent resultPendingIntent_cancel =
