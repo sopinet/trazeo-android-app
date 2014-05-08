@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -45,7 +44,7 @@ public class SeeActivity extends ActionBarActivity {
 
     private String data;
     private String lastPointID = "0";
-    private boolean firstZoom = true;
+    private boolean firstLoad = true;
 
     @Pref
     MyPrefs_ myPrefs;
@@ -120,12 +119,15 @@ public class SeeActivity extends ActionBarActivity {
         Marker mPin = new Marker(mapview);
         mPin.setPosition(mGeoP);
 
-        mapview.getOverlays().add(mPin);
+        if(!firstLoad)
+            mapview.getOverlays().remove(0);
+
+        mapview.getOverlays().add(0, mPin);
         mapview.invalidate();
 
-        if(firstZoom) {
+        if(firstLoad) {
             mapview.getController().animateTo(mGeoP);
-            firstZoom = false;
+            firstLoad = false;
         }
     }
 
