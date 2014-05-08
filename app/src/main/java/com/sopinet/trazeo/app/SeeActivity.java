@@ -45,6 +45,7 @@ public class SeeActivity extends ActionBarActivity {
 
     private String data;
     private String lastPointID = "0";
+    private boolean firstZoom = true;
 
     @Pref
     MyPrefs_ myPrefs;
@@ -121,6 +122,11 @@ public class SeeActivity extends ActionBarActivity {
 
         mapview.getOverlays().add(mPin);
         mapview.invalidate();
+
+        if(firstZoom) {
+            mapview.getController().animateTo(mGeoP);
+            firstZoom = false;
+        }
     }
 
 
