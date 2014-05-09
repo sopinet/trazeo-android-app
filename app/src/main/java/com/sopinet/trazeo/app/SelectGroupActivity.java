@@ -126,6 +126,11 @@ public class SelectGroupActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
+        goGroup(result, hasride);
+    }
+
+    @UiThread
+    void goGroup(String result, String hasride){
         Log.d("TEMA", result);
 
         final Type objectCPD = new TypeToken<CreateRide>(){}.getType();
@@ -149,12 +154,10 @@ public class SelectGroupActivity extends ActionBarActivity {
         }
     }
 
-    @UiThread
     void goActivityMonitor() {
         startActivity(new Intent(SelectGroupActivity.this, MonitorActivity_.class));
     }
 
-    @UiThread
     void goActivitySee() {
         startActivity(new Intent(SelectGroupActivity.this, SeeActivity_.class));
     }

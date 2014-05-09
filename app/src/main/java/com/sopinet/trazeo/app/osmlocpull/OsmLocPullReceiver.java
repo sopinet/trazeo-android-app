@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,15 +37,39 @@ import java.lang.reflect.Type;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
 // http://stackoverflow.com/questions/4459058/alarm-manager-example
-public class OsmLocPullReceiver extends BroadcastReceiver {
+public class OsmLocPullReceiver extends BroadcastReceiver{
     // public MyLoc myLoc;
     public String url;
     public String data;
     public static NotificationManager notificationManager = null;
     public static NotificationCompat.Builder mBuilder = null;
+    Location location;
 
     public OsmLocPullReceiver() {
     }
+
+    /*LocationListener locationListener = new LocationListener(){
+
+        @Override
+        public void onLocationChanged(Location location) {
+            updateLocation(location);
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+            Log.d("GPSListener", "GPS ACTIVADO");
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+            Log.d("GPSListener", "GPS DESACTIVADO");
+        }
+    };*/
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -64,6 +89,7 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
 
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
         if (location != null) {
             lat = String.valueOf(location.getLatitude());
             lon = String.valueOf(location.getLongitude());
@@ -190,6 +216,10 @@ public class OsmLocPullReceiver extends BroadcastReceiver {
         PendingIntent pi;
         pi = PendingIntent.getBroadcast(context, 0, i, FLAG_UPDATE_CURRENT);
         am.cancel(pi);
+    }
+
+    public void updateLocation(Location loc){
+        this.location = loc;
     }
 
     private class SendPositionTask extends AsyncTask<String, Integer, String> {
