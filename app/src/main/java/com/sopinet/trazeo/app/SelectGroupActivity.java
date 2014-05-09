@@ -1,7 +1,10 @@
 package com.sopinet.trazeo.app;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -114,10 +117,22 @@ public class SelectGroupActivity extends ActionBarActivity {
 
     @Background
     void createRide(String l, String hasride) {
+
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        String lat = "";
+        String lon = "";
+        if (location != null) {
+            lat = String.valueOf(location.getLatitude());
+            lon = String.valueOf(location.getLongitude());
+        }
+
         SimpleContent sc = new SimpleContent(this, "trazeo", 1);
         String data = "email="+myPrefs.email().get();
         data += "&pass="+myPrefs.pass().get();
         data += "&id_group="+l;
+        data += "&latitude="+lat;
+        data += "&longitude="+lon;
         String result = "";
 
         try {

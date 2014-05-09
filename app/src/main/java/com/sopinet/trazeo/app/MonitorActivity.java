@@ -217,7 +217,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
             pi = PendingIntent.getBroadcast(this, 0, i, FLAG_UPDATE_CURRENT);
             am.cancel(pi);
 
-            // Eliminamos las notificaciones
+            // Eliminamos las ficaciones
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(200);
 
