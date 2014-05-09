@@ -70,13 +70,13 @@ public class MonitorChildFragment extends Fragment {
                     return item.nick;
                 }
             });
-        dict.addStringField(R.id.descriptionCHILD,
+        /*dict.addStringField(R.id.descriptionCHILD,
             new StringExtractor<EChild>() {
                 @Override
                 public String getStringValue(EChild item, int position) {
                     return item.gender + " - " + item.date_birth;
                 }
-            });
+            }); */
 
         // Creamos adaptador
         //FunDapter<EChild> adapter = new FunDapter<EChild>(getActivity(),

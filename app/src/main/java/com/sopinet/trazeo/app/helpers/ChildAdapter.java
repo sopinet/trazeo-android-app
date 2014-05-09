@@ -48,7 +48,7 @@ public class ChildAdapter extends ArrayAdapter<EChild> {
 
             holder = new ViewHolder();
             holder.title = (TextView) convertView.findViewById(R.id.titleCHILD);
-            holder.description = (TextView) convertView.findViewById(R.id.descriptionCHILD);
+            //holder.description = (TextView) convertView.findViewById(R.id.descriptionCHILD);
             holder.check = (CheckBox) convertView.findViewById(R.id.checkCHILD);
             convertView.setTag(holder);
 
@@ -73,7 +73,7 @@ public class ChildAdapter extends ArrayAdapter<EChild> {
 
         EChild echild = echildList.get(position);
         holder.title.setText(echild.nick);
-        holder.description.setText(echild.date_birth);
+        //holder.description.setText(echild.date_birth);
         holder.check.setChecked(echild.isSelected());
         holder.check.setTag(echild);
 
