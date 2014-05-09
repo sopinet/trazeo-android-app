@@ -167,8 +167,10 @@ public class OsmLocPullReceiver extends BroadcastReceiver{
         //mBuilder.setNumber(12);
         //mBuilder.setProgress(100, 12, false);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
         String end_ride = preferences.getString("end_ride", "0");
-        mBuilder.setContentText("Se encuentra en una ruta ACTIVA "+end_ride);
+        //mBuilder.setContentText("Paseo Activo"+end_ride);
+        mBuilder.setContentText("Paseo Activo");
 
         // Intent para CANCELAR Paseo
         TaskStackBuilder stackBuilder_cancel = TaskStackBuilder.create(context);

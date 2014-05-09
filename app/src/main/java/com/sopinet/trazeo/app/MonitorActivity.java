@@ -393,8 +393,6 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
                 Log.d("GPSLOG", "MonitorActivity, sendtofrag: "+data);
                 return MonitorMapFragment.newInstance(data);
             } else if (position == 1) {
-                return MonitorDataFragment.newInstance();
-            } else if (position == 2) {
                 return MonitorChildFragment.newInstance(data);
             }
 
@@ -404,7 +402,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
 
         @Override
@@ -414,8 +412,6 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
                 case 0:
                     return getString(R.string.title_fragment_map).toUpperCase(l);
                 case 1:
-                    return getString(R.string.title_fragment_data).toUpperCase(l);
-                case 2:
                     return getString(R.string.title_fragment_children).toUpperCase(l);
             }
             return null;
