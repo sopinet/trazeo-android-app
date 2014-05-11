@@ -2,6 +2,7 @@ package com.sopinet.trazeo.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.sopinet.trazeo.app.gson.EEvent;
 import com.sopinet.trazeo.app.gson.EPoint;
+import com.sopinet.trazeo.app.helpers.MyLocationNewOverlaySub;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
 import com.sopinet.trazeo.app.osmlocpull.OsmLocPullService;
@@ -20,6 +22,7 @@ import com.sopinet.trazeo.app.osmlocpull.OsmLocPullService;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.apache.log4j.lf5.util.Resource;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
@@ -30,6 +33,7 @@ import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -79,6 +83,8 @@ public class MonitorMapFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_monitor_map, container, false);
+
+
 
         final Context context = getActivity();
         final Context applicationContext = context.getApplicationContext();
