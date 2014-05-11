@@ -19,6 +19,12 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone"/>
 
+    <TextView
+        android:text="Ingrese su Email y Contraseña de acceso para Trazeo. Si no dispone de una debe registrarse."
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
@@ -90,11 +96,21 @@
 
                 <Button
                     android:id="@+id/email_sign_in_button"
+                    android:background="#99FF99"
                     style="?android:textAppearanceSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/action_sign_in"
+                    android:textStyle="bold"/>
+
+                <Button
+                    android:id="@+id/register"
+                    style="?android:textAppearanceSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/action_register"
                     android:textStyle="bold"/>
 
             </LinearLayout>

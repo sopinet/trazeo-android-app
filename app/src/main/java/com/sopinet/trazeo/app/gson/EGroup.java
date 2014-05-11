@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class EGroup {
     public String id;
     public ArrayList<EChild> childs;
-    public ERoute route;
+    public ERoute route = null;
     public String visibility;
     public String has_ride;
     public String name;

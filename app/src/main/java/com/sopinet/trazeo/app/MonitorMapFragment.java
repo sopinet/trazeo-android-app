@@ -180,27 +180,29 @@ public class MonitorMapFragment extends Fragment {
         RoadManager roadManager = new OSRMRoadManager();
         ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
 
-        ArrayList<EPoint> points = MonitorActivity.ride.data.group.route.points;
+        if (MonitorActivity.ride.data.group.route != null) { // Cuando no hay ruta establecida
+            ArrayList<EPoint> points = MonitorActivity.ride.data.group.route.points;
 
-        if (points.size() > 1) {
-            Double latitude = Double.valueOf(points.get(0).location.latitude);
-            Double longitude = Double.valueOf(points.get(0).location.longitude);
-            GeoPoint startPoint = new GeoPoint(latitude, longitude);
-            GeoPoint endPoint;
-            Road road;
-            Polyline roadOverlay;
-            for (int i = 1; i < points.size(); i++) {
-                waypoints.add(startPoint);
-                Double latitudeF = Double.parseDouble(points.get(i).location.latitude);
-                Double longitudeF = Double.parseDouble(points.get(i).location.longitude);
-                endPoint = new GeoPoint(latitudeF, longitudeF);
-                waypoints.add(endPoint);
-                road = roadManager.getRoad(waypoints);
-                roadOverlay = RoadManager.buildRoadOverlay(road, context);
-                mapview.getOverlays().add(roadOverlay);
+            if (points.size() > 1) {
+                Double latitude = Double.valueOf(points.get(0).location.latitude);
+                Double longitude = Double.valueOf(points.get(0).location.longitude);
+                GeoPoint startPoint = new GeoPoint(latitude, longitude);
+                GeoPoint endPoint;
+                Road road;
+                Polyline roadOverlay;
+                for (int i = 1; i < points.size(); i++) {
+                    waypoints.add(startPoint);
+                    Double latitudeF = Double.parseDouble(points.get(i).location.latitude);
+                    Double longitudeF = Double.parseDouble(points.get(i).location.longitude);
+                    endPoint = new GeoPoint(latitudeF, longitudeF);
+                    waypoints.add(endPoint);
+                    road = roadManager.getRoad(waypoints);
+                    roadOverlay = RoadManager.buildRoadOverlay(road, context);
+                    mapview.getOverlays().add(roadOverlay);
 
-                waypoints = new ArrayList<GeoPoint>();
-                startPoint = endPoint;
+                    waypoints = new ArrayList<GeoPoint>();
+                    startPoint = endPoint;
+                }
             }
         }
     }
