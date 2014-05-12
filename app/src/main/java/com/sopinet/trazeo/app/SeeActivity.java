@@ -1,13 +1,16 @@
 package com.sopinet.trazeo.app;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -66,6 +69,7 @@ public class SeeActivity extends ActionBarActivity {
 
     @AfterViews
     void init() {
+        configureBar();
         data = "id_ride="+myPrefs.id_ride().get()+"&email="+myPrefs.email().get()+"&pass="+myPrefs.pass().get();
 
         String tiles[] = new String[1];
@@ -183,14 +187,15 @@ public class SeeActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                this.onBackPressed();
+                break;
+            case R.id.action_settings:
+                break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Background
@@ -242,6 +247,15 @@ public class SeeActivity extends ActionBarActivity {
                 }
             }
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private void configureBar() {
+        getActionBar().setDisplayShowHomeEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(true);
+        getActionBar().setDisplayUseLogoEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

@@ -196,8 +196,15 @@ public class SelectGroupActivity extends ActionBarActivity {
             myPrefs.user_id().put("");
             startActivity(new Intent(this, LoginSimpleActivity_.class));
             return true;
+        } else if (id == R.id.refresh){
+            refreshGroups();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void refreshGroups(){
+        startActivity(new Intent(this, SelectGroupActivity_.class));
+        finish();
     }
 
 }

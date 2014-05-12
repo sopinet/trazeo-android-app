@@ -3,6 +3,7 @@ package com.sopinet.trazeo.app;
 import java.lang.reflect.Type;
 import java.util.Locale;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -12,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -92,6 +94,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     @AfterViews
     void init() {
+        this.configureBar();
         data = "id_ride="+myPrefs.id_ride().get()+"&email="+myPrefs.email().get()+"&pass="+myPrefs.pass().get();
 
 
@@ -344,20 +347,20 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_close) {
-            showCancelDialog();
+        switch (item.getItemId())
+        {
+            case R.id.action_close:
+            case android.R.id.home:
+                showCancelDialog();
+                break;
+            case R.id.action_disconnect:
+                showDisconnectDialog();
+                break;
+            case R.id.action_report:
+                showReportDialog();
+                break;
         }
-        else if (id == R.id.action_disconnect) {
-            showDisconnectDialog();
-        }
-        else if (id == R.id.action_report) {
-            showReportDialog();
-        }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -373,6 +376,15 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private void configureBar() {
+        getActionBar().setDisplayShowHomeEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(true);
+        getActionBar().setDisplayUseLogoEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
