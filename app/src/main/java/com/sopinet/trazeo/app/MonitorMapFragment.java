@@ -154,7 +154,6 @@ public class MonitorMapFragment extends Fragment {
             }
         }
          **/
-
         // Añado localización
         MyLocationNewOverlay myLocNewOver = new MyLocationNewOverlay(context, mapview);
 
@@ -208,7 +207,31 @@ public class MonitorMapFragment extends Fragment {
     }
 
     @Background
-    void drawRide() {
-
+    void drawRide(MapView mapview, Context context) {
+        RoadManager roadManager = new OSRMRoadManager();
+        ArrayList<EEvent> events = MonitorActivity.ride.data.events;
+        ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+        GeoPoint startPoint = null;
+        GeoPoint endPoint = null;
+        Road road;
+        Polyline roadOverlay;
+        for(int o = 0; o < events.size();o++) {
+            startPoint = endPoint;
+            if (events.get(o).action.equals("point")) {
+                String[] coords = events.get(o).data.split(",");
+                Double latitudeI = Double.parseDouble(coords[0].replace("(", ""));
+                Double longitudeI = Double.parseDouble(coords[1].replace(")", ""));
+                endPoint = new GeoPoint(latitudeI, longitudeI);
+                if (startPoint != null) {
+                    waypoints = new ArrayList<GeoPoint>();
+                    waypoints.add(startPoint);
+                    waypoints.add(endPoint);
+                    road = roadManager.getRoad(waypoints);
+                    roadOverlay = RoadManager.buildRoadOverlay(road, context);
+                    roadOverlay.setColor(Color.GREEN);
+                    mapview.getOverlays().add(roadOverlay);
+                }
+            }
+        }
     }
 }

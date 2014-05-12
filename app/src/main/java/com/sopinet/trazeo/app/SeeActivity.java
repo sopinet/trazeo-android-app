@@ -1,6 +1,8 @@
 package com.sopinet.trazeo.app;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -47,6 +49,11 @@ public class SeeActivity extends ActionBarActivity {
     private String lastPointID = "0";
     private boolean firstLoad = true;
 
+    private boolean isStartPoint = true;
+    ArrayList<GeoPoint> waypoints;
+    GeoPoint startPoint = null;
+    GeoPoint endPoint = null;
+
     @Pref
     MyPrefs_ myPrefs;
 
@@ -64,6 +71,7 @@ public class SeeActivity extends ActionBarActivity {
         String tiles[] = new String[1];
         tiles[0] = "http://tile.openstreetmap.org/";
         final ITileSource tileSource = new XYTileSource("Mapnik", ResourceProxy.string.mapnik, 1, 18, 256, ".png", tiles);
+        waypoints = new ArrayList<GeoPoint>();
 
         mapview.setBuiltInZoomControls(true);
         mapview.setTileSource(tileSource);
@@ -117,18 +125,46 @@ public class SeeActivity extends ActionBarActivity {
 
     @UiThread
     void showLastPoint(LastPoint lastPoint) {
+        RoadManager roadManager = new OSRMRoadManager();
+        Polyline roadOverlay;
+
         Double latitudeI = Double.parseDouble(lastPoint.data.location.latitude);
         Double longitudeI = Double.parseDouble(lastPoint.data.location.longitude);
 
         GeoPoint mGeoP = new GeoPoint(latitudeI, longitudeI);
+        if(isStartPoint) {
+            startPoint = new GeoPoint(latitudeI, longitudeI);
+            isStartPoint = false;
+        } else {
+            endPoint = new GeoPoint(latitudeI, longitudeI);
+            isStartPoint = true;
+        }
 
         Marker mPin = new Marker(mapview);
         mPin.setPosition(mGeoP);
+        mPin.setIcon(getResources().getDrawable(R.drawable.mascota_arrow));
 
         if(!firstLoad)
             mapview.getOverlays().remove(0);
 
         mapview.getOverlays().add(0, mPin);
+
+        if(isStartPoint){
+            Road road;
+            waypoints = new ArrayList<GeoPoint>();
+            waypoints.add(startPoint);
+            Log.d("STARTPOINT", "STARTPOINT: " + startPoint.getLatitude());
+            waypoints.add(endPoint);
+            Log.d("ENDPOINT", "ENDPOINT: " + endPoint.getLatitude());
+            road = roadManager.getRoad(waypoints);
+            roadOverlay = RoadManager.buildRoadOverlay(road, this);
+            roadOverlay.setColor(this.getResources().getColor(R.color.green_trazeo_2));
+            roadOverlay.getPaint().setPathEffect(new DashPathEffect(new float[] {10,10}, 5));
+            mapview.getOverlays().add(roadOverlay);
+
+            waypoints = new ArrayList<GeoPoint>();
+            startPoint = endPoint;
+        }
         mapview.invalidate();
 
         if(firstLoad) {

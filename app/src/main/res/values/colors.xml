@@ -1,5 +1,8 @@
 <resources>
 
     <color name="black_overlay">#66000000</color>
+    <color name="green_trazeo_2">#cbca20</color>
+    <color name="green_trazeo_1">#a8ba2e</color>
+    <color name="green_trazeo_0">#82a939</color>
 
 </resources>
