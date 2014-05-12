@@ -5,31 +5,25 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.test.UiThreadTest;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.ami.fundapter.BindDictionary;
-import com.ami.fundapter.FunDapter;
 import com.ami.fundapter.extractors.StringExtractor;
-import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
-import com.fortysevendeg.swipelistview.SwipeListView;
 import com.sopinet.android.nethelper.SimpleContent;
 import com.sopinet.trazeo.app.gson.EChild;
 import com.sopinet.trazeo.app.helpers.ChildAdapter;
-import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 @EFragment(R.layout.fragment_monitor_child)
 public class MonitorChildFragment extends Fragment {
@@ -84,7 +78,7 @@ public class MonitorChildFragment extends Fragment {
 
         // Creamos adaptador
         ChildAdapter adapter = new ChildAdapter(getActivity(),
-                R.layout.child_item, MonitorActivity.ride.data.group.childs);
+                R.layout.child_item, MonitorActivity.ride.data.group.childs, this);
 
         // Asignamos el adaptador a la vista
         ListView listChildren = (ListView)root.findViewById(R.id.listChildren);
@@ -94,7 +88,7 @@ public class MonitorChildFragment extends Fragment {
         listChildren.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                EChild echild = (EChild) adapterView.getItemAtPosition(position);
+                final EChild echild = (EChild) adapterView.getItemAtPosition(position);
                 CheckBox checkbox = (CheckBox) view.findViewById(R.id.checkCHILD);
                 checkbox.setChecked(!checkbox.isChecked());
                 echild.setSelected(checkbox.isChecked());
@@ -107,7 +101,7 @@ public class MonitorChildFragment extends Fragment {
     }
 
     @Background
-    void changeChild(EChild echild) {
+    public void changeChild(EChild echild) {
         String url = "";
         if (echild.isSelected()) {
             url = Var.URL_API_CHILDIN;

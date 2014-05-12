@@ -200,7 +200,7 @@ public class SeeActivity extends ActionBarActivity {
 
     @Background
     void loadData() {
-        SimpleContent sc = new SimpleContent(this, "trazeo", 3);
+        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
         String result = "";
 
         try {

@@ -8,9 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sopinet.trazeo.app.MonitorActivity;
+import com.sopinet.trazeo.app.MonitorChildFragment;
 import com.sopinet.trazeo.app.R;
 import com.sopinet.trazeo.app.gson.EChild;
 
@@ -20,13 +23,15 @@ public class ChildAdapter extends ArrayAdapter<EChild> {
 
     private ArrayList<EChild> echildList;
     private Context context;
+    private MonitorChildFragment childFragment;
 
     public ChildAdapter(Context context, int textViewResourceId,
-                           ArrayList<EChild> countryList) {
+                           ArrayList<EChild> countryList, MonitorChildFragment childFragment) {
         super(context, textViewResourceId, countryList);
         this.echildList = new ArrayList<EChild>();
         this.echildList.addAll(countryList);
         this.context = context;
+        this.childFragment = childFragment;
     }
 
     private class ViewHolder {
@@ -36,7 +41,7 @@ public class ChildAdapter extends ArrayAdapter<EChild> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder = null;
         Log.v("ConvertView", String.valueOf(position));
@@ -71,11 +76,20 @@ public class ChildAdapter extends ArrayAdapter<EChild> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        EChild echild = echildList.get(position);
+        final EChild echild = echildList.get(position);
         holder.title.setText(echild.nick);
         //holder.description.setText(echild.date_birth);
         holder.check.setChecked(echild.isSelected());
         holder.check.setTag(echild);
+
+        CheckBox checkbox = (CheckBox) convertView.findViewById(R.id.checkCHILD);
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                echild.setSelected(b);
+                childFragment.changeChild(echild);
+            }
+        });
 
         return convertView;
 
