@@ -104,8 +104,10 @@ public class MonitorChildFragment extends Fragment {
     public void changeChild(EChild echild) {
         String url = "";
         if (echild.isSelected()) {
+            echild.setSelected(true);
             url = Var.URL_API_CHILDIN;
         } else {
+            echild.setSelected(false);
             url = Var.URL_API_CHILDOUT;
         }
 

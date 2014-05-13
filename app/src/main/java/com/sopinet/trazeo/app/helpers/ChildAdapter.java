@@ -6,11 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sopinet.trazeo.app.MonitorActivity;
 import com.sopinet.trazeo.app.MonitorChildFragment;
@@ -82,8 +80,7 @@ public class ChildAdapter extends ArrayAdapter<EChild> {
         holder.check.setChecked(echild.isSelected());
         holder.check.setTag(echild);
 
-        CheckBox checkbox = (CheckBox) convertView.findViewById(R.id.checkCHILD);
-        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 echild.setSelected(b);
