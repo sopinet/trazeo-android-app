@@ -6,12 +6,15 @@ public class EChild {
     public String date_birth;
     public String visibility;
     public String gender;
-    boolean selected = false;
+    public String selected = "-";
 
     public boolean isSelected() {
-        return selected;
+        if(this.selected.equals("true"))
+            return true;
+        else
+            return false;
     }
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    public void setSelected(Boolean selected) {
+        this.selected = selected.toString();
     }
 }
