@@ -1,6 +1,9 @@
 package com.sopinet.trazeo.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.content.Intent;
 import android.widget.ImageView;

@@ -1,7 +1,9 @@
 package com.sopinet.trazeo.app;
 
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
@@ -52,6 +54,9 @@ public class SelectGroupActivity extends ActionBarActivity {
     @AfterViews
     void init() {
         loadData();
+        final LocationManager manager = (LocationManager) getSystemService( this.LOCATION_SERVICE );
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) )
+            buildAlertMessageNoGps();
     }
 
     @Background
@@ -205,6 +210,24 @@ public class SelectGroupActivity extends ActionBarActivity {
     public void refreshGroups(){
         startActivity(new Intent(this, SelectGroupActivity_.class));
         finish();
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("El GPS de su dispositivo parece estar desactivado, ¿Desea activarlo ahora?")
+                .setCancelable(false)
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
 }
