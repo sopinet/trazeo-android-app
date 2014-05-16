@@ -8,6 +8,7 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -92,16 +93,21 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     SimpleDialogFragment wait;
 
+    ProgressDialog pdialog;
+
     @AfterViews
     void init() {
         this.configureBar();
         data = "id_ride="+myPrefs.id_ride().get()+"&email="+myPrefs.email().get()+"&pass="+myPrefs.pass().get();
 
-
-
         if (cancel != null && cancel.equals("1")) {
             showCancelDialog();
         }
+        pdialog = new ProgressDialog(this);
+        pdialog.setCancelable(false);
+        pdialog.setMessage("Cargando...");
+        pdialog.show();
+
         loadData();
     }
 
@@ -334,6 +340,8 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+
+        pdialog.cancel();
 
     }
 
