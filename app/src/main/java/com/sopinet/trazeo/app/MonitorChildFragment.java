@@ -5,6 +5,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,8 @@ import org.androidannotations.annotations.UiThread;
 public class MonitorChildFragment extends Fragment {
     private static final String Adata = "mdata";
     private String mdata;
+    ListView listChildren;
+    View root;
 
     // TODO: Rename and change types and number of parameters
     public static MonitorChildFragment newInstance(String data) {
@@ -38,6 +41,7 @@ public class MonitorChildFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     public MonitorChildFragment() {
         // Required empty public constructor
     }
@@ -53,17 +57,18 @@ public class MonitorChildFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_monitor_child, container, false);
+        root = inflater.inflate(R.layout.fragment_monitor_child, container, false);
 
         // Creamos diccionario
         BindDictionary<EChild> dict = new BindDictionary<EChild>();
         dict.addStringField(R.id.titleCHILD,
-            new StringExtractor<EChild>() {
-                @Override
-                public String getStringValue(EChild item, int position) {
-                    return item.nick;
+                new StringExtractor<EChild>() {
+                    @Override
+                    public String getStringValue(EChild item, int position) {
+                        return item.nick;
+                    }
                 }
-            });
+        );
         /*dict.addStringField(R.id.descriptionCHILD,
             new StringExtractor<EChild>() {
                 @Override
@@ -81,7 +86,7 @@ public class MonitorChildFragment extends Fragment {
                 R.layout.child_item, MonitorActivity.ride.data.group.childs, this);
 
         // Asignamos el adaptador a la vista
-        ListView listChildren = (ListView)root.findViewById(R.id.listChildren);
+        listChildren = (ListView) root.findViewById(R.id.listChildren);
 
         listChildren.setAdapter(adapter);
 
@@ -121,9 +126,9 @@ public class MonitorChildFragment extends Fragment {
         }
 
         String data = mdata;
-        data += "&id_child="+echild.id;
-        data += "&latitude="+lat;
-        data += "&longitude="+lon;
+        data += "&id_child=" + echild.id;
+        data += "&latitude=" + lat;
+        data += "&longitude=" + lon;
 
         String result = "";
         SimpleContent sc = new SimpleContent(this.getActivity(), "trazeo", 3);
@@ -140,10 +145,11 @@ public class MonitorChildFragment extends Fragment {
     void changeChildShow(EChild echild) {
         String msg = "";
         if (echild.isSelected()) {
-            msg = "("+echild.nick+")"+" Niño registrado en este Paseo";
+            msg = "(" + echild.nick + ")" + " Niño registrado en este Paseo";
         } else {
-            msg = "("+echild.nick+")"+" Niño desvinculado del Paseo";
+            msg = "(" + echild.nick + ")" + " Niño desvinculado del Paseo";
         }
         Toast.makeText(this.getActivity(), msg, Toast.LENGTH_LONG).show();
     }
+
 }

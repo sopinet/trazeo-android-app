@@ -80,10 +80,13 @@ public class ChildAdapter extends ArrayAdapter<EChild> {
         holder.check.setChecked(echild.isSelected());
         holder.check.setTag(echild);
 
-        holder.check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.check.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                echild.setSelected(b);
+            public void onClick(View view) {
+                if(echild.isSelected())
+                    echild.setSelected(false);
+                else
+                    echild.setSelected(true);
                 childFragment.changeChild(echild);
             }
         });
