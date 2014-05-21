@@ -3,7 +3,7 @@
     package="com.sopinet.trazeo.app" >
 
     <application
-        android:debuggable="false"
+        android:debuggable="true"
         android:allowBackup="true"
         android:icon="@drawable/mascota3"
         android:label="@string/app_name"

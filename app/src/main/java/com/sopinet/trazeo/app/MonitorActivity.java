@@ -11,8 +11,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -90,9 +95,28 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     ProgressDialog pdialog;
 
+    int commentCount;
+    boolean firstLoad = true;
+
+    @Extra
+    boolean fromComment;
+
+    public static NotificationManager notificationManager = null;
+    public static NotificationCompat.Builder mBuilder = null;
+
+    Handler handler = new Handler();
+    Runnable runnable = new Runnable() {
+        public void run() {
+            checkNewComments();
+        }
+    };
+
     @AfterViews
     void init() {
         this.configureBar();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(201);
+
         data = "id_ride=" + myPrefs.id_ride().get() + "&email=" + myPrefs.email().get() + "&pass=" + myPrefs.pass().get();
         data_wall = "id_group=" + myPrefs.id_group().get() + "&email=" + myPrefs.email().get() + "&pass=" + myPrefs.pass().get();
 
@@ -268,6 +292,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
             // Eliminamos las ficaciones
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(200);
+            notificationManager.cancel(201);
 
             // Deslogueamos (si es necesario)
             if (requestCode == 2) {
@@ -390,6 +415,72 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
         pdialog.cancel();
 
+        if(fromComment)
+            mViewPager.setCurrentItem(2);
+
+        checkNewComments();
+    }
+
+    @Background
+    public void checkNewComments(){
+        SimpleContent sc = new SimpleContent(this, "trazeo", 3);
+        String result_wall = "";
+
+        try {
+            result_wall = sc.postUrlContent(Var.URL_API_WALL, data_wall);
+        } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        }
+
+        final Type objectCPDWall = new TypeToken<MasterWall>() {
+        }.getType();
+
+        MonitorActivity.wall = new Gson().fromJson(result_wall, objectCPDWall);
+        showNotification();
+    }
+
+    @UiThread
+    public void showNotification(){
+        if(!firstLoad){
+            if(MonitorActivity.wall.data.size() > commentCount)
+                createNotification(this);
+        }
+
+        commentCount = MonitorActivity.wall.data.size();
+
+        if(firstLoad)
+            firstLoad = false;
+
+        handler.postDelayed(runnable, 5000);
+    }
+
+    public void createNotification(Context context)
+    {
+        mBuilder = new NotificationCompat.Builder(context);
+
+        TaskStackBuilder stackBuilder_go = TaskStackBuilder.create(context);
+
+        // TODO: Estas clases podrían ser dinámicas
+        stackBuilder_go.addParentStack(MonitorActivity_.class);
+        Intent intent_go = new Intent(context, MonitorActivity_.class);
+        intent_go.putExtra("fromComment", true);
+        intent_go.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |   Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        stackBuilder_go.addNextIntent(intent_go);
+        PendingIntent resultPendingIntent_go =
+                stackBuilder_go.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent_go);
+
+        mBuilder.setContentTitle("Trazeo");
+        mBuilder.setSmallIcon(R.drawable.mascota3);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        mBuilder.setContentText("Nuevo comentario de grupo");
+
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(201, mBuilder.build());
     }
 
     @Override

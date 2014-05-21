@@ -3,12 +3,9 @@ package com.sopinet.trazeo.app;
 import android.content.Context;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -60,6 +57,12 @@ public class SeeMapFragment extends Fragment {
 
     @Pref
     MyPrefs_ myPrefs;
+
+    public Runnable runnable = new Runnable() {
+        public void run() {
+            loadLastPoint();
+        }
+    };
 
     View root;
 
@@ -124,7 +127,7 @@ public class SeeMapFragment extends Fragment {
         }
 
         // Pedir otro último PUNTO
-        ((SeeActivity)getActivity()).handler.postDelayed(((SeeActivity)getActivity()).runnable, 1000);
+        ((SeeActivity)getActivity()).handler.postDelayed(runnable, 1000);
     }
 
     @UiThread

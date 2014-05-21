@@ -1,16 +1,12 @@
 package com.sopinet.trazeo.app;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -60,8 +56,8 @@ public class SeeActivity extends ActionBarActivity {
     @Pref
     MyPrefs_ myPrefs;
 
-    public Handler handler = new Handler();
-    public Runnable runnable = new Runnable() {
+    Handler handler = new Handler();
+    Runnable runnable = new Runnable() {
         public void run() {
             loadLastPoint();
         }
