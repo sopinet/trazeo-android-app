@@ -146,6 +146,7 @@ public class SelectGroupActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
+        myPrefs.id_group().put(l);
         goGroup(result, hasride);
     }
 

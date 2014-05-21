@@ -3,7 +3,6 @@ package com.sopinet.trazeo.app;
 import java.lang.reflect.Type;
 import java.util.Locale;
 
-import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -14,35 +13,29 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.SimpleContent;
-import com.sopinet.trazeo.app.gson.CreateRide;
 import com.sopinet.trazeo.app.gson.MasterRide;
+import com.sopinet.trazeo.app.gson.MasterWall;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
 import com.sopinet.trazeo.app.osmlocpull.OsmLocPullReceiver;
-import com.sopinet.trazeo.app.osmlocpull.OsmLocPullService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -88,8 +81,10 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     MyPrefs_ myPrefs;
 
     public static MasterRide ride;
+    public static MasterWall wall;
 
     String data = null;
+    String data_wall = null;
 
     SimpleDialogFragment wait;
 
@@ -98,7 +93,8 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     @AfterViews
     void init() {
         this.configureBar();
-        data = "id_ride="+myPrefs.id_ride().get()+"&email="+myPrefs.email().get()+"&pass="+myPrefs.pass().get();
+        data = "id_ride=" + myPrefs.id_ride().get() + "&email=" + myPrefs.email().get() + "&pass=" + myPrefs.pass().get();
+        data_wall = "id_group=" + myPrefs.id_group().get() + "&email=" + myPrefs.email().get() + "&pass=" + myPrefs.pass().get();
 
         if (cancel != null && cancel.equals("1")) {
             showCancelDialog();
@@ -109,6 +105,48 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         pdialog.show();
 
         loadData();
+    }
+
+
+    void showNewCommentDialog() {
+        final EditText input = new EditText(this);
+        new AlertDialog.Builder(this)
+                .setTitle("Trazeo: Escribir nuevo comentario")
+                .setView(input)
+                .setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String comment = input.getText().toString();
+                        if(!comment.equals("")) {
+                            Toast.makeText(getBaseContext(), "Enviando comentario...", Toast.LENGTH_LONG).show();
+                            createComment(comment);
+                        }else {
+                            Toast.makeText(getBaseContext(), "El mensaje no puede estar vacío", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        }).show();
+    }
+
+    @Background
+    void createComment(String comment) {
+        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
+        String sdata = data = "id_group=" + myPrefs.id_group().get() + "&email=" + myPrefs.email().get() + "&pass=" + myPrefs.pass().get() + "&text=" + comment;
+        String result = "";
+        try {
+            result = sc.postUrlContent(Var.URL_API_WALL_NEW, sdata);
+        } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        }
+        commentOk();
+    }
+
+    @UiThread
+    void commentOk(){
+        Intent i = new Intent(this, MonitorActivity_.class);
+        i.putExtra("cancel", cancel);
+        startActivity(i);
     }
 
     @UiThread
@@ -146,7 +184,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
                 .setCancelable(false)
                 .setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 // TODO: ENVIAR LA INFO AL SERVIDOR
                                 // get user input and set it to result
                                 // edit text
@@ -155,7 +193,8 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
                                 showWaitDialog();
                                 sendReport(userInput.getText().toString());
                             }
-                        })
+                        }
+                )
                 .setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -175,7 +214,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     void sendReport(String text) {
         SimpleContent sc = new SimpleContent(this, "trazeo", 0);
         String sdata = data;
-        sdata += "&text="+text;
+        sdata += "&text=" + text;
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -186,8 +225,8 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
             lon = String.valueOf(location.getLongitude());
         }
 
-        sdata += "&latitude="+lat;
-        sdata += "&longitude="+lon;
+        sdata += "&latitude=" + lat;
+        sdata += "&longitude=" + lon;
 
         String result = "";
         try {
@@ -213,9 +252,9 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
             // stopService(SelectGroupActivity.intentGPS);  // TODO: No estoy seguro de que esto sea necesario
 
             // Cancelamos la ALARMA
-            String data_service = "email="+myPrefs.email().get();
-            data_service += "&pass="+myPrefs.pass().get();
-            data_service += "&id_ride="+myPrefs.id_ride().get();
+            String data_service = "email=" + myPrefs.email().get();
+            data_service += "&pass=" + myPrefs.pass().get();
+            data_service += "&id_ride=" + myPrefs.id_ride().get();
 
             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             Intent i = new Intent(this, OsmLocPullReceiver.class);
@@ -257,8 +296,8 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         }
 
         String fdata = data;
-        fdata += "&latitude="+lat;
-        fdata += "&longitude="+lon;
+        fdata += "&latitude=" + lat;
+        fdata += "&longitude=" + lon;
 
         try {
             result = sc.postUrlContent(Var.URL_API_RIDE_FINISH, fdata);
@@ -291,15 +330,22 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     void loadData() {
         SimpleContent sc = new SimpleContent(this, "trazeo", 3);
         String result = "";
+        String result_wall = "";
 
         try {
             result = sc.postUrlContent(Var.URL_API_RIDE_DATA, data);
+            result_wall = sc.postUrlContent(Var.URL_API_WALL, data_wall);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
 
-        final Type objectCPD = new TypeToken<MasterRide>(){}.getType();
-        MonitorActivity.ride = new Gson().fromJson(result, objectCPD);
+        final Type objectCPDRide = new TypeToken<MasterRide>() {
+        }.getType();
+        final Type objectCPDWall = new TypeToken<MasterWall>() {
+        }.getType();
+        MonitorActivity.ride = new Gson().fromJson(result, objectCPDRide);
+        MonitorActivity.wall = new Gson().fromJson(result_wall, objectCPDWall);
+
 
         //myPrefs.id_ride().put(createRide.data.id_ride);
         showData();
@@ -338,7 +384,8 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
             actionBar.addTab(
                     actionBar.newTab()
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
-                            .setTabListener(this));
+                            .setTabListener(this)
+            );
         }
 
         pdialog.cancel();
@@ -347,7 +394,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.monitor, menu);
         return true;
@@ -355,11 +402,13 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.action_close:
             case android.R.id.home:
                 showCancelDialog();
+                break;
+            case R.id.action_new:
+                showNewCommentDialog();
                 break;
             case R.id.action_disconnect:
                 showDisconnectDialog();
@@ -386,13 +435,12 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void configureBar() {
-        getActionBar().setDisplayShowHomeEnabled(true);
-        getActionBar().setDisplayShowTitleEnabled(true);
-        getActionBar().setDisplayUseLogoEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -410,10 +458,12 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             if (position == 0) {
-                Log.d("GPSLOG", "MonitorActivity, sendtofrag: "+data);
+                Log.d("GPSLOG", "MonitorActivity, sendtofrag: " + data);
                 return MonitorMapFragment.newInstance(data);
             } else if (position == 1) {
                 return MonitorChildFragment.newInstance(data);
+            } else if (position == 2) {
+                return MonitorWallFragment.newInstance(data);
             }
 
             return null;
@@ -422,7 +472,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
+            return 3;
         }
 
         @Override
@@ -433,6 +483,8 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
                     return getString(R.string.title_fragment_map).toUpperCase(l);
                 case 1:
                     return getString(R.string.title_fragment_children).toUpperCase(l);
+                case 2:
+                    return getString(R.string.title_fragment_wall).toUpperCase(l);
             }
             return null;
         }

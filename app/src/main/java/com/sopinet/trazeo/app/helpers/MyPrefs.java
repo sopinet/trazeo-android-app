@@ -28,6 +28,9 @@ public interface MyPrefs {
     @DefaultString("")
     String end_ride();
 
+    @DefaultString("")
+    String id_group();
+
     // The field lastUpdated will have default value 0
     long lastUpdated();
 }

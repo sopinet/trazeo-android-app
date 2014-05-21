@@ -11,24 +11,82 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/mascota3" />
+
+            <ImageView
+                android:id="@+id/greenlogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/logoverde" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/banners_layout"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/mascota3"
-            android:layout_marginRight="100dp"
-            android:layout_marginLeft="100dp"
-            android:adjustViewBounds="true"/>
-        <ImageView
-            android:id="@+id/greenlogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:src="@drawable/logoverde"
-            android:adjustViewBounds="true"/>
+            android:orientation="vertical"
+            android:layout_weight="3"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/up_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cajasur"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:id="@+id/down_banners_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="2">
+
+                <ImageView
+                    android:id="@+id/down_banner0"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/sopinetlogo"
+                    android:layout_weight="1"/>
+                <ImageView
+                    android:id="@+id/down_banner1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/hellendoron1"
+                    android:layout_weight="1"/>
+                <ImageView
+                    android:id="@+id/down_banner2"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:src="@drawable/dcabo"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:id="@+id/down_banner3"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:src="@drawable/centrocordoba"
+                    android:layout_weight="1"/>
+           </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <!-- This FrameLayout insets its children based on system windows using

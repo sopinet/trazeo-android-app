@@ -1,16 +1,16 @@
 package com.sopinet.trazeo.app;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,9 +21,8 @@ import com.sopinet.trazeo.app.gson.MasterRide;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -42,9 +41,11 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-@EActivity(R.layout.activity_see)
-public class SeeActivity extends ActionBarActivity {
-
+/**
+ * Created by david on 21/05/14.
+ */
+@EFragment(R.layout.activity_see)
+public class SeeMapFragment extends Fragment {
     @ViewById
     MapView mapview;
 
@@ -60,16 +61,13 @@ public class SeeActivity extends ActionBarActivity {
     @Pref
     MyPrefs_ myPrefs;
 
-    public Handler handler = new Handler();
-    public Runnable runnable = new Runnable() {
-        public void run() {
-            loadLastPoint();
-        }
-    };
+    View root;
 
-    @AfterViews
-    void init() {
-        configureBar();
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        root = inflater.inflate(R.layout.activity_see, container, false);
+
         data = "id_ride="+myPrefs.id_ride().get()+"&email="+myPrefs.email().get()+"&pass="+myPrefs.pass().get();
 
         String tiles[] = new String[1];
@@ -81,7 +79,7 @@ public class SeeActivity extends ActionBarActivity {
         mapview.setTileSource(tileSource);
 
         // Añado localización
-        MyLocationNewOverlay myLocNewOver = new MyLocationNewOverlay(this, mapview);
+        MyLocationNewOverlay myLocNewOver = new MyLocationNewOverlay(root.getContext(), mapview);
 
         myLocNewOver.enableFollowLocation();
         myLocNewOver.enableMyLocation();
@@ -96,11 +94,13 @@ public class SeeActivity extends ActionBarActivity {
 
         loadLastPoint();
         loadData();
+
+        return root;
     }
 
     @Background
     void loadLastPoint() {
-        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
+        SimpleContent sc = new SimpleContent(root.getContext(), "trazeo", 0);
         String result = "";
         try {
             result = sc.postUrlContent(Var.URL_API_LASTPOINT, data);
@@ -124,7 +124,7 @@ public class SeeActivity extends ActionBarActivity {
         }
 
         // Pedir otro último PUNTO
-        handler.postDelayed(runnable, 1000);
+        ((SeeActivity)getActivity()).handler.postDelayed(((SeeActivity)getActivity()).runnable, 1000);
     }
 
     @UiThread
@@ -161,7 +161,7 @@ public class SeeActivity extends ActionBarActivity {
             waypoints.add(endPoint);
             Log.d("ENDPOINT", "ENDPOINT: " + endPoint.getLatitude());
             road = roadManager.getRoad(waypoints);
-            roadOverlay = RoadManager.buildRoadOverlay(road, this);
+            roadOverlay = RoadManager.buildRoadOverlay(road, root.getContext());
             roadOverlay.setColor(this.getResources().getColor(R.color.green_trazeo_2));
             roadOverlay.getPaint().setPathEffect(new DashPathEffect(new float[] {10,10}, 5));
             mapview.getOverlays().add(roadOverlay);
@@ -177,30 +177,9 @@ public class SeeActivity extends ActionBarActivity {
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.see, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case android.R.id.home:
-                this.onBackPressed();
-                break;
-            case R.id.action_settings:
-                break;
-        }
-        return true;
-    }
-
     @Background
     void loadData() {
-        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
+        SimpleContent sc = new SimpleContent(root.getContext(), "trazeo", 0);
         String result = "";
 
         try {
@@ -214,7 +193,7 @@ public class SeeActivity extends ActionBarActivity {
 
         //myPrefs.id_ride().put(createRide.data.id_ride);
         //showData();
-        drawRoute(mapview, this);
+        drawRoute(mapview, root.getContext());
     }
 
     @UiThread
@@ -247,25 +226,5 @@ public class SeeActivity extends ActionBarActivity {
                 }
             }
         }
-    }
-
-    private void configureBar() {
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        handler.removeCallbacksAndMessages(null);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        handler.removeCallbacksAndMessages(null);
     }
 }
