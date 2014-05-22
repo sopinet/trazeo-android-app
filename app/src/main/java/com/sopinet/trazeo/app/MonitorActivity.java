@@ -308,6 +308,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     @Background
     void sendFinishRide() {
+        handler.removeCallbacksAndMessages(null);
         SimpleContent sc = new SimpleContent(this, "trazeo", 1);
         String result = "";
 
@@ -355,21 +356,21 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     void loadData() {
         SimpleContent sc = new SimpleContent(this, "trazeo", 3);
         String result = "";
-        String result_wall = "";
+        //String result_wall = "";
 
         try {
             result = sc.postUrlContent(Var.URL_API_RIDE_DATA, data);
-            result_wall = sc.postUrlContent(Var.URL_API_WALL, data_wall);
+            //result_wall = sc.postUrlContent(Var.URL_API_WALL, data_wall);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
 
         final Type objectCPDRide = new TypeToken<MasterRide>() {
         }.getType();
-        final Type objectCPDWall = new TypeToken<MasterWall>() {
-        }.getType();
+        //final Type objectCPDWall = new TypeToken<MasterWall>() {
+        //}.getType();
         MonitorActivity.ride = new Gson().fromJson(result, objectCPDRide);
-        MonitorActivity.wall = new Gson().fromJson(result_wall, objectCPDWall);
+        //MonitorActivity.wall = new Gson().fromJson(result_wall, objectCPDWall);
 
 
         //myPrefs.id_ride().put(createRide.data.id_ride);
@@ -413,8 +414,6 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
             );
         }
 
-        pdialog.cancel();
-
         if(fromComment)
             mViewPager.setCurrentItem(2);
 
@@ -441,6 +440,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     @UiThread
     public void showNotification(){
+        pdialog.cancel();
         if(!firstLoad){
             if(MonitorActivity.wall.data.size() > commentCount)
                 createNotification(this);
