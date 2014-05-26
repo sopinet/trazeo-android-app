@@ -22,9 +22,6 @@ public class InitActivity extends Activity {
 
     String email;
 
-    @ViewById
-    ImageView greenlogo;
-
     @AfterViews
     void init() {
         email = myPrefs.email().get();

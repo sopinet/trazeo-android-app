@@ -344,6 +344,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     void gotoSelect() {
         Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show();
         startActivity(new Intent(this, InitActivity_.class));
+        finish();
     }
 
     @Override
