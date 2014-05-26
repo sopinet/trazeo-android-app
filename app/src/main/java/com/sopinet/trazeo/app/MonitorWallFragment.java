@@ -65,12 +65,15 @@ public class MonitorWallFragment extends Fragment {
         );
 
         // Creamos adaptador
-        CommentAdapter adapter = new CommentAdapter(root.getContext(),
-                R.layout.comment_item, MonitorActivity.wall.data);
+        // Si tenemos mensajes
+        if (MonitorActivity.wall != null && MonitorActivity.wall.data != null) {
+            CommentAdapter adapter = new CommentAdapter(root.getContext(),
+                    R.layout.comment_item, MonitorActivity.wall.data);
 
-        // Asignamos el adaptador a la vista
-        listComments = (ListView) root.findViewById(R.id.listComments);
-        listComments.setAdapter(adapter);
+            // Asignamos el adaptador a la vista
+            listComments = (ListView) root.findViewById(R.id.listComments);
+            listComments.setAdapter(adapter);
+        }
 
         // Inflate the layout for this fragment
         return root;

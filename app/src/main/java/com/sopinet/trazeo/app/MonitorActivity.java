@@ -443,11 +443,15 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     public void showNotification(){
         pdialog.cancel();
         if(!firstLoad){
-            if(MonitorActivity.wall.data.size() > commentCount)
-                createNotification(this);
+            if (MonitorActivity.wall != null && MonitorActivity.wall.data != null) {
+                if (MonitorActivity.wall.data.size() > commentCount)
+                    createNotification(this);
+            }
         }
 
-        commentCount = MonitorActivity.wall.data.size();
+        if (MonitorActivity.wall != null && MonitorActivity.wall.data != null) {
+            commentCount = MonitorActivity.wall.data.size();
+        }
 
         if(firstLoad)
             firstLoad = false;
