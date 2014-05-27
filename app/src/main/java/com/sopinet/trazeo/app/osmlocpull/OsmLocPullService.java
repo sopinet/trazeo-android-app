@@ -9,7 +9,10 @@ import android.util.Log;
 
 import com.sopinet.trazeo.app.helpers.MyLoc;
 
+import org.androidannotations.annotations.sharedpreferences.Pref;
+
 public class OsmLocPullService extends Service {
+
     OsmLocPullReceiver osmReceiver;
     Context context;
 

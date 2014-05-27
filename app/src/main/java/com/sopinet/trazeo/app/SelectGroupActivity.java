@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.ami.fundapter.BindDictionary;
 import com.ami.fundapter.FunDapter;
 import com.ami.fundapter.extractors.StringExtractor;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.SimpleContent;
@@ -29,6 +30,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.osmdroid.views.overlay.MyLocationOverlay;
 
 import com.sopinet.trazeo.app.gson.CreateRide;
 import com.sopinet.trazeo.app.gson.Group;
@@ -42,7 +44,7 @@ import java.lang.reflect.Type;
 import android.widget.ListView;
 
 @EActivity(R.layout.activity_select_group)
-public class SelectGroupActivity extends ActionBarActivity {
+public class SelectGroupActivity extends ActionBarActivity{
     @Pref
     MyPrefs_ myPrefs;
 

@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.SimpleContent;
+import com.sopinet.trazeo.app.InitActivity;
 import com.sopinet.trazeo.app.MonitorActivity;
 import com.sopinet.trazeo.app.MonitorActivity_;
 import com.sopinet.trazeo.app.R;
@@ -30,6 +31,7 @@ import com.sopinet.trazeo.app.gson.LastPoint;
 import com.sopinet.trazeo.app.helpers.MyLoc;
 import com.sopinet.trazeo.app.helpers.Var;
 
+import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.lang.reflect.Type;
@@ -38,11 +40,13 @@ import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
 // http://stackoverflow.com/questions/4459058/alarm-manager-example
 public class OsmLocPullReceiver extends BroadcastReceiver{
+
     // public MyLoc myLoc;
     public String url;
     public String data;
     public static NotificationManager notificationManager = null;
     public static NotificationCompat.Builder mBuilder = null;
+    static Location lastLocation = null;
     Location location;
 
     public OsmLocPullReceiver() {
@@ -84,13 +88,15 @@ public class OsmLocPullReceiver extends BroadcastReceiver{
          String lat = String.valueOf(myLoc.getMyLocation().getLatitude());
          String lon = String.valueOf(myLoc.getMyLocation().getLongitude());
          **/
-        String lat = "0";
-        String lon = "0";
+        String lat = null;
+        String lon = null;
 
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-        if (location != null) {
+        if(lastLocation == null) {
+            lastLocation = location;
+        }else if (location != null && lastLocation.getLatitude() != location.getLatitude()) {
             lat = String.valueOf(location.getLatitude());
             lon = String.valueOf(location.getLongitude());
 

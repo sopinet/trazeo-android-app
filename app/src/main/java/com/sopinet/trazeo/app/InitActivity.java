@@ -2,7 +2,9 @@ package com.sopinet.trazeo.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.content.Intent;
@@ -14,6 +16,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
+import com.sopinet.trazeo.app.osmlocpull.OsmLocPullService;
 
 @EActivity(R.layout.activity_init)
 public class InitActivity extends Activity {
@@ -24,6 +27,7 @@ public class InitActivity extends Activity {
 
     @AfterViews
     void init() {
+
         email = myPrefs.email().get();
 
         final int SPLASH_DISPLAY_LENGHT = 2000;
