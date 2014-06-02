@@ -81,6 +81,9 @@ public class SeeMapFragment extends Fragment {
         mapview.setBuiltInZoomControls(true);
         mapview.setTileSource(tileSource);
 
+        loadLastPoint();
+        loadData();
+
         // Añado localización
         MyLocationNewOverlay myLocNewOver = new MyLocationNewOverlay(root.getContext(), mapview);
 
@@ -94,9 +97,6 @@ public class SeeMapFragment extends Fragment {
 
         // Establecemos Zoom
         mapview.getController().setZoom(14);
-
-        loadLastPoint();
-        loadData();
 
         return root;
     }

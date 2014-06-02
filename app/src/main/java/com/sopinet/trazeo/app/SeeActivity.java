@@ -3,6 +3,7 @@ package com.sopinet.trazeo.app;
 import android.content.Context;
 import android.graphics.DashPathEffect;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -76,6 +77,13 @@ public class SeeActivity extends ActionBarActivity {
         mapview.setBuiltInZoomControls(true);
         mapview.setTileSource(tileSource);
 
+        // TODO: Necesario para OSMLOCPULLRECEIVER, mirar de quitar
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        loadLastPoint();
+        loadData();
+
         // Añado localización
         MyLocationNewOverlay myLocNewOver = new MyLocationNewOverlay(this, mapview);
 
@@ -89,9 +97,6 @@ public class SeeActivity extends ActionBarActivity {
 
         // Establecemos Zoom
         mapview.getController().setZoom(14);
-
-        loadLastPoint();
-        loadData();
     }
 
     @Background
