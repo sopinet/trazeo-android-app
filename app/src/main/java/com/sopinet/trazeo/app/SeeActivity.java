@@ -27,6 +27,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.bonuspack.overlays.Polyline;
+import org.osmdroid.bonuspack.routing.MapQuestRoadManager;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
@@ -130,8 +131,8 @@ public class SeeActivity extends ActionBarActivity {
 
     @UiThread
     void showLastPoint(LastPoint lastPoint) {
-        RoadManager roadManager = new OSRMRoadManager();
-        Polyline roadOverlay;
+        RoadManager roadManager = new MapQuestRoadManager("Fmjtd%7Cluur2g6z2l%2C2s%3Do5-9a8g0u");
+        roadManager.addRequestOption("routeType=pedestrian");
 
         Double latitudeI = Double.parseDouble(lastPoint.data.location.latitude);
         Double longitudeI = Double.parseDouble(lastPoint.data.location.longitude);
@@ -156,6 +157,7 @@ public class SeeActivity extends ActionBarActivity {
 
         if(isStartPoint){
             Road road;
+            Polyline roadOverlay;
             waypoints = new ArrayList<GeoPoint>();
             waypoints.add(startPoint);
             Log.d("STARTPOINT", "STARTPOINT: " + startPoint.getLatitude());
@@ -220,7 +222,8 @@ public class SeeActivity extends ActionBarActivity {
 
     @UiThread
     void drawRoute(MapView mapview, Context context) {
-        RoadManager roadManager = new OSRMRoadManager();
+        RoadManager roadManager = new MapQuestRoadManager("Fmjtd%7Cluur2g6z2l%2C2s%3Do5-9a8g0u");
+        roadManager.addRequestOption("routeType=pedestrian");
         ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
 
         if (MonitorActivity.ride.data.group.route != null) { // Checking route is not null
