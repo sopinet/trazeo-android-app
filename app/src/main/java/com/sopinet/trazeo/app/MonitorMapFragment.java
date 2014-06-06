@@ -19,6 +19,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.bonuspack.overlays.Polyline;
+import org.osmdroid.bonuspack.routing.MapQuestRoadManager;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
@@ -76,8 +77,6 @@ public class MonitorMapFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_monitor_map, container, false);
-
-
 
         final Context context = getActivity();
         final Context applicationContext = context.getApplicationContext();
@@ -169,7 +168,9 @@ public class MonitorMapFragment extends Fragment {
 
     @Background
     void drawRoute(MapView mapview, Context context) {
-        RoadManager roadManager = new OSRMRoadManager();
+        RoadManager roadManager = new MapQuestRoadManager("Fmjtd%7Cluur2g6z2l%2C2s%3Do5-9a8g0u");
+        roadManager.addRequestOption("routeType=pedestrian");
+        //RoadManager roadManager = new OSRMRoadManager();
         ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
 
         if (MonitorActivity.ride.data.group.route != null) { // Cuando no hay ruta establecida
