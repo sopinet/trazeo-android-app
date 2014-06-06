@@ -30,12 +30,10 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.osmdroid.views.overlay.MyLocationOverlay;
 
 import com.sopinet.trazeo.app.gson.CreateRide;
 import com.sopinet.trazeo.app.gson.Group;
 import com.sopinet.trazeo.app.gson.Groups;
-import com.sopinet.trazeo.app.gson.Login;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
 import com.sopinet.trazeo.app.osmlocpull.OsmLocPullService;
@@ -68,7 +66,7 @@ public class SelectGroupActivity extends ActionBarActivity{
         data += "&pass="+myPrefs.pass().get();
         String result = "";
         try {
-            result = sc.postUrlContent(Var.URL_API_GROUPS, data);
+            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_GROUPS, data);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
@@ -143,7 +141,7 @@ public class SelectGroupActivity extends ActionBarActivity{
         String result = "";
 
         try {
-            result = sc.postUrlContent(Var.URL_API_RIDE_CREATE, data);
+            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_RIDE_CREATE, data);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
@@ -169,7 +167,7 @@ public class SelectGroupActivity extends ActionBarActivity{
             data_service += "&id_ride=" + createRide.data.id_ride;
 
             intentGPS = new Intent(this, OsmLocPullService.class);
-            intentGPS.putExtra("url", Var.URL_API_SENDPOSITION);
+            intentGPS.putExtra("url", myPrefs.url_api().get() + Var.URL_API_SENDPOSITION);
             intentGPS.putExtra("data", data_service);
             startService(intentGPS);
 

@@ -105,7 +105,7 @@ public class SeeActivity extends ActionBarActivity {
         SimpleContent sc = new SimpleContent(this, "trazeo", 0);
         String result = "";
         try {
-            result = sc.postUrlContent(Var.URL_API_LASTPOINT, data);
+            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_LASTPOINT, data);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
@@ -207,7 +207,7 @@ public class SeeActivity extends ActionBarActivity {
         String result = "";
 
         try {
-            result = sc.postUrlContent(Var.URL_API_RIDE_DATA, data);
+            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_RIDE_DATA, data);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }

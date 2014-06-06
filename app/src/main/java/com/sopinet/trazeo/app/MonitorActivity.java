@@ -83,7 +83,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     */
 
     @Pref
-    MyPrefs_ myPrefs;
+    public MyPrefs_ myPrefs;
 
     public static MasterRide ride;
     public static MasterWall wall;
@@ -159,7 +159,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         String sdata = data = "id_group=" + myPrefs.id_group().get() + "&email=" + myPrefs.email().get() + "&pass=" + myPrefs.pass().get() + "&text=" + comment;
         String result = "";
         try {
-            result = sc.postUrlContent(Var.URL_API_WALL_NEW, sdata);
+            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_WALL_NEW, sdata);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
@@ -254,7 +254,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
         String result = "";
         try {
-            result = sc.postUrlContent(Var.URL_API_SENDREPORT, sdata);
+            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_SENDREPORT, sdata);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
@@ -282,7 +282,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             Intent i = new Intent(this, OsmLocPullReceiver.class);
-            i.putExtra("url", Var.URL_API_SENDPOSITION);
+            i.putExtra("url", myPrefs.url_api().get() + Var.URL_API_SENDPOSITION);
             i.putExtra("data", data_service);
 
             PendingIntent pi;
@@ -326,7 +326,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         fdata += "&longitude=" + lon;
 
         try {
-            result = sc.postUrlContent(Var.URL_API_RIDE_FINISH, fdata);
+            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_RIDE_FINISH, fdata);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
@@ -360,7 +360,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         //String result_wall = "";
 
         try {
-            result = sc.postUrlContent(Var.URL_API_RIDE_DATA, data);
+            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_RIDE_DATA, data);
             //result_wall = sc.postUrlContent(Var.URL_API_WALL, data_wall);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
@@ -427,7 +427,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         String result_wall = "";
 
         try {
-            result_wall = sc.postUrlContent(Var.URL_API_WALL, data_wall);
+            result_wall = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_WALL, data_wall);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }

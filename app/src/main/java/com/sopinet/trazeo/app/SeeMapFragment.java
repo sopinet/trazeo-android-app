@@ -106,7 +106,7 @@ public class SeeMapFragment extends Fragment {
         SimpleContent sc = new SimpleContent(root.getContext(), "trazeo", 0);
         String result = "";
         try {
-            result = sc.postUrlContent(Var.URL_API_LASTPOINT, data);
+            result = sc.postUrlContent(((SeeActivity)getActivity()).myPrefs.url_api().get() + Var.URL_API_LASTPOINT, data);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
@@ -186,7 +186,7 @@ public class SeeMapFragment extends Fragment {
         String result = "";
 
         try {
-            result = sc.postUrlContent(Var.URL_API_RIDE_DATA, data);
+            result = sc.postUrlContent(((SeeActivity)getActivity()).myPrefs.url_api().get() + Var.URL_API_RIDE_DATA, data);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }

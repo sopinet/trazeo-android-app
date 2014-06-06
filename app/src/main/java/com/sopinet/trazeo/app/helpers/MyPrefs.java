@@ -31,6 +31,9 @@ public interface MyPrefs {
     @DefaultString("")
     String id_group();
 
+    @DefaultString("")
+    String url_api();
+
     // The field lastUpdated will have default value 0
     long lastUpdated();
 }

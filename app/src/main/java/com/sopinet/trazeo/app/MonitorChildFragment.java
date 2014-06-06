@@ -110,10 +110,10 @@ public class MonitorChildFragment extends Fragment {
         String url = "";
         if (echild.isSelected()) {
             echild.setSelected(true);
-            url = Var.URL_API_CHILDIN;
+            url = ((MonitorActivity)getActivity()).myPrefs.url_api().get() + Var.URL_API_CHILDIN;
         } else {
             echild.setSelected(false);
-            url = Var.URL_API_CHILDOUT;
+            url = ((MonitorActivity)getActivity()).myPrefs.url_api().get() + Var.URL_API_CHILDOUT;
         }
 
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);

@@ -29,6 +29,7 @@ public class InitActivity extends Activity {
     void init() {
 
         email = myPrefs.email().get();
+        myPrefs.url_api().put("http://beta.trazeo.es/");
 
         final int SPLASH_DISPLAY_LENGHT = 2000;
 

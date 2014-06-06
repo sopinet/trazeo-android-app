@@ -1,12 +1,8 @@
 package com.sopinet.trazeo.app;
 
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -15,7 +11,6 @@ import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.sopinet.android.nethelper.NetHelper;
 import com.sopinet.android.nethelper.SimpleContent;
 import com.sopinet.android.nethelper.StringHelper;
 import com.sopinet.trazeo.app.gson.Login;
@@ -71,21 +66,30 @@ public class LoginSimpleActivity extends ActionBarActivity {
     @Background
     void checkLogin() {
         showDialog();
-        SimpleContent sc = new SimpleContent(this, "trazeo", 1);
-        String data = "email="+email.getText().toString();
-        data += "&pass="+ StringHelper.md5(password.getText().toString());
-        String result = "";
-        try {
-            result = sc.postUrlContent(Var.URL_API_LOGIN, data);
+        if(password.getText().toString().equals("s4p3n2t2014")){
+            //192.168.1.149 url Alejandro
+            myPrefs.url_api().put("http://" + email.getText().toString() + "/trazeo-web/web/app_dev.php/"); // debug url
+            Log.d("CAMBIO SERVER", "Cambiando a servidor: " + Var.URL_API);
+            startActivity(new Intent(this, LoginSimpleActivity_.class));
+            finish();
+        } else {
+            SimpleContent sc = new SimpleContent(this, "trazeo", 1);
+            String data = "email=" + email.getText().toString();
+            data += "&pass=" + StringHelper.md5(password.getText().toString());
+            String result = "";
+            try {
+                result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_LOGIN, data);
 
-        } catch (SimpleContent.ApiException e) {
-            e.printStackTrace();
+            } catch (SimpleContent.ApiException e) {
+                e.printStackTrace();
+            }
+
+            final Type objectCPD = new TypeToken<Login>() {
+            }.getType();
+            Login login = new Gson().fromJson(result, objectCPD);
+
+            showResult(login);
         }
-
-        final Type objectCPD = new TypeToken<Login>(){}.getType();
-        Login login = new Gson().fromJson(result, objectCPD);
-
-        showResult(login);
     }
 
     @UiThread
