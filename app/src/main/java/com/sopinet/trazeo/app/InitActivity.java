@@ -1,22 +1,15 @@
 package com.sopinet.trazeo.app;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Handler;
 import android.content.Intent;
-import android.widget.ImageView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import com.androidquery.service.MarketService;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
-import com.sopinet.trazeo.app.osmlocpull.OsmLocPullService;
 
 @EActivity(R.layout.activity_init)
 public class InitActivity extends Activity {
@@ -30,6 +23,9 @@ public class InitActivity extends Activity {
 
         email = myPrefs.email().get();
         myPrefs.url_api().put("http://beta.trazeo.es/");
+
+        MarketService ms = new MarketService(this);
+        ms.level(MarketService.REVISION).checkVersion();
 
         final int SPLASH_DISPLAY_LENGHT = 2000;
 

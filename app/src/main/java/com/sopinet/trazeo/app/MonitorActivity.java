@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.SimpleContent;
 import com.sopinet.trazeo.app.gson.MasterRide;
@@ -327,6 +328,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
         try {
             result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_RIDE_FINISH, fdata);
+            myPrefs.isRideActive().put(0);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
@@ -418,6 +420,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         if(fromComment)
             mViewPager.setCurrentItem(2);
 
+        pdialog.cancel();
         checkNewComments();
     }
 
@@ -430,18 +433,24 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
             result_wall = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_WALL, data_wall);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
+            result_wall = "";
         }
 
         final Type objectCPDWall = new TypeToken<MasterWall>() {
         }.getType();
 
-        MonitorActivity.wall = new Gson().fromJson(result_wall, objectCPDWall);
-        showNotification();
+        try {
+            MonitorActivity.wall = new Gson().fromJson(result_wall, objectCPDWall);
+            showNotification();
+        } catch(JsonSyntaxException e){
+            e.printStackTrace();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @UiThread
     public void showNotification(){
-        pdialog.cancel();
         if(!firstLoad){
             if (MonitorActivity.wall != null && MonitorActivity.wall.data != null) {
                 if (MonitorActivity.wall.data.size() > commentCount)
@@ -537,6 +546,11 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
     }
 
     /**

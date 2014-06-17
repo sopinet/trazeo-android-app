@@ -1,25 +1,21 @@
 package com.sopinet.trazeo.app;
 
 import android.app.AlertDialog;
-import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.ami.fundapter.BindDictionary;
 import com.ami.fundapter.FunDapter;
 import com.ami.fundapter.extractors.StringExtractor;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.SimpleContent;
@@ -53,6 +49,10 @@ public class SelectGroupActivity extends ActionBarActivity{
 
     @AfterViews
     void init() {
+        if(myPrefs.isRideActive().get() == 1){
+            startActivity(new Intent(this, MonitorActivity_.class));
+            finish();
+        }
         loadData();
         final LocationManager manager = (LocationManager) getSystemService( this.LOCATION_SERVICE );
         if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) )
@@ -176,6 +176,7 @@ public class SelectGroupActivity extends ActionBarActivity{
     }
 
     void goActivityMonitor() {
+        myPrefs.isRideActive().put(1);
         startActivity(new Intent(SelectGroupActivity.this, MonitorActivity_.class));
     }
 
