@@ -49,10 +49,6 @@ public class SelectGroupActivity extends ActionBarActivity{
 
     @AfterViews
     void init() {
-        if(myPrefs.isRideActive().get() == 1){
-            startActivity(new Intent(this, MonitorActivity_.class));
-            finish();
-        }
         loadData();
         final LocationManager manager = (LocationManager) getSystemService( this.LOCATION_SERVICE );
         if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) )
@@ -74,6 +70,15 @@ public class SelectGroupActivity extends ActionBarActivity{
         final Type objectCPD = new TypeToken<Groups>(){}.getType();
         Groups groups = new Gson().fromJson(result, objectCPD);
 
+        if(groups.data != null && groups.data.size() > 0) {
+            for (int i = 0; i < groups.data.size(); i++) {
+                if (groups.data.get(i).hasride.equals("true") && groups.data.get(i).ride_id.equals(myPrefs.id_ride().get())) {
+                    startActivity(new Intent(this, MonitorActivity_.class));
+                    finish();
+                }
+            }
+        }
+        
         showData(groups);
         //sc.postUrlContent()
     }
@@ -176,7 +181,7 @@ public class SelectGroupActivity extends ActionBarActivity{
     }
 
     void goActivityMonitor() {
-        myPrefs.isRideActive().put(1);
+        //myPrefs.isRideActive().put(1);
         startActivity(new Intent(SelectGroupActivity.this, MonitorActivity_.class));
     }
 
@@ -201,6 +206,7 @@ public class SelectGroupActivity extends ActionBarActivity{
             myPrefs.email().put("");
             myPrefs.pass().put("");
             myPrefs.user_id().put("");
+            myPrefs.url_api().put("http://beta.trazeo.es/");
             startActivity(new Intent(this, LoginSimpleActivity_.class));
             return true;
         } else if (id == R.id.refresh){

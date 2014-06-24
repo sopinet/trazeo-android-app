@@ -1,8 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.sopinet.trazeo.app.MonitorChildFragment">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context="com.sopinet.trazeo.app.MonitorActivity">
 
     <ListView
         android:id="@+id/listChildren"
@@ -10,4 +10,4 @@
         android:layout_height="wrap_content">
     </ListView>
 
-</FrameLayout>
+</LinearLayout>

@@ -3,12 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sopinet.trazeo.app.MainActivity" >
 
-    <item android:id="@+id/action_new"
-        android:icon="@android:drawable/ic_input_add"
-        android:title="Nuevo comentario"
-        app:showAsAction="always"
-    />
-
     <item android:id="@+id/action_close"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
         android:title="Terminar paseo"

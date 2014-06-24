@@ -5,13 +5,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -83,7 +81,7 @@ public class MonitorChildFragment extends Fragment {
 
         // Creamos adaptador
         ChildAdapter adapter = new ChildAdapter(getActivity(),
-                R.layout.child_item, MonitorActivity.ride.data.group.childs, this);
+                R.layout.child_item, MonitorActivity.ride.data.group.childs, (MonitorActivity) this.getActivity());
 
         // Asignamos el adaptador a la vista
         listChildren = (ListView) root.findViewById(R.id.listChildren);

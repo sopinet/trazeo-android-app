@@ -22,7 +22,8 @@ public class InitActivity extends Activity {
     void init() {
 
         email = myPrefs.email().get();
-        myPrefs.url_api().put("http://beta.trazeo.es/");
+        if(myPrefs.url_api().get().equals(""))
+            myPrefs.url_api().put("http://beta.trazeo.es/");
 
         MarketService ms = new MarketService(this);
         ms.level(MarketService.REVISION).checkVersion();

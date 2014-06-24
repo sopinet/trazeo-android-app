@@ -1,7 +1,6 @@
 package com.sopinet.trazeo.app;
 
 import java.lang.reflect.Type;
-import java.util.Locale;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -11,34 +10,30 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.ami.fundapter.BindDictionary;
+import com.ami.fundapter.extractors.StringExtractor;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.SimpleContent;
+import com.sopinet.trazeo.app.gson.EChild;
 import com.sopinet.trazeo.app.gson.MasterRide;
 import com.sopinet.trazeo.app.gson.MasterWall;
+import com.sopinet.trazeo.app.helpers.ChildAdapter;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
 import com.sopinet.trazeo.app.osmlocpull.OsmLocPullReceiver;
@@ -49,39 +44,16 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-
-import eu.inmite.android.lib.dialogs.ISimpleDialogListener;
-import eu.inmite.android.lib.dialogs.SimpleDialogFragment;
+import org.osmdroid.tileprovider.IRegisterReceiver;
+import org.osmdroid.tileprovider.util.SimpleRegisterReceiver;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
-@EActivity(R.layout.activity_monitor)
-public class MonitorActivity extends ActionBarActivity implements ISimpleDialogListener, ActionBar.TabListener {
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    ViewPager mViewPager;
+@EActivity(R.layout.fragment_monitor_child)
+public class MonitorActivity extends ActionBarActivity {
 
     @Extra
     String cancel;
-
-    /*
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_monitor);
-    */
 
     @Pref
     public MyPrefs_ myPrefs;
@@ -90,36 +62,18 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     public static MasterWall wall;
 
     String data = null;
-    String data_wall = null;
-
-    SimpleDialogFragment wait;
 
     ProgressDialog pdialog;
 
-    int commentCount;
-    boolean firstLoad = true;
-
-    @Extra
-    boolean fromComment;
-
-    public static NotificationManager notificationManager = null;
-    public static NotificationCompat.Builder mBuilder = null;
-
-    Handler handler = new Handler();
-    Runnable runnable = new Runnable() {
-        public void run() {
-            checkNewComments();
-        }
-    };
+    ListView listChildren;
 
     @AfterViews
     void init() {
         this.configureBar();
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(201);
+
+        final IRegisterReceiver registerReceiver = new SimpleRegisterReceiver(this);
 
         data = "id_ride=" + myPrefs.id_ride().get() + "&email=" + myPrefs.email().get() + "&pass=" + myPrefs.pass().get();
-        data_wall = "id_group=" + myPrefs.id_group().get() + "&email=" + myPrefs.email().get() + "&pass=" + myPrefs.pass().get();
 
         if (cancel != null && cancel.equals("1")) {
             showCancelDialog();
@@ -129,71 +83,52 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
         pdialog.setMessage("Cargando...");
         pdialog.show();
 
+        // TODO: Necesario para OSMLOCPULLRECEIVER, mirar de quitar
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         loadData();
-    }
-
-
-    void showNewCommentDialog() {
-        final EditText input = new EditText(this);
-        new AlertDialog.Builder(this)
-                .setTitle("Trazeo: Escribir nuevo comentario")
-                .setView(input)
-                .setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String comment = input.getText().toString();
-                        if(!comment.equals("")) {
-                            Toast.makeText(getBaseContext(), "Enviando comentario...", Toast.LENGTH_LONG).show();
-                            createComment(comment);
-                        }else {
-                            Toast.makeText(getBaseContext(), "El mensaje no puede estar vacío", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-            }
-        }).show();
-    }
-
-    @Background
-    void createComment(String comment) {
-        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
-        String sdata = data = "id_group=" + myPrefs.id_group().get() + "&email=" + myPrefs.email().get() + "&pass=" + myPrefs.pass().get() + "&text=" + comment;
-        String result = "";
-        try {
-            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_WALL_NEW, sdata);
-        } catch (SimpleContent.ApiException e) {
-            e.printStackTrace();
-        }
-        commentOk();
-    }
-
-    @UiThread
-    void commentOk(){
-        Intent i = new Intent(this, MonitorActivity_.class);
-        i.putExtra("cancel", cancel);
-        startActivity(i);
     }
 
     @UiThread
     void showCancelDialog() {
-        SimpleDialogFragment wsure = (SimpleDialogFragment) SimpleDialogFragment.createBuilder(
-                this,
-                getSupportFragmentManager()).setTitle("Trazeo: Terminar paseo")
-                .setMessage("Se terminará su paseo actual, ¿está seguro?")
-                .setPositiveButtonText("Sí").setRequestCode(1)
-                .setNegativeButtonText("No").setRequestCode(1)
-                .show();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Trazeo: Terminar paseo");
+        builder.setMessage("Se terminará su paseo actual, ¿Está seguro?")
+                .setCancelable(false)
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        finishRide(1);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @UiThread
     void showDisconnectDialog() {
-        SimpleDialogFragment wsure = (SimpleDialogFragment) SimpleDialogFragment.createBuilder(
-                this,
-                getSupportFragmentManager()).setTitle("Trazeo: Desconectar")
-                .setMessage("Se terminará su paseo actual y desconectará su usuario de la aplicación, ¿está seguro?")
-                .setPositiveButtonText("Sí").setRequestCode(2)
-                .setNegativeButtonText("No").setRequestCode(2)
-                .show();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Trazeo: Desconectar");
+        builder.setMessage("Se terminará su paseo actual y desconectará su usuario de la aplicación, ¿Está seguro?")
+                .setCancelable(false)
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        myPrefs.url_api().put("http://beta.trazeo.es/");
+                        finishRide(2);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @UiThread
@@ -211,9 +146,6 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // TODO: ENVIAR LA INFO AL SERVIDOR
-                                // get user input and set it to result
-                                // edit text
-                                //result.setText(userInput.getText());
                                 dialog.cancel();
                                 showWaitDialog();
                                 sendReport(userInput.getText().toString());
@@ -264,12 +196,12 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     @UiThread
     void showReportOK() {
-        wait.dismiss();
+        //wait.dismiss();
+        pdialog.cancel();
         Toast.makeText(this, "El reporte ha sido enviado con éxito.", Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    public void onPositiveButtonClicked(int requestCode) {
+    public void finishRide(int requestCode) {
         if (requestCode == 1 || requestCode == 2) {
             // Mensaje de inicio de detención de PASEO
             showWaitDialog();
@@ -293,7 +225,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
             // Eliminamos las ficaciones
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(200);
-            notificationManager.cancel(201);
+            //notificationManager.cancel(201);
 
             // Deslogueamos (si es necesario)
             if (requestCode == 2) {
@@ -309,7 +241,6 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     @Background
     void sendFinishRide() {
-        handler.removeCallbacksAndMessages(null);
         SimpleContent sc = new SimpleContent(this, "trazeo", 1);
         String result = "";
 
@@ -328,7 +259,7 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
         try {
             result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_RIDE_FINISH, fdata);
-            myPrefs.isRideActive().put(0);
+            myPrefs.id_ride().put("-1");
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
@@ -339,167 +270,122 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
 
     @UiThread
     void showWaitDialog() {
-        wait = (SimpleDialogFragment) SimpleDialogFragment.createBuilder(this, getSupportFragmentManager()).hideDefaultButton(true).setMessage("Espere...").show();
+        pdialog.setMessage("Espere...");
+        pdialog.show();
     }
 
     @UiThread
     void gotoSelect() {
+        pdialog.cancel();
         Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show();
         startActivity(new Intent(this, InitActivity_.class));
         finish();
-    }
-
-    @Override
-    public void onNegativeButtonClicked(int requestCode) {
-        //
-        // this.cancel();
     }
 
     @Background
     void loadData() {
         SimpleContent sc = new SimpleContent(this, "trazeo", 3);
         String result = "";
-        //String result_wall = "";
 
         try {
             result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_RIDE_DATA, data);
-            //result_wall = sc.postUrlContent(Var.URL_API_WALL, data_wall);
         } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        } catch (Exception e){
             e.printStackTrace();
         }
 
         final Type objectCPDRide = new TypeToken<MasterRide>() {
         }.getType();
-        //final Type objectCPDWall = new TypeToken<MasterWall>() {
-        //}.getType();
-        MonitorActivity.ride = new Gson().fromJson(result, objectCPDRide);
-        //MonitorActivity.wall = new Gson().fromJson(result_wall, objectCPDWall);
+        this.ride = new Gson().fromJson(result, objectCPDRide);
 
-
-        //myPrefs.id_ride().put(createRide.data.id_ride);
         showData();
     }
 
     @UiThread
     void showData() {
-        // Set up the action bar.
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        // Creamos diccionario
+        BindDictionary<EChild> dict = new BindDictionary<EChild>();
+        dict.addStringField(R.id.titleCHILD,
+                new StringExtractor<EChild>() {
+                    @Override
+                    public String getStringValue(EChild item, int position) {
+                        return item.nick;
+                    }
+                }
+        );
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        // Creamos adaptador
+        ChildAdapter adapter = new ChildAdapter(this,
+                R.layout.child_item, this.ride.data.group.childs, this);
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        // Asignamos el adaptador a la vista
+        listChildren = (ListView) findViewById(R.id.listChildren);
 
-        // When swiping between different sections, select the corresponding
-        // tab. We can also use ActionBar.Tab#select() to do this if we have
-        // a reference to the Tab.
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        listChildren.setAdapter(adapter);
+
+        listChildren.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                final EChild echild = (EChild) adapterView.getItemAtPosition(position);
+                CheckBox checkbox = (CheckBox) view.findViewById(R.id.checkCHILD);
+                checkbox.setChecked(!checkbox.isChecked());
+                echild.setSelected(checkbox.isChecked());
+                changeChild(echild);
             }
         });
-
-        // For each of the sections in the app, add a tab to the action bar.
-        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-            // Create a tab with text corresponding to the page title defined by
-            // the adapter. Also specify this Activity object, which implements
-            // the TabListener interface, as the callback (listener) for when
-            // this tab is selected.
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText(mSectionsPagerAdapter.getPageTitle(i))
-                            .setTabListener(this)
-            );
-        }
-
-        if(fromComment)
-            mViewPager.setCurrentItem(2);
-
         pdialog.cancel();
-        checkNewComments();
     }
 
     @Background
-    public void checkNewComments(){
-        SimpleContent sc = new SimpleContent(this, "trazeo", 3);
-        String result_wall = "";
+    public void changeChild(EChild echild) {
+        String url = "";
+        if (echild.isSelected()) {
+            echild.setSelected(true);
+            url = myPrefs.url_api().get() + Var.URL_API_CHILDIN;
+        } else {
+            echild.setSelected(false);
+            url = myPrefs.url_api().get() + Var.URL_API_CHILDOUT;
+        }
 
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        String lat = "";
+        String lon = "";
+        if (location != null) {
+            lat = String.valueOf(location.getLatitude());
+            lon = String.valueOf(location.getLongitude());
+        }
+
+        String data = this.data;
+        data += "&id_child=" + echild.id;
+        data += "&latitude=" + lat;
+        data += "&longitude=" + lon;
+
+        String result = "";
+        SimpleContent sc = new SimpleContent(this, "trazeo", 3);
         try {
-            result_wall = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_WALL, data_wall);
+            result = sc.postUrlContent(url, data);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
-            result_wall = "";
         }
-
-        final Type objectCPDWall = new TypeToken<MasterWall>() {
-        }.getType();
-
-        try {
-            MonitorActivity.wall = new Gson().fromJson(result_wall, objectCPDWall);
-            showNotification();
-        } catch(JsonSyntaxException e){
-            e.printStackTrace();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
+        changeChildShow(echild);
+        //Log.d("TEMA", result);
     }
 
     @UiThread
-    public void showNotification(){
-        if(!firstLoad){
-            if (MonitorActivity.wall != null && MonitorActivity.wall.data != null) {
-                if (MonitorActivity.wall.data.size() > commentCount)
-                    createNotification(this);
-            }
+    void changeChildShow(EChild echild) {
+        String msg = "";
+        if (echild.isSelected()) {
+            msg = "(" + echild.nick + ")" + " Niño registrado en este Paseo";
+        } else {
+            msg = "(" + echild.nick + ")" + " Niño desvinculado del Paseo";
         }
-
-        if (MonitorActivity.wall != null && MonitorActivity.wall.data != null) {
-            commentCount = MonitorActivity.wall.data.size();
-        }
-
-        if(firstLoad)
-            firstLoad = false;
-
-        handler.postDelayed(runnable, 5000);
-    }
-
-    public void createNotification(Context context)
-    {
-        mBuilder = new NotificationCompat.Builder(context);
-
-        TaskStackBuilder stackBuilder_go = TaskStackBuilder.create(context);
-
-        // TODO: Estas clases podrían ser dinámicas
-        stackBuilder_go.addParentStack(MonitorActivity_.class);
-        Intent intent_go = new Intent(context, MonitorActivity_.class);
-        intent_go.putExtra("fromComment", true);
-        intent_go.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |   Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        stackBuilder_go.addNextIntent(intent_go);
-        PendingIntent resultPendingIntent_go =
-                stackBuilder_go.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent_go);
-
-        mBuilder.setContentTitle("Trazeo");
-        mBuilder.setSmallIcon(R.drawable.mascota3);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-
-        mBuilder.setContentText("Nuevo comentario de grupo");
-
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(201, mBuilder.build());
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.monitor, menu);
         return true;
@@ -512,9 +398,6 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
             case android.R.id.home:
                 showCancelDialog();
                 break;
-            case R.id.action_new:
-                showNewCommentDialog();
-                break;
             case R.id.action_disconnect:
                 showDisconnectDialog();
                 break;
@@ -523,21 +406,6 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
                 break;
         }
         return true;
-    }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        // When the given tab is selected, switch to the corresponding page in
-        // the ViewPager.
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
 
     private void configureBar() {
@@ -551,52 +419,5 @@ public class MonitorActivity extends ActionBarActivity implements ISimpleDialogL
     @Override
     public void onResume(){
         super.onResume();
-    }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            if (position == 0) {
-                Log.d("GPSLOG", "MonitorActivity, sendtofrag: " + data);
-                return MonitorMapFragment.newInstance(data);
-            } else if (position == 1) {
-                return MonitorChildFragment.newInstance(data);
-            } else if (position == 2) {
-                return MonitorWallFragment.newInstance(data);
-            }
-
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.title_fragment_map).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_fragment_children).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_fragment_wall).toUpperCase(l);
-            }
-            return null;
-        }
     }
 }

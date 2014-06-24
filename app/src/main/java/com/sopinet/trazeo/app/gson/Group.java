@@ -5,4 +5,6 @@ public class Group {
     public String name = "";
     public String visibility = "";
     public String hasride = "";
+    public String id_ride = "";
+    public String ride_id = "";
 }

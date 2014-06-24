@@ -21,15 +21,15 @@ public class ChildAdapter extends ArrayAdapter<EChild> {
 
     private ArrayList<EChild> echildList;
     private Context context;
-    private MonitorChildFragment childFragment;
+    private MonitorActivity monitorActivity;
 
     public ChildAdapter(Context context, int textViewResourceId,
-                           ArrayList<EChild> countryList, MonitorChildFragment childFragment) {
+                           ArrayList<EChild> countryList, MonitorActivity monitorActivity) {
         super(context, textViewResourceId, countryList);
         this.echildList = new ArrayList<EChild>();
         this.echildList.addAll(countryList);
         this.context = context;
-        this.childFragment = childFragment;
+        this.monitorActivity = monitorActivity;
     }
 
     private class ViewHolder {
@@ -87,7 +87,7 @@ public class ChildAdapter extends ArrayAdapter<EChild> {
                     echild.setSelected(false);
                 else
                     echild.setSelected(true);
-                childFragment.changeChild(echild);
+                monitorActivity.changeChild(echild);
             }
         });
 

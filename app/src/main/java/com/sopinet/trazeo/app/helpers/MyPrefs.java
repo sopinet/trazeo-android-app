@@ -34,8 +34,6 @@ public interface MyPrefs {
     @DefaultString("")
     String url_api();
 
-    int isRideActive();
-
     // The field lastUpdated will have default value 0
     long lastUpdated();
 }

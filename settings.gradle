@@ -1,1 +1,1 @@
-include ':app', ':NetHelper'
+include ':app'
