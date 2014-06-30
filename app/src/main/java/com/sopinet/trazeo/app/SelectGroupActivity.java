@@ -1,11 +1,17 @@
 package com.sopinet.trazeo.app;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -32,7 +38,6 @@ import com.sopinet.trazeo.app.gson.Group;
 import com.sopinet.trazeo.app.gson.Groups;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
-import com.sopinet.trazeo.app.osmlocpull.OsmLocPullService;
 
 import java.lang.reflect.Type;
 import android.widget.ListView;
@@ -45,7 +50,8 @@ public class SelectGroupActivity extends ActionBarActivity{
     @ViewById
     ListView listSelectGroup;
 
-    public static Intent intentGPS;
+    public static NotificationManager notificationManager = null;
+    public static NotificationCompat.Builder mBuilder = null;
 
     @AfterViews
     void init() {
@@ -73,8 +79,7 @@ public class SelectGroupActivity extends ActionBarActivity{
         if(groups.data != null && groups.data.size() > 0) {
             for (int i = 0; i < groups.data.size(); i++) {
                 if (groups.data.get(i).hasride.equals("true") && groups.data.get(i).ride_id.equals(myPrefs.id_ride().get())) {
-                    startActivity(new Intent(this, MonitorActivity_.class));
-                    finish();
+                    goActivityMonitor(false);
                 }
             }
         }
@@ -171,18 +176,63 @@ public class SelectGroupActivity extends ActionBarActivity{
             data_service += "&pass=" + myPrefs.pass().get();
             data_service += "&id_ride=" + createRide.data.id_ride;
 
-            intentGPS = new Intent(this, OsmLocPullService.class);
+            /*intentGPS = new Intent(this, OsmLocPullService.class);
             intentGPS.putExtra("url", myPrefs.url_api().get() + Var.URL_API_SENDPOSITION);
             intentGPS.putExtra("data", data_service);
-            startService(intentGPS);
+            startService(intentGPS);*/
 
-            goActivityMonitor();
+            goActivityMonitor(true);
         }
     }
 
-    void goActivityMonitor() {
-        //myPrefs.isRideActive().put(1);
+    void goActivityMonitor(Boolean isNew) {
         startActivity(new Intent(SelectGroupActivity.this, MonitorActivity_.class));
+        if(isNew)
+            createNotification();
+        finish();
+    }
+
+    void createNotification(){
+        mBuilder = new NotificationCompat.Builder(this);
+
+        TaskStackBuilder stackBuilder_go = TaskStackBuilder.create(this);
+        // TODO: Estas clases podrían ser dinámicas
+        stackBuilder_go.addParentStack(MonitorActivity_.class);
+        Intent intent_go = new Intent(this, MonitorActivity_.class);
+        intent_go.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |   Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        stackBuilder_go.addNextIntent(intent_go);
+        PendingIntent resultPendingIntent_go =
+                stackBuilder_go.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent_go);
+
+        mBuilder.setContentTitle("Trazeo");
+        mBuilder.setSmallIcon(R.drawable.mascota3);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String end_ride = preferences.getString("end_ride", "0");
+        //mBuilder.setContentText("Paseo Activo"+end_ride);
+        mBuilder.setContentText("Paseo Activo");
+
+        // Intent para CANCELAR Paseo
+        TaskStackBuilder stackBuilder_cancel = TaskStackBuilder.create(this);
+        stackBuilder_cancel.addParentStack(MonitorActivity_.class);
+        Intent intent_cancel = new Intent(this, MonitorActivity_.class);
+        intent_cancel.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |   Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent_cancel.putExtra("cancel", "1");
+        stackBuilder_cancel.addNextIntent(intent_cancel);
+        PendingIntent resultPendingIntent_cancel =
+                stackBuilder_cancel.getPendingIntent(
+                        1,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Terminar Paseo", resultPendingIntent_cancel);
+
+        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        // Debe haber un ID, el "id_raid" estaría bien
+        notificationManager.notify(200, mBuilder.build());
     }
 
     void goActivitySee() {

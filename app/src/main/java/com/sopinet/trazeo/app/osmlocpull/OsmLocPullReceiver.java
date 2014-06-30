@@ -8,13 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.provider.AlarmClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -23,16 +21,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.SimpleContent;
-import com.sopinet.trazeo.app.InitActivity;
-import com.sopinet.trazeo.app.MonitorActivity;
 import com.sopinet.trazeo.app.MonitorActivity_;
 import com.sopinet.trazeo.app.R;
 import com.sopinet.trazeo.app.gson.LastPoint;
-import com.sopinet.trazeo.app.helpers.MyLoc;
-import com.sopinet.trazeo.app.helpers.Var;
-
-import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.lang.reflect.Type;
 
@@ -117,7 +108,7 @@ public class OsmLocPullReceiver extends BroadcastReceiver{
                 this.data += "&latitude=" + lat;
                 this.data += "&longitude=" + lon;
                 Log.d("TEMA", "DATA_SENDPOINT: "+this.data);
-
+                Toast.makeText(context, "DATA SENDPOINT", Toast.LENGTH_LONG).show();
                 String result = "";
 
                 final SendPositionTask positionTask = new SendPositionTask(result, sc, this.url, this.data, context);
@@ -125,8 +116,6 @@ public class OsmLocPullReceiver extends BroadcastReceiver{
                 // Log.d("TEMA", "HORA ACTUAL: "+lastPoint.data.updated_at);
                 // TODO: Result puede ser nulo, deberíamos revisarlo
                 //Log.d("TEMA", result);
-
-
 //                mBuilder.setContentText(result);
             }
 

@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 19
-        versionCode 18
-        versionName "1.0.18"
+        versionCode 19
+        versionName "1.0.19"
     }
     buildTypes {
         release {
@@ -38,9 +38,9 @@ apt {
 
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.0.1'
+    compile 'com.android.support:appcompat-v7:19.1.0'
     compile 'com.android.support:support-v4:19.+'
-    compile 'com.google.android.gms:play-services:4.2.42'
+    compile 'com.google.android.gms:play-services:4.4.52'
     compile 'org.androidannotations:androidannotations-api:3.0.+'
     compile 'com.google.code.gson:gson:2.2.4@jar'
     compile 'com.github.amigold.fundapter2:library:1.01'

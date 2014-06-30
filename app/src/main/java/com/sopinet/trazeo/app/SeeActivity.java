@@ -28,7 +28,6 @@ import org.osmdroid.ResourceProxy;
 import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.bonuspack.routing.MapQuestRoadManager;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.tilesource.ITileSource;

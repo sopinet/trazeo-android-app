@@ -2,17 +2,14 @@ package com.sopinet.trazeo.app;
 
 import java.lang.reflect.Type;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,13 +27,15 @@ import com.ami.fundapter.extractors.StringExtractor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.SimpleContent;
+import com.sopinet.trazeo.app.gpsmodule.GPS;
+import com.sopinet.trazeo.app.gpsmodule.IGPSActivity;
 import com.sopinet.trazeo.app.gson.EChild;
+import com.sopinet.trazeo.app.gson.LastPoint;
 import com.sopinet.trazeo.app.gson.MasterRide;
 import com.sopinet.trazeo.app.gson.MasterWall;
 import com.sopinet.trazeo.app.helpers.ChildAdapter;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
-import com.sopinet.trazeo.app.osmlocpull.OsmLocPullReceiver;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -44,13 +43,9 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.osmdroid.tileprovider.IRegisterReceiver;
-import org.osmdroid.tileprovider.util.SimpleRegisterReceiver;
-
-import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
 @EActivity(R.layout.fragment_monitor_child)
-public class MonitorActivity extends ActionBarActivity {
+public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
 
     @Extra
     String cancel;
@@ -62,18 +57,20 @@ public class MonitorActivity extends ActionBarActivity {
     public static MasterWall wall;
 
     String data = null;
+    String sendPointUrl = null;
 
     ProgressDialog pdialog;
 
     ListView listChildren;
 
+    private GPS gps;
+
     @AfterViews
     void init() {
         this.configureBar();
 
-        final IRegisterReceiver registerReceiver = new SimpleRegisterReceiver(this);
-
         data = "id_ride=" + myPrefs.id_ride().get() + "&email=" + myPrefs.email().get() + "&pass=" + myPrefs.pass().get();
+        sendPointUrl = myPrefs.url_api().get() + Var.URL_API_SENDPOSITION;
 
         if (cancel != null && cancel.equals("1")) {
             showCancelDialog();
@@ -82,10 +79,6 @@ public class MonitorActivity extends ActionBarActivity {
         pdialog.setCancelable(false);
         pdialog.setMessage("Cargando...");
         pdialog.show();
-
-        // TODO: Necesario para OSMLOCPULLRECEIVER, mirar de quitar
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
 
         loadData();
     }
@@ -209,7 +202,7 @@ public class MonitorActivity extends ActionBarActivity {
             // stopService(SelectGroupActivity.intentGPS);  // TODO: No estoy seguro de que esto sea necesario
 
             // Cancelamos la ALARMA
-            String data_service = "email=" + myPrefs.email().get();
+            /*String data_service = "email=" + myPrefs.email().get();
             data_service += "&pass=" + myPrefs.pass().get();
             data_service += "&id_ride=" + myPrefs.id_ride().get();
 
@@ -220,7 +213,7 @@ public class MonitorActivity extends ActionBarActivity {
 
             PendingIntent pi;
             pi = PendingIntent.getBroadcast(this, 0, i, FLAG_UPDATE_CURRENT);
-            am.cancel(pi);
+            am.cancel(pi);*/
 
             // Eliminamos las ficaciones
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -235,6 +228,7 @@ public class MonitorActivity extends ActionBarActivity {
             }
 
             // Enviamos solicitud de fin de PASEO en Background
+
             sendFinishRide();
         }
     }
@@ -260,6 +254,7 @@ public class MonitorActivity extends ActionBarActivity {
         try {
             result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_RIDE_FINISH, fdata);
             myPrefs.id_ride().put("-1");
+            gps.stopGPS();
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
@@ -304,6 +299,8 @@ public class MonitorActivity extends ActionBarActivity {
 
     @UiThread
     void showData() {
+        gps = new GPS(this);
+
         // Creamos diccionario
         BindDictionary<EChild> dict = new BindDictionary<EChild>();
         dict.addStringField(R.id.titleCHILD,
@@ -416,8 +413,40 @@ public class MonitorActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Background
+    public void sendPoint(double lon, double lat){
+        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
+        String sendPointData = this.data;
+        sendPointData = sendPointData.concat("&latitude=" + lat);
+        sendPointData = sendPointData.concat("&longitude=" + lon);
+        Log.d("TEMA", "DATA_SENDPOINT: " + sendPointData);
+        String result = "";
+        try {
+            result = sc.postUrlContent(this.sendPointUrl, sendPointData);
+        } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        }
+
+        final Type objectCPD = new TypeToken<LastPoint>() {
+        }.getType();
+        LastPoint lastPoint = new Gson().fromJson(result, objectCPD);
+
+        if (lastPoint != null && lastPoint.data != null) {
+            myPrefs.end_ride().put(lastPoint.data.updated_at);
+        }
+    }
+
     @Override
-    public void onResume(){
+    protected void onResume() {
+        //if(gps != null) gps.resumeGPS();
         super.onResume();
+    }
+
+    @Override
+    public void locationChanged(double longitude, double latitude) {
+        Log.d("GPSMODULE", "Longitude: " + longitude);
+        Log.d("GPSMODULE", "Latitude: " + latitude);
+        //Toast.makeText(this, "Lon: " + longitude + " Lat: " + latitude, Toast.LENGTH_SHORT).show();
+        sendPoint(longitude, latitude);
     }
 }
