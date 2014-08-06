@@ -10,7 +10,7 @@
         android:id="@+id/textREPORT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Describa la incidencia: "
+        android:text="Describe la incidencia: "
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText

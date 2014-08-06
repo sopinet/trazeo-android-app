@@ -87,6 +87,7 @@ public class ChildAdapter extends ArrayAdapter<EChild> {
                     echild.setSelected(false);
                 else
                     echild.setSelected(true);
+                monitorActivity.changeChildShow(echild);
                 monitorActivity.changeChild(echild);
             }
         });

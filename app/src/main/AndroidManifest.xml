@@ -27,6 +27,12 @@
             android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
         <activity
+            android:name="com.sopinet.trazeo.app.RegisterActivity_"
+            android:label="@string/title_activity_register"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
+        </activity>
+        <activity
             android:name="com.sopinet.trazeo.app.SelectGroupActivity_"
             android:label="@string/title_activity_select_group"
             android:screenOrientation="portrait" >
@@ -42,6 +48,12 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_see" >
         </activity>
+
+        <receiver android:name="com.sopinet.android.mediauploader.ChangeConnectivity">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -50,5 +62,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

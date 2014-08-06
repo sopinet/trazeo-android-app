@@ -19,5 +19,9 @@
     <string name="title_activity_finish_ride">FinishRideActivity</string>
     <string name="title_activity_see">SeeActivity</string>
     <string name="about">Acerca de...</string>
+    <string name="action_points">Mis puntos</string>
+    <string name="confirm_register">Confirmar</string>
+    <string name="prompt_password_repeat">Repetir contraseña</string>
+    <string name="title_activity_register">Registro</string>
 
 </resources>

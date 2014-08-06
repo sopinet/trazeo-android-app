@@ -36,11 +36,18 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import com.sopinet.trazeo.app.gson.CreateRide;
 import com.sopinet.trazeo.app.gson.Group;
 import com.sopinet.trazeo.app.gson.Groups;
+import com.sopinet.trazeo.app.gson.TimestampData;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
 
 import java.lang.reflect.Type;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.widget.ListView;
+import android.widget.Toast;
 
 @EActivity(R.layout.activity_select_group)
 public class SelectGroupActivity extends ActionBarActivity{
@@ -53,8 +60,13 @@ public class SelectGroupActivity extends ActionBarActivity{
     public static NotificationManager notificationManager = null;
     public static NotificationCompat.Builder mBuilder = null;
 
+    public TimestampData timestampData;
+    public static Timestamp serverTimestamp;
+    public static Timestamp localTimestamp;
+
     @AfterViews
     void init() {
+        this.localTimestamp = getCurrentTimestamp();
         loadData();
         final LocationManager manager = (LocationManager) getSystemService( this.LOCATION_SERVICE );
         if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) )
@@ -67,6 +79,17 @@ public class SelectGroupActivity extends ActionBarActivity{
         String data = "email="+myPrefs.email().get();
         data += "&pass="+myPrefs.pass().get();
         String result = "";
+        String resultTimestamp = "";
+
+        try {
+            resultTimestamp = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_TIMESTAMP, data);
+        } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        }
+
+        final Type objectTimeStamp = new TypeToken<TimestampData>(){}.getType();
+        this.timestampData = new Gson().fromJson(resultTimestamp, objectTimeStamp);
+
         try {
             result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_GROUPS, data);
         } catch (SimpleContent.ApiException e) {
@@ -74,11 +97,12 @@ public class SelectGroupActivity extends ActionBarActivity{
         }
 
         final Type objectCPD = new TypeToken<Groups>(){}.getType();
+
         Groups groups = new Gson().fromJson(result, objectCPD);
 
         if(groups.data != null && groups.data.size() > 0) {
             for (int i = 0; i < groups.data.size(); i++) {
-                if (groups.data.get(i).hasride.equals("true") && groups.data.get(i).ride_id.equals(myPrefs.id_ride().get())) {
+                if (groups.data.get(i).hasride.equals("true") && groups.data.get(i).ride_id.equals(myPrefs.id_ride_monitor().get())) {
                     goActivityMonitor(false);
                 }
             }
@@ -90,6 +114,10 @@ public class SelectGroupActivity extends ActionBarActivity{
 
     @UiThread
     void showData(final Groups groups) {
+        this.serverTimestamp = parseFromStringToTimestamp(this.timestampData.data);
+
+        //Toast.makeText(this, this.localTimestamp.getTime() + this.serverTimestamp.getTime() + "", Toast.LENGTH_LONG).show();
+
         BindDictionary<Group> dict = new BindDictionary<Group>();
         dict.addStringField(R.id.name,
                 new StringExtractor<Group>() {
@@ -172,6 +200,8 @@ public class SelectGroupActivity extends ActionBarActivity{
         if (hasride.equals("true")) {
             goActivitySee();
         } else {
+            myPrefs.id_ride_monitor().put(createRide.data.id_ride);
+
             String data_service = "email=" + myPrefs.email().get();
             data_service += "&pass=" + myPrefs.pass().get();
             data_service += "&id_ride=" + createRide.data.id_ride;
@@ -272,7 +302,7 @@ public class SelectGroupActivity extends ActionBarActivity{
 
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("El GPS de su dispositivo parece estar desactivado, ¿Desea activarlo ahora?")
+        builder.setMessage("El GPS de tu dispositivo parece estar desactivado, ¿Quieres activarlo ahora?")
                 .setCancelable(false)
                 .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
@@ -286,6 +316,28 @@ public class SelectGroupActivity extends ActionBarActivity{
                 });
         final AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    public Timestamp parseFromStringToTimestamp(String data){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date parsedDate = null;
+
+        try {
+            parsedDate = dateFormat.parse(data);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if(parsedDate != null) {
+            Timestamp timestamp = new Timestamp(parsedDate.getTime());
+            return timestamp;
+        }
+        return null;
+    }
+
+    public static Timestamp getCurrentTimestamp(){
+        Date date= new Date();
+        return new Timestamp(date.getTime());
     }
 
 }

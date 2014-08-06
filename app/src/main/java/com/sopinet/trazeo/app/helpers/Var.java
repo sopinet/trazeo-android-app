@@ -7,6 +7,7 @@ public class Var {
     //ºpublic static String URL_API = "http://192.168.1.131/trazeo-web/web/app_dev.php/";
     //public static String URL_API = "http://192.168.1.34/trazeo-web/web/app_dev.php/";
     public static String URL_API_LOGIN = "api/login";
+    public static String URL_API_REGISTER = "api/register";
     public static String URL_API_GROUPS = "api/groups";
     public static String URL_API_RIDE_CREATE = "api/ride/createNew";
     public static String URL_API_RIDE_DATA = "api/ride/data";
@@ -23,4 +24,5 @@ public class Var {
 
     public static String URL_API_WALL = "api/group/timeline/list";
     public static String URL_API_WALL_NEW = "api/group/timeline/new";
+    public static String URL_API_TIMESTAMP = "api/timeStamp";
 }

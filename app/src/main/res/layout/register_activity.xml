@@ -10,23 +10,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.sopinet.trazeo.app.LoginActivity">
 
-    <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"/>
-
     <TextView
-        android:text="Introduce tu Email y Contraseña de acceso para Trazeo, o Regístrate si aún no tienes usuario."
+        android:text="Rellena los siguientes campos para completar el registro."
         android:layout_marginBottom="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <ScrollView
-        android:id="@+id/login_form"
+        android:id="@+id/register_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
@@ -35,40 +26,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-<!--
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/plus_sign_in_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"/>
-
             <LinearLayout
-                android:id="@+id/plus_sign_out_buttons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:weightSum="2">
-
-                <Button
-                    android:id="@+id/plus_sign_out_button"
-                    style="?android:textAppearanceSmall"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/plus_sign_out"/>
-
-                <Button
-                    android:id="@+id/plus_disconnect_button"
-                    style="?android:textAppearanceSmall"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/plus_disconnect"/>
-
-            </LinearLayout>
--->
-            <LinearLayout
-                android:id="@+id/email_login_form"
+                android:id="@+id/email_register_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -94,26 +53,27 @@
                     android:maxLines="1"
                     android:singleLine="true"/>
 
+                <EditText
+                    android:id="@+id/confirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_password_repeat"
+                    android:imeActionId="@+id/login"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionUnspecified"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:singleLine="true"/>
+
                 <Button
-                    android:id="@+id/email_sign_in_button"
+                    android:id="@+id/email_register_button"
                     android:background="#cbca20"
                     style="?android:textAppearanceSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/action_sign_in"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold"/>
-
-                <Button
-                    android:id="@+id/register"
-                    android:background="#82a939"
-                    style="?android:textAppearanceSmall"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/action_register"
-                    android:textColor="@android:color/white"
+                    android:text="@string/confirm_register"
                     android:textStyle="bold"/>
 
             </LinearLayout>
@@ -121,6 +81,3 @@
     </ScrollView>
 
 </LinearLayout>
-
-
-

@@ -25,8 +25,6 @@ public class MonitorDataFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_monitor_data, container, false);
 
-
-
         // Inflate the layout for this fragment
         return root;
     }

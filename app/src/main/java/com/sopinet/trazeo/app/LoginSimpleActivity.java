@@ -59,8 +59,8 @@ public class LoginSimpleActivity extends ActionBarActivity {
 
     @Click(R.id.register)
     void registerClick() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://dev.trazeo.es/panel"));
-        startActivity(browserIntent);
+        //Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://dev.trazeo.es/panel"));
+        startActivity(new Intent(LoginSimpleActivity.this, RegisterActivity_.class));
     }
 
     @Background
@@ -94,7 +94,7 @@ public class LoginSimpleActivity extends ActionBarActivity {
 
     @UiThread
     void showDialog() {
-        wait = SimpleDialogFragment.createBuilder(this, getSupportFragmentManager()).hideDefaultButton(true).setMessage("Espere...").show();
+        wait = SimpleDialogFragment.createBuilder(this, getSupportFragmentManager()).hideDefaultButton(true).setMessage("Espera...").show();
     }
 
     @UiThread

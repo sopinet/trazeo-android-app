@@ -8,7 +8,7 @@
     <string name="action_sign_in_short">Acceder</string>
     <string name="action_register">Registrarme</string>
     <string name="error_invalid_email">Esta dirección es inválida</string>
-    <string name="error_invalid_password">Su clave es demasiado corta</string>
-    <string name="error_incorrect_password">Su clave es inválida</string>
+    <string name="error_invalid_password">Tu clave es demasiado corta</string>
+    <string name="error_incorrect_password">Tu clave es inválida</string>
     <string name="error_field_required">Este campo es requerido</string>
 </resources>

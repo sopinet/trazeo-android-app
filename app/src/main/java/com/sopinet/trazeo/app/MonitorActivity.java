@@ -1,6 +1,8 @@
 package com.sopinet.trazeo.app;
 
 import java.lang.reflect.Type;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -26,11 +28,12 @@ import com.ami.fundapter.BindDictionary;
 import com.ami.fundapter.extractors.StringExtractor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sopinet.android.mediauploader.HttpPostHelper;
+import com.sopinet.android.mediauploader.MediaUploader;
 import com.sopinet.android.nethelper.SimpleContent;
 import com.sopinet.trazeo.app.gpsmodule.GPS;
 import com.sopinet.trazeo.app.gpsmodule.IGPSActivity;
 import com.sopinet.trazeo.app.gson.EChild;
-import com.sopinet.trazeo.app.gson.LastPoint;
 import com.sopinet.trazeo.app.gson.MasterRide;
 import com.sopinet.trazeo.app.gson.MasterWall;
 import com.sopinet.trazeo.app.helpers.ChildAdapter;
@@ -65,12 +68,15 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
 
     private GPS gps;
 
+    private double longitude;
+    private double latitude;
+
     @AfterViews
     void init() {
         this.configureBar();
 
         data = "id_ride=" + myPrefs.id_ride().get() + "&email=" + myPrefs.email().get() + "&pass=" + myPrefs.pass().get();
-        sendPointUrl = myPrefs.url_api().get() + Var.URL_API_SENDPOSITION;
+        this.sendPointUrl = myPrefs.url_api().get() + Var.URL_API_SENDPOSITION;
 
         if (cancel != null && cancel.equals("1")) {
             showCancelDialog();
@@ -80,6 +86,12 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         pdialog.setMessage("Cargando...");
         pdialog.show();
 
+        MediaUploader.MODE = "any";
+        MediaUploader.SENDINGCONTEXT = "com.sopinet.trazeo.app";
+        MediaUploader.SENDINGCLASS = "com.sopinet.trazeo.app.MonitorActivity_";
+        MediaUploader.RES_OK = "json";
+        MediaUploader.NOTIFICATION_ENABLED = false;
+
         loadData();
     }
 
@@ -87,7 +99,7 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
     void showCancelDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Trazeo: Terminar paseo");
-        builder.setMessage("Se terminará su paseo actual, ¿Está seguro?")
+        builder.setMessage("Se terminará tu paseo actual, ¿Estás seguro?")
                 .setCancelable(false)
                 .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
@@ -107,7 +119,7 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
     void showDisconnectDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Trazeo: Desconectar");
-        builder.setMessage("Se terminará su paseo actual y desconectará su usuario de la aplicación, ¿Está seguro?")
+        builder.setMessage("Se terminará tu paseo actual y desconectarás tu usuario de la aplicación, ¿Estás seguro?")
                 .setCancelable(false)
                 .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
@@ -183,6 +195,8 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
             result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_SENDREPORT, sdata);
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         }
         showReportOK();
     }
@@ -235,9 +249,10 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
 
     @Background
     void sendFinishRide() {
-        SimpleContent sc = new SimpleContent(this, "trazeo", 1);
-        String result = "";
+        //SimpleContent sc = new SimpleContent(this, "trazeo", 1);
+        //String result = "";
 
+        Log.d("MEDIAUPLOADERURL:", "MediaUploaderUrl: " + MediaUploader.URL);
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         String lat = "";
@@ -247,25 +262,44 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
             lon = String.valueOf(location.getLongitude());
         }
 
-        String fdata = data;
+        String finishRideData[] = new String[12];
+        finishRideData[0] = "id_ride";
+        finishRideData[1] = myPrefs.id_ride().get();
+        finishRideData[2] = "email";
+        finishRideData[3] = myPrefs.email().get();
+        finishRideData[4] = "pass";
+        finishRideData[5] = myPrefs.pass().get();
+        finishRideData[6] = "latitude";
+        finishRideData[7] = lat + "";
+        finishRideData[8] = "longitude";
+        finishRideData[9] = lon + "";
+        finishRideData[10] = "createat";
+        finishRideData[11] = calculateTimestamp().toString();
+        HttpPostHelper.send(MonitorActivity.this, finishRideData, "Final de paseo", myPrefs.url_api().get() + Var.URL_API_RIDE_FINISH);
+        myPrefs.id_ride().put("-1");
+        myPrefs.id_ride_monitor().put("-1");
+        gps.stopGPS();
+
+        /*String fdata = data;
         fdata += "&latitude=" + lat;
         fdata += "&longitude=" + lon;
 
         try {
             result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_RIDE_FINISH, fdata);
             myPrefs.id_ride().put("-1");
+            myPrefs.id_ride_monitor().put("-1");
             gps.stopGPS();
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
-        }
-        Log.d("TEMA", result);
+        }*/
 
+        //Log.d("TEMA", result);
         gotoSelect();
     }
 
     @UiThread
     void showWaitDialog() {
-        pdialog.setMessage("Espere...");
+        pdialog.setMessage("Espera...");
         pdialog.show();
     }
 
@@ -329,6 +363,7 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
                 checkbox.setChecked(!checkbox.isChecked());
                 echild.setSelected(checkbox.isChecked());
                 changeChild(echild);
+                changeChildShow(echild);
             }
         });
         pdialog.cancel();
@@ -345,6 +380,8 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
             url = myPrefs.url_api().get() + Var.URL_API_CHILDOUT;
         }
 
+        Log.d("ChangeChild", "ChangeChild: " + url);
+
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         String lat = "";
@@ -354,24 +391,32 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
             lon = String.valueOf(location.getLongitude());
         }
 
-        String data = this.data;
-        data += "&id_child=" + echild.id;
-        data += "&latitude=" + lat;
-        data += "&longitude=" + lon;
+        String childChangeData[] = new String[14];
+        childChangeData[0] = "id_ride";
+        childChangeData[1] = myPrefs.id_ride().get();
+        childChangeData[2] = "email";
+        childChangeData[3] = myPrefs.email().get();
+        childChangeData[4] = "pass";
+        childChangeData[5] = myPrefs.pass().get();
+        childChangeData[6] = "id_child";
+        childChangeData[7] = echild.id;
+        childChangeData[8] = "latitude";
+        childChangeData[9] = lat + "";
+        childChangeData[10] = "longitude";
+        childChangeData[11] = lon + "";
+        childChangeData[12] = "createat";
+        childChangeData[13] = calculateTimestamp().toString();
 
-        String result = "";
-        SimpleContent sc = new SimpleContent(this, "trazeo", 3);
-        try {
-            result = sc.postUrlContent(url, data);
-        } catch (SimpleContent.ApiException e) {
-            e.printStackTrace();
+        if(gps.isFixed() && lat != "" && lon != "" ) {
+            HttpPostHelper.send(MonitorActivity.this, childChangeData, "Evento vincular/desvincular niño", url);
+            //changeChildShow(echild);
+        } else {
+            gps.addData(MonitorActivity.this, childChangeData, "Evento vincular/desvincular niño", url, echild);
+            Log.d("DATALIST", "DATALIST: " + gps.dataList.size());
         }
-        changeChildShow(echild);
-        //Log.d("TEMA", result);
     }
 
-    @UiThread
-    void changeChildShow(EChild echild) {
+    public void changeChildShow(EChild echild) {
         String msg = "";
         if (echild.isSelected()) {
             msg = "(" + echild.nick + ")" + " Niño registrado en este Paseo";
@@ -415,7 +460,22 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
 
     @Background
     public void sendPoint(double lon, double lat){
-        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
+        String sendPointData[] = new String[12];
+        sendPointData[0] = "id_ride";
+        sendPointData[1] = myPrefs.id_ride().get();
+        sendPointData[2] = "email";
+        sendPointData[3] = myPrefs.email().get();
+        sendPointData[4] = "pass";
+        sendPointData[5] = myPrefs.pass().get();
+        sendPointData[6] = "latitude";
+        sendPointData[7] = lat + "";
+        sendPointData[8] = "longitude";
+        sendPointData[9] = lon + "";
+        sendPointData[10] = "createat";
+        sendPointData[11] = calculateTimestamp().toString();
+        HttpPostHelper.send(MonitorActivity.this, sendPointData, "Enviando posición", this.sendPointUrl);
+
+        /*SimpleContent sc = new SimpleContent(this, "trazeo", 0);
         String sendPointData = this.data;
         sendPointData = sendPointData.concat("&latitude=" + lat);
         sendPointData = sendPointData.concat("&longitude=" + lon);
@@ -433,7 +493,7 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
 
         if (lastPoint != null && lastPoint.data != null) {
             myPrefs.end_ride().put(lastPoint.data.updated_at);
-        }
+        }*/
     }
 
     @Override
@@ -446,7 +506,39 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
     public void locationChanged(double longitude, double latitude) {
         Log.d("GPSMODULE", "Longitude: " + longitude);
         Log.d("GPSMODULE", "Latitude: " + latitude);
-        //Toast.makeText(this, "Lon: " + longitude + " Lat: " + latitude, Toast.LENGTH_SHORT).show();
+
         sendPoint(longitude, latitude);
+    }
+
+    @Override
+    public void gpsFirstFix(Location location){
+
+        String latt = "";
+        String lonn = "";
+
+        for(int i = 0; i < gps.dataList.size(); i++){
+            Context context = (Context) gps.dataList.get(i)[0];
+            String[] data = (String[]) gps.dataList.get(i)[1];
+
+            data[9] = location.getLatitude() + "";
+            data[11] = location.getLongitude() + "";
+
+            String description = (String) gps.dataList.get(i)[2];
+            String url = (String) gps.dataList.get(i)[3];
+            EChild echild = (EChild) gps.dataList.get(i)[4];
+
+            HttpPostHelper.send(context, data, description, url);
+        }
+    }
+
+    public Timestamp calculateTimestamp(){
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+        
+        long result = SelectGroupActivity.serverTimestamp.getTime() +
+                (SelectGroupActivity.getCurrentTimestamp().getTime() - SelectGroupActivity.localTimestamp.getTime());
+        timestamp.setTime(result);
+
+        return timestamp;
     }
 }
