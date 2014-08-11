@@ -1,27 +1,17 @@
 package com.sopinet.trazeo.app.helpers;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.sopinet.trazeo.app.MonitorChildFragment;
 import com.sopinet.trazeo.app.R;
-import com.sopinet.trazeo.app.gson.EChild;
 import com.sopinet.trazeo.app.gson.EComment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-/**
- * Created by david on 19/05/14.
- */
 public class CommentAdapter extends ArrayAdapter<EComment> {
     private ArrayList<EComment> ecommentList;
     private Context context;

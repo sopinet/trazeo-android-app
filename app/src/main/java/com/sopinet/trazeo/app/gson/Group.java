@@ -7,4 +7,5 @@ public class Group {
     public String hasride = "";
     public String id_ride = "";
     public String ride_id = "";
+    public String admin;
 }

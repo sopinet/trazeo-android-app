@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.ami.fundapter.BindDictionary;
-import com.ami.fundapter.FunDapter;
 import com.ami.fundapter.extractors.StringExtractor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,6 +27,7 @@ import com.sopinet.android.nethelper.SimpleContent;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -37,6 +37,7 @@ import com.sopinet.trazeo.app.gson.CreateRide;
 import com.sopinet.trazeo.app.gson.Group;
 import com.sopinet.trazeo.app.gson.Groups;
 import com.sopinet.trazeo.app.gson.TimestampData;
+import com.sopinet.trazeo.app.helpers.GroupAdapter;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
 
@@ -46,16 +47,33 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 @EActivity(R.layout.activity_select_group)
 public class SelectGroupActivity extends ActionBarActivity{
     @Pref
     MyPrefs_ myPrefs;
 
+    Groups groups;
+
     @ViewById
     ListView listSelectGroup;
+
+    @ViewById
+    TextView btnSearch;
+
+    @ViewById
+    LinearLayout groups_layout;
+
+    @ViewById
+    LinearLayout no_groups_layout;
+
+    @ViewById
+    TextView btnBegin;
+
+    Menu mDynamicMenu;
 
     public static NotificationManager notificationManager = null;
     public static NotificationCompat.Builder mBuilder = null;
@@ -67,6 +85,10 @@ public class SelectGroupActivity extends ActionBarActivity{
     @AfterViews
     void init() {
         this.localTimestamp = getCurrentTimestamp();
+
+        btnSearch.setTextSize(10 * getResources().getDisplayMetrics().density);
+        btnBegin.setTextSize(15 * getResources().getDisplayMetrics().density);
+
         loadData();
         final LocationManager manager = (LocationManager) getSystemService( this.LOCATION_SERVICE );
         if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) )
@@ -98,7 +120,7 @@ public class SelectGroupActivity extends ActionBarActivity{
 
         final Type objectCPD = new TypeToken<Groups>(){}.getType();
 
-        Groups groups = new Gson().fromJson(result, objectCPD);
+        this.groups = new Gson().fromJson(result, objectCPD);
 
         if(groups.data != null && groups.data.size() > 0) {
             for (int i = 0; i < groups.data.size(); i++) {
@@ -118,41 +140,48 @@ public class SelectGroupActivity extends ActionBarActivity{
 
         //Toast.makeText(this, this.localTimestamp.getTime() + this.serverTimestamp.getTime() + "", Toast.LENGTH_LONG).show();
 
-        BindDictionary<Group> dict = new BindDictionary<Group>();
-        dict.addStringField(R.id.name,
-                new StringExtractor<Group>() {
+        if(groups.data.size() > 0) {
+            getMenuInflater().inflate(R.menu.select_group, mDynamicMenu);
+            groups_layout.setVisibility(View.VISIBLE);
+            no_groups_layout.setVisibility(View.GONE);
+            BindDictionary<Group> dict = new BindDictionary<Group>();
+            dict.addStringField(R.id.name,
+                    new StringExtractor<Group>() {
 
-                    @Override
-                    public String getStringValue(Group group, int position) {
-                        return group.name;
-                    }
-                });
-
-        dict.addStringField(R.id.description,
-                new StringExtractor<Group>() {
-                    @Override
-                    public String getStringValue(Group item, int position) {
-                        if (item.hasride.equals("true")) {
-                            return "...Paseo en curso...";
-                        } else {
-                            return "Iniciar";
+                        @Override
+                        public String getStringValue(Group group, int position) {
+                            return group.name;
                         }
+                    });
 
+            /*dict.addStringField(R.id.description,
+                    new StringExtractor<Group>() {
+                        @Override
+                        public String getStringValue(Group item, int position) {
+                            if (item.hasride.equals("true")) {
+                                return "...Paseo en curso...";
+                            } else {
+                                return "Iniciar";
+                            }
+                        }
                     }
+            );*/
+
+            GroupAdapter adapter = new GroupAdapter(this, R.layout.group_list_item, groups.data);
+
+            listSelectGroup.setAdapter(adapter);
+
+            listSelectGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    createRide(groups.data.get((int) l).id, groups.data.get((int) l).hasride);
                 }
-        );
-
-        FunDapter<Group> adapter = new FunDapter<Group>(this, groups.data,
-                R.layout.group_list_item, dict);
-
-        listSelectGroup.setAdapter(adapter);
-
-        listSelectGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                createRide(groups.data.get((int) l).id, groups.data.get((int) l).hasride);
-            }
-        });
+            });
+        } else {
+            getMenuInflater().inflate(R.menu.select_no_group, mDynamicMenu);
+            groups_layout.setVisibility(View.GONE);
+            no_groups_layout.setVisibility(View.VISIBLE);
+        }
 
         //Toast.makeText(this, "Espere unos segundos mientras cargamos los datos de la Ruta...", Toast.LENGTH_LONG).show();
     }
@@ -272,7 +301,7 @@ public class SelectGroupActivity extends ActionBarActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.select_group, menu);
+        mDynamicMenu = menu;
         return true;
     }
 

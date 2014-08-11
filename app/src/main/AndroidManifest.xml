@@ -48,6 +48,11 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_see" >
         </activity>
+        <activity
+            android:name="com.sopinet.trazeo.app.EditGroupActivity_"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_edit" >
+        </activity>
 
         <receiver android:name="com.sopinet.android.mediauploader.ChangeConnectivity">
             <intent-filter>

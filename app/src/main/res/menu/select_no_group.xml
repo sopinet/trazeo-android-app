@@ -10,20 +10,6 @@
         android:orderInCategory="100"
         app:showAsAction="always" />
 
-    <item android:id="@+id/info"
-        android:enabled="true"
-        android:title="Información"
-        android:icon="@drawable/ic_action_help"
-        android:orderInCategory="100"
-        app:showAsAction="always" />
-
-    <item android:id="@+id/new_group"
-        android:enabled="true"
-        android:title="Nuevo grupo"
-        android:icon="@drawable/ic_action_new"
-        android:orderInCategory="100"
-        app:showAsAction="always" />
-
     <item android:id="@+id/action_disconnect"
         android:title="@string/action_disconnect"
         android:orderInCategory="100"

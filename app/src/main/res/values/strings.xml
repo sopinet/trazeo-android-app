@@ -12,7 +12,7 @@
     <string name="dummy_content">Trazeo</string>
     <string name="title_activity_login_simple">Acceso</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_select_group">Selección de Grupo</string>
+    <string name="title_activity_select_group">Mis grupos de pedibus</string>
     <string name="title_activity_monitor">Trazeo</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action_disconnect">Desconectar</string>
@@ -23,5 +23,6 @@
     <string name="confirm_register">Confirmar</string>
     <string name="prompt_password_repeat">Repetir contraseña</string>
     <string name="title_activity_register">Registro</string>
+    <string name="title_activity_edit">Editar la configuración del grupo</string>
 
 </resources>

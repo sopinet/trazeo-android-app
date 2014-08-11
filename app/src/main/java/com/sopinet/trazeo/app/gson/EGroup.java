@@ -9,4 +9,5 @@ public class EGroup {
     public String visibility;
     public String has_ride;
     public String name;
+    public String admin;
 }
