@@ -27,9 +27,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Type;
 
-/**
- * Created by david on 6/08/14.
- */
 @EActivity(R.layout.register_activity)
 public class RegisterActivity extends ActionBarActivity{
 

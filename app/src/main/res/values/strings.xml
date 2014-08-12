@@ -24,5 +24,12 @@
     <string name="prompt_password_repeat">Repetir contraseña</string>
     <string name="title_activity_register">Registro</string>
     <string name="title_activity_edit">Editar la configuración del grupo</string>
+    <string name="prompt_edit_group">Nombre del grupo</string>
+    <string name="visibility_prompt">Visibilidad/Accesibilidad</string>
+
+    <string-array name="visibility_array">
+        <item>Público</item>
+        <item>Privado</item>
+    </string-array>
 
 </resources>

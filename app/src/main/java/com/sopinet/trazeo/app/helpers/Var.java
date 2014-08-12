@@ -25,4 +25,6 @@ public class Var {
     public static String URL_API_WALL = "api/group/timeline/list";
     public static String URL_API_WALL_NEW = "api/group/timeline/new";
     public static String URL_API_TIMESTAMP = "api/timeStamp";
+
+    public static String URL_API_MANAGE_GROUP = "api/manageGroup";
 }

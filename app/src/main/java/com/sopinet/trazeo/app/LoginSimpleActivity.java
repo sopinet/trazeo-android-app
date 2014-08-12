@@ -100,14 +100,19 @@ public class LoginSimpleActivity extends ActionBarActivity {
     @UiThread
     void showResult(Login login) {
         wait.dismiss();
-        if (login.state.equals("1")) {
-            myPrefs.user_id().put(login.data.id);
-            myPrefs.email().put(email.getText().toString());
-            myPrefs.pass().put(StringHelper.md5(password.getText().toString()));
-            Toast.makeText(this, "Ok", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, SelectGroupActivity_.class));
-        } else {
-            Toast.makeText(this, "Error login", Toast.LENGTH_SHORT).show();
+        try {
+            if (login.state.equals("1")) {
+                myPrefs.user_id().put(login.data.id);
+                myPrefs.email().put(email.getText().toString());
+                myPrefs.pass().put(StringHelper.md5(password.getText().toString()));
+                Toast.makeText(this, "Ok", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, SelectGroupActivity_.class));
+            } else {
+                Toast.makeText(this, "Error login", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e){
+            myPrefs.url_api().put("http://beta.trazeo.es/");
+            Toast.makeText(this, "Error en el servidor", Toast.LENGTH_SHORT).show();
         }
     }
 }
