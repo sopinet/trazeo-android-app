@@ -96,7 +96,7 @@
 
                 <Button
                     android:id="@+id/email_sign_in_button"
-                    android:background="#cbca20"
+                    android:background="@drawable/green_box"
                     style="?android:textAppearanceSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
 
                 <Button
                     android:id="@+id/register"
-                    android:background="#82a939"
+                    android:background="@drawable/green_0_box"
                     style="?android:textAppearanceSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

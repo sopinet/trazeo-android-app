@@ -5,23 +5,33 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ami.fundapter.BindDictionary;
@@ -53,6 +63,9 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
     @Extra
     String cancel;
 
+    @Extra
+    boolean firstRide;
+
     @Pref
     public MyPrefs_ myPrefs;
 
@@ -70,6 +83,8 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
 
     private double longitude;
     private double latitude;
+
+    private int step;
 
     @AfterViews
     void init() {
@@ -367,6 +382,9 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
             }
         });
         pdialog.cancel();
+
+        if(firstRide)
+            onCoachMark();
     }
 
     @Background
@@ -540,5 +558,67 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         timestamp.setTime(result);
 
         return timestamp;
+    }
+
+    private void onCoachMark(){
+        // Tutorial
+        this.step = 0;
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.coach_step1);
+        dialog.setCanceledOnTouchOutside(true);
+
+        final Button masterView = (Button) dialog.findViewById(R.id.coach_ok_button_1);
+        final TextView text = (TextView) dialog.findViewById(R.id.coach_text_1);
+        final LinearLayout images = (LinearLayout) dialog.findViewById(R.id.images);
+        final ImageView small_arrow = (ImageView) dialog.findViewById(R.id.coach_arrow_1);
+        final ImageView coach_bell = (ImageView) dialog.findViewById(R.id.coach_bell);
+        final ImageView coach_gps = (ImageView) dialog.findViewById(R.id.coach_gps);
+        final ImageView right_arrow = (ImageView) dialog.findViewById(R.id.coach_arrow_right);
+
+        masterView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                step++;
+                switch (step) {
+                    case 1:
+                        small_arrow.setVisibility(View.VISIBLE);
+                        text.setText("Cuando pulses sobre un niño y quede marcado, éste se considera incorporado al paseo y empieza a sumar puntos.");
+                        break;
+                    case 2:
+                        small_arrow.setVisibility(View.GONE);
+                        images.setGravity(Gravity.CENTER_HORIZONTAL);
+                        coach_bell.setVisibility(View.VISIBLE);
+                        coach_gps.setVisibility(View.VISIBLE);
+                        text.setText("A su familia le llegará un mensaje y podrá ver el recorrido del grupo. Recuerda activar el GPS");
+                        break;
+                    case 3:
+                        small_arrow.setVisibility(View.VISIBLE);
+                        images.setGravity(Gravity.NO_GRAVITY);
+                        coach_bell.setVisibility(View.GONE);
+                        coach_gps.setVisibility(View.GONE);
+                        text.setText("Cuando desmarques a un niño, se considera que ha llegado a su destino, a su familia le llegará un mensaje si lo ha configurado");
+                        break;
+                    case 4:
+                        small_arrow.setVisibility(View.GONE);
+                        images.setGravity(Gravity.RIGHT);
+                        right_arrow.setVisibility(View.VISIBLE);
+                        text.setText("Cuando todos hayan llegado al destino, finaliza el paseo pulsando aquí de arriba");
+                        break;
+                    case 5:
+                        right_arrow.setVisibility(View.GONE);
+                        text.setText("Obtendrás tus puntos, todos los miembros del grupo sabrán que habéis llegado y podrán ver un resumen");
+                        break;
+                    case 6:
+                        text.setText("Accediendo con tu correo y contraseña a la web www.trazeo.es podrás ver tus puntos y canjearlos por premios, hacer el seguimiento de los paseos de tu grupo cuando no lo acompañes, e invitar a otras familias a tu grupo si así lo deseas");
+                        masterView.setText("Finalizar");
+                        break;
+                    case 7:
+                        dialog.dismiss();
+                }
+            }
+        });
+        dialog.show();
     }
 }

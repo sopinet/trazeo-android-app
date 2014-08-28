@@ -8,11 +8,21 @@ public class EChild {
     public String gender;
     public String selected = "-";
 
+    public EChild(String nick, String gender) {
+        this.nick = nick;
+        this.gender = gender;
+        this.selected = "false";
+    }
+
     public boolean isSelected() {
-        if(this.selected.equals("true"))
-            return true;
-        else
+        try {
+            if (this.selected.equals("true"))
+                return true;
+            else
+                return false;
+        } catch(NullPointerException ne) {
             return false;
+        }
     }
     public void setSelected(Boolean selected) {
         this.selected = selected.toString();

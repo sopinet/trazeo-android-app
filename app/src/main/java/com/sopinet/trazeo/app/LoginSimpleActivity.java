@@ -84,6 +84,8 @@ public class LoginSimpleActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
 
+            Log.d("LOGIN", "LOGIN RESULT: " + result);
+
             final Type objectCPD = new TypeToken<Login>() {
             }.getType();
             Login login = new Gson().fromJson(result, objectCPD);

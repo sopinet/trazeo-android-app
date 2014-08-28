@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/coach_mark_master_view"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/content_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="15sp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/coach_arrow"
+            android:layout_width="80sp"
+            android:layout_height="80sp"
+            android:src="@drawable/white_arrow"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:id="@+id/coach_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/coach_arrow"
+            android:layout_alignParentBottom="true"
+            android:text="Aquí arriba debe aparecer tu primer grupo, cuando hagas click en él se iniciará el paseo"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:padding="10sp"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_weight="3">
+
+        <Button
+            android:id="@+id/coach_ok_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text="Entendido"
+            android:layout_marginRight="25sp"
+            android:layout_marginBottom="50sp"
+            android:background="@drawable/green_box"
+            android:textColor="@color/white"
+            android:padding="20sp"/>
+    </RelativeLayout>
+</LinearLayout>

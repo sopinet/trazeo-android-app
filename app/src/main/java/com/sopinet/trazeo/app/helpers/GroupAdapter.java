@@ -2,6 +2,7 @@ package com.sopinet.trazeo.app.helpers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,7 @@ public class GroupAdapter extends ArrayAdapter<Group> {
 
         final Group group = groupsList.get(position);
         holder.name.setText(group.name);
-        holder.name.setTextSize(13 * context.getResources().getDisplayMetrics().density);
+        holder.name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
 
         String description = "";
         if (group.hasride.equals("true")) {
@@ -68,7 +69,7 @@ public class GroupAdapter extends ArrayAdapter<Group> {
         }
 
         holder.description.setText(description);
-        holder.description.setTextSize(9 * context.getResources().getDisplayMetrics().density);
+        holder.description.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
 
         if(group.admin != null) {
             if (group.admin.equals("true")) {

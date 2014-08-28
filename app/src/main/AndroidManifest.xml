@@ -53,7 +53,21 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_edit" >
         </activity>
-
+        <activity
+            android:name="com.sopinet.trazeo.app.NewGroupActivity_"
+            android:screenOrientation="portrait"
+            android:label="Crear un nuevo grupo de pedibús">
+        </activity>
+        <activity
+            android:name="com.sopinet.trazeo.app.SearchGroupsActivity_"
+            android:screenOrientation="portrait"
+            android:label="Busca pedibuses en tu ciudad">
+        </activity>
+        <activity
+            android:name="com.sopinet.trazeo.app.AddChildrenGuide_"
+            android:screenOrientation="portrait"
+            android:label="Registro de niños">
+        </activity>
         <receiver android:name="com.sopinet.android.mediauploader.ChangeConnectivity">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

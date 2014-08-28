@@ -26,6 +26,10 @@
     <string name="title_activity_edit">Editar la configuración del grupo</string>
     <string name="prompt_edit_group">Nombre del grupo</string>
     <string name="visibility_prompt">Visibilidad/Accesibilidad</string>
+    <string name="provinces_prompt">Provincias</string>
+    <string name="cities_prompt">Localidades</string>
+    <string name="search_btn">Buscar</string>
+    <string name="see_all_btn">Ver todos</string>
 
     <string-array name="visibility_array">
         <item>Público</item>

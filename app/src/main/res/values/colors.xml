@@ -1,8 +1,11 @@
 <resources>
 
+    <color name="white">#fff</color>
     <color name="black_overlay">#66000000</color>
     <color name="green_trazeo_2">#cbca20</color>
     <color name="green_trazeo_1">#a8ba2e</color>
     <color name="green_trazeo_0">#82a939</color>
+    <color name="red_trazeo_0">#E3423E</color>
+    <color name="red_trazeo_1">#D2322D</color>
 
 </resources>

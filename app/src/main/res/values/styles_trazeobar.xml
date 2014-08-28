@@ -29,8 +29,6 @@
         <item name="actionModeBackground">@drawable/cab_background_top_trazeobar</item>
         <item name="actionModeSplitBackground">@drawable/cab_background_bottom_trazeobar</item>
         <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Trazeobar</item>
-
-        
     </style>
 
     <style name="ActionBar.Solid.Trazeobar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">

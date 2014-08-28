@@ -1,12 +1,15 @@
 package com.sopinet.trazeo.app;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.preference.PreferenceManager;
@@ -14,9 +17,11 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 
 import com.ami.fundapter.BindDictionary;
@@ -29,6 +34,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -58,6 +64,9 @@ public class SelectGroupActivity extends ActionBarActivity{
 
     Groups groups;
 
+    @Extra
+    boolean firstGroup;
+
     @ViewById
     ListView listSelectGroup;
 
@@ -86,8 +95,16 @@ public class SelectGroupActivity extends ActionBarActivity{
     void init() {
         this.localTimestamp = getCurrentTimestamp();
 
-        btnSearch.setTextSize(10 * getResources().getDisplayMetrics().density);
-        btnBegin.setTextSize(15 * getResources().getDisplayMetrics().density);
+        try {
+            if (firstGroup)
+                onCoachMark();
+        } catch(Exception e) {
+            e.printStackTrace();
+            firstGroup = false;
+        }
+
+        btnSearch.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        btnBegin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
 
         loadData();
         final LocationManager manager = (LocationManager) getSystemService( this.LOCATION_SERVICE );
@@ -231,11 +248,11 @@ public class SelectGroupActivity extends ActionBarActivity{
         } else {
             myPrefs.id_ride_monitor().put(createRide.data.id_ride);
 
-            String data_service = "email=" + myPrefs.email().get();
+            /*String data_service = "email=" + myPrefs.email().get();
             data_service += "&pass=" + myPrefs.pass().get();
             data_service += "&id_ride=" + createRide.data.id_ride;
 
-            /*intentGPS = new Intent(this, OsmLocPullService.class);
+            intentGPS = new Intent(this, OsmLocPullService.class);
             intentGPS.putExtra("url", myPrefs.url_api().get() + Var.URL_API_SENDPOSITION);
             intentGPS.putExtra("data", data_service);
             startService(intentGPS);*/
@@ -245,7 +262,9 @@ public class SelectGroupActivity extends ActionBarActivity{
     }
 
     void goActivityMonitor(Boolean isNew) {
-        startActivity(new Intent(SelectGroupActivity.this, MonitorActivity_.class));
+        Intent i = new Intent(SelectGroupActivity.this, MonitorActivity_.class);
+        i.putExtra("firstRide", firstGroup);
+        startActivity(i);
         if(isNew)
             createNotification();
         finish();
@@ -298,6 +317,16 @@ public class SelectGroupActivity extends ActionBarActivity{
         startActivity(new Intent(SelectGroupActivity.this, SeeActivity_.class));
     }
 
+    @Click(R.id.btnSearch)
+    public void btnSearchClick(){
+        startActivity(new Intent(this, SearchGroupsActivity_.class));
+    }
+
+    @Click(R.id.btnBegin)
+    public void btnBeginClick() {
+        startActivity(new Intent(this, AddChildrenGuide_.class));
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -318,10 +347,17 @@ public class SelectGroupActivity extends ActionBarActivity{
             myPrefs.url_api().put("http://beta.trazeo.es/");
             startActivity(new Intent(this, LoginSimpleActivity_.class));
             return true;
-        } else if (id == R.id.refresh){
+        } else if (id == R.id.refresh) {
             refreshGroups();
+        } else if (id == R.id.new_group) {
+            goNewGroup();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void goNewGroup(){
+        startActivity(new Intent(this, NewGroupActivity_.class));
+        finish();
     }
 
     public void refreshGroups(){
@@ -367,6 +403,24 @@ public class SelectGroupActivity extends ActionBarActivity{
     public static Timestamp getCurrentTimestamp(){
         Date date= new Date();
         return new Timestamp(date.getTime());
+    }
+
+    public void onCoachMark(){
+        // Tutorial
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.coach_mark);
+        dialog.setCanceledOnTouchOutside(true);
+        //for dismissing anywhere you touch
+        View masterView = dialog.findViewById(R.id.coach_ok_button);
+        masterView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
 }

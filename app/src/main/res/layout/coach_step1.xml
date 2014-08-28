@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/coach_mark_master_view_1"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/content_layout_1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="15sp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/images"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/coach_arrow_1"
+                android:layout_width="80sp"
+                android:layout_height="80sp"
+                android:src="@drawable/small_arrow_white"
+                android:layout_marginTop="70sp"
+                android:visibility="gone"
+                android:layout_marginLeft="18sp"/>
+
+            <ImageView
+                android:id="@+id/coach_bell"
+                android:layout_width="40sp"
+                android:layout_height="40sp"
+                android:src="@drawable/notification_icon"
+                android:layout_marginTop="70sp"
+                android:visibility="gone"
+                android:layout_marginLeft="18sp"/>
+
+            <ImageView
+                android:id="@+id/coach_gps"
+                android:layout_width="40sp"
+                android:layout_height="40sp"
+                android:src="@drawable/gps_icon"
+                android:visibility="gone"
+                android:layout_marginTop="70sp"
+                android:layout_marginLeft="18sp"/>
+
+            <ImageView
+                android:id="@+id/coach_arrow_right"
+                android:layout_width="80sp"
+                android:layout_height="80sp"
+                android:src="@drawable/right_arrow_white"
+                android:visibility="gone"
+                android:layout_marginTop="70sp"
+                android:layout_marginRight="34sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/coach_text_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/coach_arrow"
+            android:layout_alignParentBottom="true"
+            android:text="Por ahora sólo tienes registrados a tus hijos, pero el listado crecerá si utilizas el grupo para organizarte con otras familias"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:padding="10sp"
+            android:layout_marginBottom="50sp"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="3">
+
+        <Button
+            android:id="@+id/coach_ok_button_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text="Continuar"
+            android:layout_marginRight="20sp"
+            android:layout_marginBottom="20sp"
+            android:background="@drawable/green_box"
+            android:textColor="@color/white"
+            android:padding="20sp"/>
+    </RelativeLayout>
+</LinearLayout>

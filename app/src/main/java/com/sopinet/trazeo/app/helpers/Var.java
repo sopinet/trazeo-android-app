@@ -27,4 +27,10 @@ public class Var {
     public static String URL_API_TIMESTAMP = "api/timeStamp";
 
     public static String URL_API_MANAGE_GROUP = "api/manageGroup";
+    public static String URL_API_SEARCH_GROUPS = "api/groupsCity";
+    public static String URL_API_GET_CITIES = "api/cities";
+    public static String URL_API_JOIN_GROUP = "api/joinGroup";
+    public static String URL_API_REQUEST_GROUP = "api/requestJoinGroup";
+    public static String URL_API_MANAGE_CHILD = "api/manageChild";
+    public static String URL_API_GET_CHILDREN = "api/user/childs";
 }
