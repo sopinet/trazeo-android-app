@@ -1,9 +1,12 @@
 package com.sopinet.trazeo.app;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
@@ -103,9 +106,31 @@ public class EditGroupActivity extends ActionBarActivity{
             Toast.makeText(this, "El grupo ha sido editado correctamente", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, SelectGroupActivity_.class));
             finish();
+        } else if (edit_group.msg.equals("Name is already in use")){
+            Toast.makeText(this, "Este nombre ya se está usando", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Ha ocurrido un error", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void buildHelpDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Sólo tú como administrador puedes cambiar la configuración del grupo. Si tu grupo es \"Privado\", las personas que quieran unirse tendrán que solicitar tu permiso para hacerlo. Si es \"Público\", cualquiera puede unirse de forma sencilla en cualquier momento. Recuerda poner un nombre significativo al grupo, para que sea fácil de encontrar por las personas que lo busquen. Poner el nombre del colegio destino y la zona de salida puede ser buena idea.")
+                .setCancelable(false)
+                .setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.dismiss();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.edit_group, menu);
+        return true;
     }
 
     @Override
@@ -114,7 +139,11 @@ public class EditGroupActivity extends ActionBarActivity{
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.help:
+                buildHelpDialog();
+                break;
         }
         return true;
     }
+
 }

@@ -10,9 +10,9 @@
         android:orderInCategory="100"
         app:showAsAction="always" />
 
-    <item android:id="@+id/info"
+    <item android:id="@+id/help"
         android:enabled="true"
-        android:title="Información"
+        android:title="Ayuda"
         android:icon="@drawable/ic_action_help"
         android:orderInCategory="100"
         app:showAsAction="always" />
@@ -28,12 +28,6 @@
         android:title="@string/action_disconnect"
         android:orderInCategory="100"
         app:showAsAction="never" />
-
-    <item android:id="@+id/action_points"
-        android:title="@string/action_points"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        />
 
     <!-- <item android:id="@+id/acerca_de"
         android:title="@string/about"

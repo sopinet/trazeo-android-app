@@ -267,7 +267,6 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         //SimpleContent sc = new SimpleContent(this, "trazeo", 1);
         //String result = "";
 
-        Log.d("MEDIAUPLOADERURL:", "MediaUploaderUrl: " + MediaUploader.URL);
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         String lat = "";
@@ -322,7 +321,14 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
     void gotoSelect() {
         pdialog.cancel();
         Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show();
-        startActivity(new Intent(this, InitActivity_.class));
+        Intent i = new Intent(this, SelectGroupActivity_.class);
+
+        if(firstRide)
+            i.putExtra("firstFinish", true);
+        else
+            i.putExtra("firstFinish", false);
+
+        startActivity(i);
         finish();
     }
 
@@ -604,17 +610,14 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
                         small_arrow.setVisibility(View.GONE);
                         images.setGravity(Gravity.RIGHT);
                         right_arrow.setVisibility(View.VISIBLE);
-                        text.setText("Cuando todos hayan llegado al destino, finaliza el paseo pulsando aquí de arriba");
+                        text.setText("Cuando todos hayan llegado al destino, finaliza el paseo pulsando aquí arriba");
                         break;
                     case 5:
                         right_arrow.setVisibility(View.GONE);
                         text.setText("Obtendrás tus puntos, todos los miembros del grupo sabrán que habéis llegado y podrán ver un resumen");
-                        break;
-                    case 6:
-                        text.setText("Accediendo con tu correo y contraseña a la web www.trazeo.es podrás ver tus puntos y canjearlos por premios, hacer el seguimiento de los paseos de tu grupo cuando no lo acompañes, e invitar a otras familias a tu grupo si así lo deseas");
                         masterView.setText("Finalizar");
                         break;
-                    case 7:
+                    case 6:
                         dialog.dismiss();
                 }
             }

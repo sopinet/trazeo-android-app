@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/coach_arrow"
             android:layout_alignParentBottom="true"
-            android:text="Aquí arriba debe aparecer tu primer grupo, cuando hagas click en él se iniciará el paseo"
+            android:text="Aquí arriba debe aparecer tu primer grupo. Cuando pulses sobre él se iniciará el paseo"
             android:textSize="20sp"
             android:textColor="@color/white"
             android:gravity="center"

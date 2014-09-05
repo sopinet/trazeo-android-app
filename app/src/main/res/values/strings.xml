@@ -30,6 +30,7 @@
     <string name="cities_prompt">Localidades</string>
     <string name="search_btn">Buscar</string>
     <string name="see_all_btn">Ver todos</string>
+    <string name="firstFinish"><![CDATA[Aquí finaliza tu primer paseo de prueba. Accediendo con tu correo y contraseña a la web <a href="http://www.trazeo.es">www.trazeo.es</a> podrás ver tus puntos y canjearlos por premios. Podrás hacer el seguimiento de los paseos de tu grupo cuando no lo acompañes e invitar a otras familias a unirse si así lo deseas.]]></string>
 
     <string-array name="visibility_array">
         <item>Público</item>

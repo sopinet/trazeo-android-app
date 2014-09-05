@@ -1,9 +1,12 @@
 package com.sopinet.trazeo.app;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
@@ -102,6 +105,26 @@ public class NewGroupActivity extends ActionBarActivity{
         }
     }
 
+    private void buildHelpDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Cuando crees un nuevo grupo se creará por defecto como “Privado”, por lo que las personas que quieran unirse tendrán que solicitar tu permiso para hacerlo. Puedes cambiar la visibilidad a “Público” si quieres que cualquier usuario pueda unirse de forma sencilla. Recuerda poner un nombre significativo al grupo, para que sea fácil de encontrar por las personas que lo busquen. Poner el nombre del colegio destino y la zona de salida puede ser buena idea.")
+                .setCancelable(false)
+                .setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.dismiss();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.new_group, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -109,7 +132,11 @@ public class NewGroupActivity extends ActionBarActivity{
                 startActivity(new Intent(this, SelectGroupActivity_.class));
                 finish();
                 break;
+            case R.id.help:
+                buildHelpDialog();
+                break;
         }
         return true;
     }
+
 }

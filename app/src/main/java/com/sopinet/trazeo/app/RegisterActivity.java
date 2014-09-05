@@ -3,6 +3,7 @@ package com.sopinet.trazeo.app;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AutoCompleteTextView;
@@ -14,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.mediauploader.MinimalJSON;
 import com.sopinet.android.nethelper.SimpleContent;
 import com.sopinet.android.nethelper.StringHelper;
+import com.sopinet.trazeo.app.gson.Login;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.Var;
 
@@ -103,18 +105,23 @@ public class RegisterActivity extends ActionBarActivity{
             e.printStackTrace();
         }
 
-        final Type objectCPD = new TypeToken<MinimalJSON>() {
+        Log.d("REGISTER", "REGISTER: " + result);
+        final Type objectCPD = new TypeToken<Login>() {
         }.getType();
-        MinimalJSON register = new Gson().fromJson(result, objectCPD);
+        Login register = new Gson().fromJson(result, objectCPD);
 
         showResult(register);
     }
 
     @UiThread
-    void showResult(MinimalJSON register){
+    void showResult(Login register){
         pdialog.dismiss();
         if (register.state.equals("1")) {
-            startActivity(new Intent(this, LoginSimpleActivity_.class));
+            myPrefs.user_id().put(register.data.id);
+            myPrefs.email().put(email.getText().toString());
+            myPrefs.pass().put(StringHelper.md5(password.getText().toString()));
+            startActivity(new Intent(this, SelectGroupActivity_.class));
+            finish();
         } else {
             Toast.makeText(this, "Ya existe un usuario con ese email", Toast.LENGTH_SHORT).show();
         }

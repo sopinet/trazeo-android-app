@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -16,6 +15,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -53,6 +54,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -66,6 +68,9 @@ public class SelectGroupActivity extends ActionBarActivity{
 
     @Extra
     boolean firstGroup;
+
+    @Extra
+    boolean firstFinish;
 
     @ViewById
     ListView listSelectGroup;
@@ -97,10 +102,13 @@ public class SelectGroupActivity extends ActionBarActivity{
 
         try {
             if (firstGroup)
-                onCoachMark();
+                onCoachMark(false);
+            if(firstFinish)
+                onCoachMark(true);
         } catch(Exception e) {
             e.printStackTrace();
             firstGroup = false;
+            firstFinish = false;
         }
 
         btnSearch.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
@@ -351,6 +359,8 @@ public class SelectGroupActivity extends ActionBarActivity{
             refreshGroups();
         } else if (id == R.id.new_group) {
             goNewGroup();
+        } else if (id == R.id.help) {
+            buildHelpDialog();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -383,6 +393,19 @@ public class SelectGroupActivity extends ActionBarActivity{
         alert.show();
     }
 
+    private void buildHelpDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Los grupos a los que estáis vinculados tus hijos y tú aparecen aquí. Cuando quieras iniciar el paseo para ese grupo, pulsa sobre él. Te aparecerá el listado de todos los niños que están dados de alta y podrás seleccionar a los que se vayan uniendo ese día al paseo, que son los que recibirán puntos por participar y cuyos padres serán notificados cuando los marques, desmarques y cuando llegues al destino.")
+                .setCancelable(false)
+                .setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.dismiss();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     public Timestamp parseFromStringToTimestamp(String data){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date parsedDate = null;
@@ -405,7 +428,7 @@ public class SelectGroupActivity extends ActionBarActivity{
         return new Timestamp(date.getTime());
     }
 
-    public void onCoachMark(){
+    public void onCoachMark(boolean firstFinish){
         // Tutorial
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -420,6 +443,14 @@ public class SelectGroupActivity extends ActionBarActivity{
                 dialog.dismiss();
             }
         });
+
+        if(firstFinish){
+            ImageView image = (ImageView) dialog.findViewById(R.id.coach_arrow);
+            image.setVisibility(View.GONE);
+            TextView text = (TextView) dialog.findViewById(R.id.coach_text);
+            text.setText(Html.fromHtml(getString(R.string.firstFinish)));
+            text.setMovementMethod(LinkMovementMethod.getInstance());
+        }
         dialog.show();
     }
 

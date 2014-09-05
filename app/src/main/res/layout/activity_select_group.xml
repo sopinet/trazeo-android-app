@@ -45,16 +45,29 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:gravity="center">
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1">
 
-            <ImageView
-                android:id="@+id/no_groups_help"
-                android:layout_width="100dip"
-                android:layout_height="100dip"
-                android:clickable="true"
-                android:src="@drawable/question3"/>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#555"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:paddingLeft="10sp"
+                android:paddingTop="10sp"
+                android:text="Bienvenido a Trazeo"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#666"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingLeft="10sp"
+                android:paddingTop="5sp"
+                android:text="1.- Pulsa 'Empieza' y se creará un grupo automáticamente\n\n2.- Registra a tus hijos\n\n3.- Realiza un primer paseo de prueba y obtén tus primeros puntos\n\n4.- Si quieres que tu grupo crezca, invita a otras familias a participar."/>
 
         </LinearLayout>
 
