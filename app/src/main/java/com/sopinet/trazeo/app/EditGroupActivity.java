@@ -32,6 +32,8 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Type;
 
+import io.segment.android.Analytics;
+
 @EActivity(R.layout.edit_group_activity)
 public class EditGroupActivity extends ActionBarActivity{
 
@@ -52,6 +54,7 @@ public class EditGroupActivity extends ActionBarActivity{
     @AfterViews
     void init(){
         configureBar();
+        Analytics.onCreate(this);
     }
 
     private void configureBar() {
@@ -144,6 +147,30 @@ public class EditGroupActivity extends ActionBarActivity{
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Analytics.activityStart(this);
+    }
+
+    @Override
+    protected void onPause() {
+        Analytics.activityPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Analytics.activityResume(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Analytics.activityStop(this);
     }
 
 }

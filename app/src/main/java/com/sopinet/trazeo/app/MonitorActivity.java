@@ -57,6 +57,9 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import io.segment.android.Analytics;
+import io.segment.android.models.Props;
+
 @EActivity(R.layout.fragment_monitor_child)
 public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
 
@@ -107,6 +110,8 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         MediaUploader.RES_OK = "json";
         MediaUploader.NOTIFICATION_ENABLED = false;
 
+        Analytics.onCreate(this);
+        Analytics.track("Monitor In - Android", new Props("email", myPrefs.email().get()));
         loadData();
     }
 
@@ -328,6 +333,7 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         else
             i.putExtra("firstFinish", false);
 
+        Analytics.track("Ride Finished - Android", new Props("email", myPrefs.email().get()));
         startActivity(i);
         finish();
     }
@@ -524,6 +530,7 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
     protected void onResume() {
         //if(gps != null) gps.resumeGPS();
         super.onResume();
+        Analytics.activityResume(this);
     }
 
     @Override
@@ -623,5 +630,23 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
             }
         });
         dialog.show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Analytics.activityStart(this);
+    }
+
+    @Override
+    protected void onPause() {
+        Analytics.activityPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Analytics.activityStop(this);
     }
 }

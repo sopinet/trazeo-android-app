@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Introduce la dirección de email de la persona a la que quieres invitar a unirse al grupo"
+            android:padding="15sp"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:textColor="#555"/>
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="trazeo@ejemplo.com"
+            android:padding="15sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/cancelBtn"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:background="@drawable/red_box"
+            android:text="Cancelar"/>
+        <Button
+            android:id="@+id/confirmBtn"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:background="@drawable/green_box"
+            android:text="Confirmar"/>
+    </LinearLayout>
+</RelativeLayout>

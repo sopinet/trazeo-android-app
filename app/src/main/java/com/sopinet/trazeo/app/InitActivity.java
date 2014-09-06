@@ -23,6 +23,8 @@ import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import io.segment.android.Analytics;
+
 @EActivity(R.layout.activity_init)
 public class InitActivity extends Activity {
     @Pref
@@ -42,6 +44,7 @@ public class InitActivity extends Activity {
         ms.level(MarketService.REVISION).checkVersion();
 
         final int SPLASH_DISPLAY_LENGHT = 2000;
+        Analytics.onCreate(this);
 
         new Handler().postDelayed(new Runnable(){
             @Override
@@ -59,5 +62,29 @@ public class InitActivity extends Activity {
             }
         }, SPLASH_DISPLAY_LENGHT);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Analytics.activityStart(this);
+    }
+
+    @Override
+    protected void onPause() {
+        Analytics.activityPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Analytics.activityResume(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Analytics.activityStop(this);
     }
 }

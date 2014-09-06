@@ -29,6 +29,8 @@ import android.util.Log;
 import java.lang.reflect.Type;
 
 import eu.inmite.android.lib.dialogs.SimpleDialogFragment;
+import io.segment.android.Analytics;
+import io.segment.android.models.Props;
 
 
 @EActivity(R.layout.activity_login)
@@ -49,6 +51,7 @@ public class LoginSimpleActivity extends ActionBarActivity {
 
     @AfterViews
     void init() {
+        Analytics.onCreate(this);
         email_sign_in_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,7 +111,9 @@ public class LoginSimpleActivity extends ActionBarActivity {
                 myPrefs.email().put(email.getText().toString());
                 myPrefs.pass().put(StringHelper.md5(password.getText().toString()));
                 Toast.makeText(this, "Ok", Toast.LENGTH_SHORT).show();
+                Analytics.track("Login - Android", new Props("email", myPrefs.email().get()));
                 startActivity(new Intent(this, SelectGroupActivity_.class));
+                finish();
             } else {
                 Toast.makeText(this, "Error login", Toast.LENGTH_SHORT).show();
             }
@@ -116,5 +121,29 @@ public class LoginSimpleActivity extends ActionBarActivity {
             myPrefs.url_api().put("http://beta.trazeo.es/");
             Toast.makeText(this, "Error en el servidor", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Analytics.activityStart(this);
+    }
+
+    @Override
+    protected void onPause() {
+        Analytics.activityPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Analytics.activityResume(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Analytics.activityStop(this);
     }
 }

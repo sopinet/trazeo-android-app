@@ -33,6 +33,8 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import io.segment.android.Analytics;
+
 @EActivity(R.layout.add_children_guide)
 public class AddChildrenGuide extends ActionBarActivity {
 
@@ -68,6 +70,7 @@ public class AddChildrenGuide extends ActionBarActivity {
     @AfterViews
     void init() {
         showDialog("Cargando...");
+        Analytics.onCreate(this);
         newChildren = new ArrayList<EChild>();
         getUserChildren();
     }
@@ -199,5 +202,29 @@ public class AddChildrenGuide extends ActionBarActivity {
         this.pdialog.setCancelable(false);
         this.pdialog.setMessage(msg);
         this.pdialog.show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Analytics.activityStart(this);
+    }
+
+    @Override
+    protected void onPause() {
+        Analytics.activityPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Analytics.activityResume(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Analytics.activityStop(this);
     }
 }

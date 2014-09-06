@@ -39,6 +39,9 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import io.segment.android.Analytics;
+import io.segment.android.models.Props;
+
 @EActivity(R.layout.activity_see)
 public class SeeActivity extends ActionBarActivity {
 
@@ -68,6 +71,10 @@ public class SeeActivity extends ActionBarActivity {
     void init() {
         configureBar();
         data = "id_ride="+myPrefs.id_ride().get()+"&email="+myPrefs.email().get()+"&pass="+myPrefs.pass().get();
+
+        Analytics.onCreate(this);
+
+        Analytics.track("See Ride In - Android", new Props("email", myPrefs.email().get()));
 
         String tiles[] = new String[1];
         tiles[0] = "http://tile.openstreetmap.org/";
@@ -270,5 +277,24 @@ public class SeeActivity extends ActionBarActivity {
     protected void onStop() {
         super.onStop();
         handler.removeCallbacksAndMessages(null);
+        Analytics.activityStop(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Analytics.activityStart(this);
+    }
+
+    @Override
+    protected void onPause() {
+        Analytics.activityPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Analytics.activityResume(this);
     }
 }

@@ -2,19 +2,27 @@ package com.sopinet.trazeo.app.helpers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sopinet.trazeo.app.EditGroupActivity_;
 import com.sopinet.trazeo.app.R;
+import com.sopinet.trazeo.app.SelectGroupActivity;
 import com.sopinet.trazeo.app.gson.Group;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by david on 19/05/14.
@@ -22,6 +30,7 @@ import java.util.ArrayList;
 public class GroupAdapter extends ArrayAdapter<Group> {
     private ArrayList<Group> groupsList;
     private Context context;
+    int spinSelectCount = 0;
 
     public GroupAdapter(Context context, int textViewResourceId,
                           ArrayList<Group> countryList) {
@@ -32,9 +41,11 @@ public class GroupAdapter extends ArrayAdapter<Group> {
     }
 
     private class ViewHolder {
+        LinearLayout groupItem;
         TextView name;
         TextView description;
-        ImageView edit;
+        ImageView spinBtn;
+        Spinner groupOptions;
     }
 
     @Override
@@ -48,9 +59,11 @@ public class GroupAdapter extends ArrayAdapter<Group> {
             convertView = vi.inflate(R.layout.group_list_item, null);
 
             holder = new ViewHolder();
+            holder.groupItem = (LinearLayout) convertView.findViewById(R.id.groupItem);
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.description = (TextView) convertView.findViewById(R.id.description);
-            holder.edit = (ImageView) convertView.findViewById(R.id.edit);
+            holder.spinBtn = (ImageView) convertView.findViewById(R.id.spinBtn);
+            holder.groupOptions = (Spinner) convertView.findViewById(R.id.groupOptions);
             convertView.setTag(holder);
         }
         else {
@@ -72,19 +85,51 @@ public class GroupAdapter extends ArrayAdapter<Group> {
         holder.description.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
 
         if(group.admin != null) {
-            if (group.admin.equals("true")) {
-                holder.edit.setVisibility(View.VISIBLE);
-            } else {
-                holder.edit.setVisibility(View.GONE);
-            }
+            ArrayList<String> list = new ArrayList<String>();
+            list.add("");
+            list.add("Invitar");
+            if (group.admin.equals("true"))
+                list.add("Configuración");
+
+            SpinnerAdapter dataAdapter = new SpinnerAdapter(context,
+                    android.R.layout.simple_spinner_item, list, 0);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            holder.groupOptions.setAdapter(dataAdapter);
         }
 
-        holder.edit.setOnClickListener(new View.OnClickListener() {
+        final ViewHolder finalHolder = holder;
+        holder.spinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(context, EditGroupActivity_.class);
-                i.putExtra("id_group", group.id);
-                context.startActivity(i);
+                finalHolder.groupOptions.performClick();
+            }
+        });
+
+
+        holder.groupOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 1) {
+                    ((SelectGroupActivity) context).showInviteDialog(group.id);
+                    finalHolder.groupOptions.setSelection(0);
+                }else if(i == 2) {
+                    Intent in = new Intent(context, EditGroupActivity_.class);
+                    in.putExtra("id_group", group.id);
+                    context.startActivity(in);
+                    finalHolder.groupOptions.setSelection(0);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        holder.groupItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((SelectGroupActivity) context).createRide(group.id, group.hasride);
             }
         });
 

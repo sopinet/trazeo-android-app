@@ -39,6 +39,9 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Type;
 
+import io.segment.android.Analytics;
+import io.segment.android.models.Props;
+
 @EActivity(R.layout.search_groups_activity)
 public class SearchGroupsActivity extends ActionBarActivity {
 
@@ -70,7 +73,10 @@ public class SearchGroupsActivity extends ActionBarActivity {
         pdialog.setCancelable(false);
         pdialog.setMessage("Cargando...");
         pdialog.show();
+        Analytics.onCreate(this);
         obtainCities();
+
+        Analytics.track("Search Groups In - Android", new Props("email", myPrefs.email().get()));
     }
 
     @Click(R.id.btnSearchGroups)
@@ -236,6 +242,7 @@ public class SearchGroupsActivity extends ActionBarActivity {
             Toast.makeText(this, "Ha ocurrido un problema", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Vinculado correctamente", Toast.LENGTH_LONG).show();
+            Analytics.track("Join Group - Android", new Props("email", myPrefs.email().get()));
         }
     }
 
@@ -268,6 +275,7 @@ public class SearchGroupsActivity extends ActionBarActivity {
             Toast.makeText(this, "Ha ocurrido un problema", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Se ha enviado tu solicitud", Toast.LENGTH_LONG).show();
+            Analytics.track("Request Group Sent - Android", new Props("email", myPrefs.email().get()));
         }
     }
 
@@ -302,5 +310,29 @@ public class SearchGroupsActivity extends ActionBarActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Analytics.activityStart(this);
+    }
+
+    @Override
+    protected void onPause() {
+        Analytics.activityPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Analytics.activityResume(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Analytics.activityStop(this);
     }
 }

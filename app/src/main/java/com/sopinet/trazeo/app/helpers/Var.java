@@ -33,4 +33,5 @@ public class Var {
     public static String URL_API_REQUEST_GROUP = "api/requestJoinGroup";
     public static String URL_API_MANAGE_CHILD = "api/manageChild";
     public static String URL_API_GET_CHILDREN = "api/user/childs";
+    public static final String URL_API_INVITE = "api/invite";
 }

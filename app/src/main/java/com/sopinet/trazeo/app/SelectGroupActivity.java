@@ -29,6 +29,7 @@ import com.ami.fundapter.BindDictionary;
 import com.ami.fundapter.extractors.StringExtractor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sopinet.android.nethelper.MinimalJSON;
 import com.sopinet.android.nethelper.SimpleContent;
 
 import org.androidannotations.annotations.AfterViews;
@@ -54,10 +55,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import io.segment.android.Analytics;
+import io.segment.android.models.Props;
 
 @EActivity(R.layout.activity_select_group)
 public class SelectGroupActivity extends ActionBarActivity{
@@ -100,6 +107,8 @@ public class SelectGroupActivity extends ActionBarActivity{
     void init() {
         this.localTimestamp = getCurrentTimestamp();
 
+        Analytics.onCreate(this);
+
         try {
             if (firstGroup)
                 onCoachMark(false);
@@ -118,6 +127,7 @@ public class SelectGroupActivity extends ActionBarActivity{
         final LocationManager manager = (LocationManager) getSystemService( this.LOCATION_SERVICE );
         if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) )
             buildAlertMessageNoGps();
+        Analytics.track("Groups List In - Android", new Props("email", myPrefs.email().get()));
     }
 
     @Background
@@ -195,13 +205,6 @@ public class SelectGroupActivity extends ActionBarActivity{
             GroupAdapter adapter = new GroupAdapter(this, R.layout.group_list_item, groups.data);
 
             listSelectGroup.setAdapter(adapter);
-
-            listSelectGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    createRide(groups.data.get((int) l).id, groups.data.get((int) l).hasride);
-                }
-            });
         } else {
             getMenuInflater().inflate(R.menu.select_no_group, mDynamicMenu);
             groups_layout.setVisibility(View.GONE);
@@ -213,7 +216,7 @@ public class SelectGroupActivity extends ActionBarActivity{
 
 
     @Background
-    void createRide(String l, String hasride) {
+    public void createRide(String l, String hasride) {
 
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -454,4 +457,86 @@ public class SelectGroupActivity extends ActionBarActivity{
         dialog.show();
     }
 
+    public void showInviteDialog(final String id) {
+        final Dialog shareDialog;
+        shareDialog = new Dialog(SelectGroupActivity.this);
+        shareDialog.setTitle("Invitaciones");
+        shareDialog.setContentView(R.layout.share_dialog);
+        shareDialog.setCancelable(true);
+        shareDialog.show();
+
+        final EditText etEmail = (EditText) shareDialog.findViewById(R.id.etEmail);
+        Button cancelBtn = (Button) shareDialog.findViewById(R.id.cancelBtn);
+        Button confirmBtn = (Button) shareDialog.findViewById(R.id.confirmBtn);
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareDialog.dismiss();
+            }
+        });
+
+        confirmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(etEmail.getText().toString().equals("")) {
+                    Toast.makeText(SelectGroupActivity.this, "Debes escribir una dirección de email", Toast.LENGTH_LONG).show();
+                } else {
+                    sendInvite(id);
+                }
+            }
+        });
+    }
+
+    @Background
+    void sendInvite(String id) {
+        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
+        String data = "email="+myPrefs.email().get();
+        data += "&password="+myPrefs.pass().get();
+        data += "&id_group="+id;
+        String result = "";
+
+        try {
+            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_INVITE, data);
+        } catch (SimpleContent.ApiException e) {
+            e.printStackTrace();
+        }
+
+        final Type objectCPD = new TypeToken<MinimalJSON>() {
+        }.getType();
+        MinimalJSON inviteResult = new Gson().fromJson(result, objectCPD);
+        showInviteResult(inviteResult);
+    }
+
+    @UiThread
+    void showInviteResult(MinimalJSON inviteResult) {
+        if(inviteResult.state.equals("1"))
+            Toast.makeText(this, "La invitación se ha enviado correctamente", Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(this, "Ha habido un error", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Analytics.activityStart(this);
+    }
+
+    @Override
+    protected void onPause() {
+        Analytics.activityPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Analytics.activityResume(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Analytics.activityStop(this);
+    }
 }

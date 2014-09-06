@@ -29,6 +29,9 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Type;
 
+import io.segment.android.Analytics;
+import io.segment.android.models.Props;
+
 @EActivity(R.layout.register_activity)
 public class RegisterActivity extends ActionBarActivity{
 
@@ -49,6 +52,8 @@ public class RegisterActivity extends ActionBarActivity{
     @AfterViews
     void init(){
         configureBar();
+        Analytics.onCreate(this);
+        Analytics.track("Register In - Android", new Props("email", myPrefs.email().get()));
     }
 
     private void configureBar() {
@@ -121,6 +126,7 @@ public class RegisterActivity extends ActionBarActivity{
             myPrefs.email().put(email.getText().toString());
             myPrefs.pass().put(StringHelper.md5(password.getText().toString()));
             startActivity(new Intent(this, SelectGroupActivity_.class));
+            Analytics.track("New User Registered - Android", new Props("email", myPrefs.email().get()));
             finish();
         } else {
             Toast.makeText(this, "Ya existe un usuario con ese email", Toast.LENGTH_SHORT).show();
@@ -142,5 +148,29 @@ public class RegisterActivity extends ActionBarActivity{
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Analytics.activityStart(this);
+    }
+
+    @Override
+    protected void onPause() {
+        Analytics.activityPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Analytics.activityResume(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Analytics.activityStop(this);
     }
 }

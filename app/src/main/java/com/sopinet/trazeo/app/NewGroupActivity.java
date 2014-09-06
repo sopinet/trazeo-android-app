@@ -30,6 +30,9 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Type;
 
+import io.segment.android.Analytics;
+import io.segment.android.models.Props;
+
 @EActivity(R.layout.new_group_activity)
 public class NewGroupActivity extends ActionBarActivity{
 
@@ -47,6 +50,8 @@ public class NewGroupActivity extends ActionBarActivity{
     @AfterViews
     void init(){
         configureBar();
+        Analytics.onCreate(this);
+        Analytics.track("New Group In - Android", new Props("email", myPrefs.email().get()));
     }
 
     private void configureBar() {
@@ -99,6 +104,7 @@ public class NewGroupActivity extends ActionBarActivity{
         if (new_group.state.equals("1")) {
             Toast.makeText(this, "El grupo ha sido creado correctamente", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, SelectGroupActivity_.class));
+            Analytics.track("New Group Created - Android", new Props("email", myPrefs.email().get()));
             finish();
         } else {
             Toast.makeText(this, "Ese nombre ya está en uso", Toast.LENGTH_SHORT).show();
@@ -137,6 +143,30 @@ public class NewGroupActivity extends ActionBarActivity{
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Analytics.activityStart(this);
+    }
+
+    @Override
+    protected void onPause() {
+        Analytics.activityPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Analytics.activityResume(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Analytics.activityStop(this);
     }
 
 }
