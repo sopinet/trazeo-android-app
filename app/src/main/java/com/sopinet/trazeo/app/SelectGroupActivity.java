@@ -23,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 
 import com.ami.fundapter.BindDictionary;
 import com.ami.fundapter.extractors.StringExtractor;
@@ -188,19 +187,6 @@ public class SelectGroupActivity extends ActionBarActivity{
                             return group.name;
                         }
                     });
-
-            /*dict.addStringField(R.id.description,
-                    new StringExtractor<Group>() {
-                        @Override
-                        public String getStringValue(Group item, int position) {
-                            if (item.hasride.equals("true")) {
-                                return "...Paseo en curso...";
-                            } else {
-                                return "Iniciar";
-                            }
-                        }
-                    }
-            );*/
 
             GroupAdapter adapter = new GroupAdapter(this, R.layout.group_list_item, groups.data);
 
@@ -482,18 +468,19 @@ public class SelectGroupActivity extends ActionBarActivity{
                 if(etEmail.getText().toString().equals("")) {
                     Toast.makeText(SelectGroupActivity.this, "Debes escribir una dirección de email", Toast.LENGTH_LONG).show();
                 } else {
-                    sendInvite(id);
+                    sendInvite(id, etEmail.getText().toString());
                 }
             }
         });
     }
 
     @Background
-    void sendInvite(String id) {
+    void sendInvite(String id, String email_invite) {
         SimpleContent sc = new SimpleContent(this, "trazeo", 0);
         String data = "email="+myPrefs.email().get();
-        data += "&password="+myPrefs.pass().get();
+        data += "&pass="+myPrefs.pass().get();
         data += "&id_group="+id;
+        data += "&email_invite=" + email_invite;
         String result = "";
 
         try {
@@ -502,18 +489,12 @@ public class SelectGroupActivity extends ActionBarActivity{
             e.printStackTrace();
         }
 
-        final Type objectCPD = new TypeToken<MinimalJSON>() {
-        }.getType();
-        MinimalJSON inviteResult = new Gson().fromJson(result, objectCPD);
-        showInviteResult(inviteResult);
+        showInviteResult();
     }
 
     @UiThread
-    void showInviteResult(MinimalJSON inviteResult) {
-        if(inviteResult.state.equals("1"))
-            Toast.makeText(this, "La invitación se ha enviado correctamente", Toast.LENGTH_LONG).show();
-        else
-            Toast.makeText(this, "Ha habido un error", Toast.LENGTH_LONG).show();
+    void showInviteResult() {
+        Toast.makeText(this, "La invitación se ha enviado correctamente", Toast.LENGTH_LONG).show();
     }
 
     @Override
