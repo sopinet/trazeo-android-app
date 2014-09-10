@@ -204,6 +204,37 @@ public class SelectGroupActivity extends ActionBarActivity{
     @Background
     public void createRide(String l, String hasride) {
 
+        String[] groupsIds = new String[6]; // Aqui guardo los ids de los grupos en los que hay que comprobar acceso.
+        groupsIds[0] = "63";
+        groupsIds[1] = "21";
+        groupsIds[2] = "20";
+        groupsIds[3] = "19";
+        groupsIds[4] = "18";
+        groupsIds[5] = "37";
+
+        String[] emailsToFilter = new String[8]; // Aqui guardo los emails de los usuarios que pueden iniciar paseo en los grupos guardados en 'groupsIds'
+        emailsToFilter[0] = "prudennl92@gmail.com";
+        emailsToFilter[1] = "fermincabal94@gmail.com";
+        emailsToFilter[2] = "victornogpan@gmail.com";
+        emailsToFilter[3] = "clsouton@gmail.com";
+        emailsToFilter[4] = "laura.alberquilla@gmail.com";
+        emailsToFilter[5] = "lrodrigosanchez@gmail.com";
+        emailsToFilter[6] = "gemi87.jg@gmail.com";
+        emailsToFilter[7] = "elenacarrie@gmail.com";
+
+        boolean canInitRide = true;
+
+        for (String groupsId : groupsIds) {
+            if (l.equals(groupsId)) {
+                canInitRide = false;
+
+                for (String anEmailsToFilter : emailsToFilter) {
+                    if (myPrefs.email().get().equals(anEmailsToFilter))
+                        canInitRide = true;
+                }
+            }
+        }
+
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         String lat = "";
@@ -228,11 +259,11 @@ public class SelectGroupActivity extends ActionBarActivity{
         }
 
         myPrefs.id_group().put(l);
-        goGroup(result, hasride);
+        goGroup(result, hasride, canInitRide);
     }
 
     @UiThread
-    void goGroup(String result, String hasride){
+    void goGroup(String result, String hasride, boolean canInitRide){
         Log.d("TEMA", result);
 
         final Type objectCPD = new TypeToken<CreateRide>(){}.getType();
@@ -243,18 +274,12 @@ public class SelectGroupActivity extends ActionBarActivity{
         if (hasride.equals("true")) {
             goActivitySee();
         } else {
-            myPrefs.id_ride_monitor().put(createRide.data.id_ride);
-
-            /*String data_service = "email=" + myPrefs.email().get();
-            data_service += "&pass=" + myPrefs.pass().get();
-            data_service += "&id_ride=" + createRide.data.id_ride;
-
-            intentGPS = new Intent(this, OsmLocPullService.class);
-            intentGPS.putExtra("url", myPrefs.url_api().get() + Var.URL_API_SENDPOSITION);
-            intentGPS.putExtra("data", data_service);
-            startService(intentGPS);*/
-
-            goActivityMonitor(true);
+            if(canInitRide) {
+                myPrefs.id_ride_monitor().put(createRide.data.id_ride);
+                goActivityMonitor(true);
+            } else {
+                buildCantInitRideDialog();
+            }
         }
     }
 
@@ -376,6 +401,19 @@ public class SelectGroupActivity extends ActionBarActivity{
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void buildCantInitRideDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("No puedes iniciar este paseo como monitor")
+                .setCancelable(false)
+                .setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.dismiss();
                     }
                 });
         final AlertDialog alert = builder.create();

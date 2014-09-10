@@ -34,6 +34,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import io.segment.android.Analytics;
+import io.segment.android.models.Props;
 
 @EActivity(R.layout.add_children_guide)
 public class AddChildrenGuide extends ActionBarActivity {
@@ -72,6 +73,7 @@ public class AddChildrenGuide extends ActionBarActivity {
         showDialog("Cargando...");
         Analytics.onCreate(this);
         newChildren = new ArrayList<EChild>();
+        Analytics.track("Add Chidren In - Android", new Props("email", myPrefs.email().get()));
         getUserChildren();
     }
 
@@ -102,6 +104,7 @@ public class AddChildrenGuide extends ActionBarActivity {
 
     @Click(R.id.addBtn)
     public void addChild() {
+        Analytics.track("Button + clicked (Children Screen) - Android", new Props("email", myPrefs.email().get()));
         if(childName.getText().toString().equals("")) {
             Toast.makeText(this, "Debes escribir el nombre del niño", Toast.LENGTH_LONG).show();
         } else {
@@ -125,6 +128,7 @@ public class AddChildrenGuide extends ActionBarActivity {
 
     @Click(R.id.saveBtn)
     public void saveBtnClick() {
+        Analytics.track("End button clicked (Children Screen) - Android", new Props("email", myPrefs.email().get()));
         if(NetHelper.isOnline(this)) {
             showDialog("Estamos registrando tus niños...");
             sendNewChildren();
@@ -193,6 +197,7 @@ public class AddChildrenGuide extends ActionBarActivity {
 
     @Click(R.id.backBtn)
     public void backBtnClick() {
+        Analytics.track("Back button clicked (Children Screen) - Android", new Props("email", myPrefs.email().get()));
         finish();
         Toast.makeText(this, "No se registrará ningún niño para que camine al colegio", Toast.LENGTH_LONG).show();
     }
