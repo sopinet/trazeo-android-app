@@ -409,7 +409,7 @@ public class SelectGroupActivity extends ActionBarActivity{
 
     private void buildCantInitRideDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("No puedes iniciar este paseo como monitor")
+        builder.setMessage("Este es un grupo oficial. Sólo los monitores pueden iniciar paseo. Puedes visualizar por donde va el grupo cuando esté en marcha.")
                 .setCancelable(false)
                 .setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {

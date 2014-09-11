@@ -3,6 +3,8 @@ package com.sopinet.trazeo.app;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,9 +33,14 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.segment.android.Analytics;
 import io.segment.android.models.Props;
+
+import static com.androidquery.util.AQUtility.post;
 
 @EActivity(R.layout.add_children_guide)
 public class AddChildrenGuide extends ActionBarActivity {
@@ -74,6 +81,47 @@ public class AddChildrenGuide extends ActionBarActivity {
         newChildren = new ArrayList<EChild>();
         Analytics.track("Add Chidren In - Android", new Props("email", myPrefs.email().get()));
         getUserChildren();
+
+        childName.addTextChangedListener(new TextWatcher() {
+            Date _lastTypeTime;
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                _lastTypeTime = new Date();
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence charSequence, int i, int i2, int i3) {
+                // Detectando que lleva más de un segundo después del último caracter editado
+                Timer t = new Timer();
+                TimerTask tt = new TimerTask(){
+                    @Override
+                    public void run(){
+                        Date myRunTime = new Date();
+
+                        if ((_lastTypeTime.getTime() + 1000) <= myRunTime.getTime()){
+                            post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.d("EditChildName", "EditChildName: texto editado");
+
+                                    if(charSequence.length() > 0)
+                                        Analytics.track("Child Name Written - Android", new Props("email", myPrefs.email().get()));
+                                }
+                            });
+                        } else {
+                            Log.d("EditChildName", "EditChildName: Cancelado");
+                        }
+                    }
+                };
+
+                t.schedule(tt, 1000);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     @Background
@@ -130,6 +178,21 @@ public class AddChildrenGuide extends ActionBarActivity {
         Analytics.track("End button clicked (Children Screen) - Android", new Props("email", myPrefs.email().get()));
         if(NetHelper.isOnline(this)) {
             showDialog("Estamos registrando tus niños...");
+
+            if(childName.getText().toString().length() > 0) {
+                String gender;
+                EChild child;
+                if(this.boy.isChecked())
+                    gender = "boy";
+                else
+                    gender = "girl";
+
+                child = new EChild(childName.getText().toString(), gender);
+
+                this.newChildren.add(child);
+                Analytics.track("New Child From End Button (Children Screen) - Android", new Props("email", myPrefs.email().get()));
+            }
+
             sendNewChildren();
         } else {
             Toast.makeText(this, "No hay conexión", Toast.LENGTH_LONG).show();
@@ -161,7 +224,7 @@ public class AddChildrenGuide extends ActionBarActivity {
         String data = "email=" + myPrefs.email().get();
         data += "&pass=" + myPrefs.pass().get();
         data += "&name=" + "El grupo de " + groupName;
-        data += "&visibility=1";
+        data += "&visibility=2";
         String groupResult = "";
         try {
             groupResult = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_MANAGE_GROUP, data);
