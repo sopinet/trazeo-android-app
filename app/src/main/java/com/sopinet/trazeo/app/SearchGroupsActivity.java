@@ -38,6 +38,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import io.segment.android.Analytics;
 import io.segment.android.models.Props;
@@ -199,6 +200,11 @@ public class SearchGroupsActivity extends ActionBarActivity {
                         return group.route.admin_name;
                     }
                 });
+
+        for(int i = 0; i < groups.data.size(); i++) {
+            if(groups.data.get(i).visibility.equals("2"))
+                groups.data.remove(i);
+        }
 
         CityGroupAdapter adapter = new CityGroupAdapter(this, R.layout.city_group_list_item, groups.data);
 

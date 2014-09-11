@@ -35,6 +35,7 @@
     <string-array name="visibility_array">
         <item>Público</item>
         <item>Privado</item>
+        <item>Oculto</item>
     </string-array>
 
 </resources>
