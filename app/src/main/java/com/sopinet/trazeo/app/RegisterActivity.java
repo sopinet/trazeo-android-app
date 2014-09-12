@@ -53,7 +53,7 @@ public class RegisterActivity extends ActionBarActivity{
     void init(){
         configureBar();
         Analytics.onCreate(this);
-        Analytics.track("Register In - Android", new Props("email", myPrefs.email().get()));
+        Analytics.track("enter.register.Android", new Props("email", myPrefs.email().get()));
     }
 
     private void configureBar() {
@@ -126,7 +126,7 @@ public class RegisterActivity extends ActionBarActivity{
             myPrefs.email().put(email.getText().toString());
             myPrefs.pass().put(StringHelper.md5(password.getText().toString()));
             startActivity(new Intent(this, SelectGroupActivity_.class));
-            Analytics.track("New User Registered - Android", new Props("email", myPrefs.email().get()));
+            Analytics.track("send.newUser.Android", new Props("email", myPrefs.email().get()));
             finish();
         } else {
             Toast.makeText(this, "Ya existe un usuario con ese email", Toast.LENGTH_SHORT).show();

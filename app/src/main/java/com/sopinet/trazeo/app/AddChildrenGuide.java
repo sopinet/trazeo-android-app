@@ -79,7 +79,7 @@ public class AddChildrenGuide extends ActionBarActivity {
         showDialog("Cargando...");
         Analytics.onCreate(this);
         newChildren = new ArrayList<EChild>();
-        Analytics.track("Add Chidren In - Android", new Props("email", myPrefs.email().get()));
+        Analytics.track("enter.addChildren.Android", new Props("email", myPrefs.email().get()));
         getUserChildren();
 
         childName.addTextChangedListener(new TextWatcher() {
@@ -105,7 +105,7 @@ public class AddChildrenGuide extends ActionBarActivity {
                                     Log.d("EditChildName", "EditChildName: texto editado");
 
                                     if(charSequence.length() > 0)
-                                        Analytics.track("Child Name Written - Android", new Props("email", myPrefs.email().get()));
+                                        Analytics.track("write.childName.addChildren.Android", new Props("email", myPrefs.email().get()));
                                 }
                             });
                         } else {
@@ -151,7 +151,7 @@ public class AddChildrenGuide extends ActionBarActivity {
 
     @Click(R.id.addBtn)
     public void addChild() {
-        Analytics.track("Button + clicked (Children Screen) - Android", new Props("email", myPrefs.email().get()));
+        Analytics.track("click.addButton.addChildren.Android", new Props("email", myPrefs.email().get()));
         if(childName.getText().toString().equals("")) {
             Toast.makeText(this, "Debes escribir el nombre del niño", Toast.LENGTH_LONG).show();
         } else {
@@ -175,7 +175,7 @@ public class AddChildrenGuide extends ActionBarActivity {
 
     @Click(R.id.saveBtn)
     public void saveBtnClick() {
-        Analytics.track("End button clicked (Children Screen) - Android", new Props("email", myPrefs.email().get()));
+        Analytics.track("click.endButton.addChildren.Android", new Props("email", myPrefs.email().get()));
         if(NetHelper.isOnline(this)) {
             showDialog("Estamos registrando tus niños...");
 
@@ -190,7 +190,7 @@ public class AddChildrenGuide extends ActionBarActivity {
                 child = new EChild(childName.getText().toString(), gender);
 
                 this.newChildren.add(child);
-                Analytics.track("New Child From End Button (Children Screen) - Android", new Props("email", myPrefs.email().get()));
+                Analytics.track("click.endButtonWithNewChild.addChildren.Android", new Props("email", myPrefs.email().get()));
             }
 
             sendNewChildren();
@@ -259,7 +259,7 @@ public class AddChildrenGuide extends ActionBarActivity {
 
     @Click(R.id.backBtn)
     public void backBtnClick() {
-        Analytics.track("Back button clicked (Children Screen) - Android", new Props("email", myPrefs.email().get()));
+        Analytics.track("click.backButton.addChildren.Android", new Props("email", myPrefs.email().get()));
         finish();
         Toast.makeText(this, "No se registrará ningún niño para que camine al colegio", Toast.LENGTH_LONG).show();
     }

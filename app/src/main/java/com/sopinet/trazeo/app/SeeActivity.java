@@ -74,7 +74,7 @@ public class SeeActivity extends ActionBarActivity {
 
         Analytics.onCreate(this);
 
-        Analytics.track("See Ride In - Android", new Props("email", myPrefs.email().get()));
+        Analytics.track("enter.seeRide.Android", new Props("email", myPrefs.email().get()));
 
         String tiles[] = new String[1];
         tiles[0] = "http://tile.openstreetmap.org/";

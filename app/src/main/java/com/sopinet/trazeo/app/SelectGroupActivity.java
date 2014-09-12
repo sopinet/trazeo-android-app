@@ -126,7 +126,7 @@ public class SelectGroupActivity extends ActionBarActivity{
         final LocationManager manager = (LocationManager) getSystemService( this.LOCATION_SERVICE );
         if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) )
             buildAlertMessageNoGps();
-        Analytics.track("Groups List In - Android", new Props("email", myPrefs.email().get()));
+        Analytics.track("enter.groupsList.Android", new Props("email", myPrefs.email().get()));
     }
 
     @Background

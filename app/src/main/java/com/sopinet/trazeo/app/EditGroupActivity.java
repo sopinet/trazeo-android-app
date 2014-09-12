@@ -33,6 +33,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.lang.reflect.Type;
 
 import io.segment.android.Analytics;
+import io.segment.android.models.Props;
 
 @EActivity(R.layout.edit_group_activity)
 public class EditGroupActivity extends ActionBarActivity{
@@ -55,6 +56,7 @@ public class EditGroupActivity extends ActionBarActivity{
     void init(){
         configureBar();
         Analytics.onCreate(this);
+        Analytics.track("enter.editGroup.Android", new Props("email", myPrefs.email().get()));
     }
 
     private void configureBar() {

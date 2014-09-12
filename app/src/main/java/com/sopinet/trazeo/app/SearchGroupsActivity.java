@@ -20,7 +20,6 @@ import com.ami.fundapter.extractors.StringExtractor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.MinimalJSON;
-import com.sopinet.android.nethelper.NetHelper;
 import com.sopinet.android.nethelper.SimpleContent;
 import com.sopinet.trazeo.app.gson.Cities;
 import com.sopinet.trazeo.app.gson.Group;
@@ -77,7 +76,7 @@ public class SearchGroupsActivity extends ActionBarActivity {
         Analytics.onCreate(this);
         obtainCities();
 
-        Analytics.track("Search Groups In - Android", new Props("email", myPrefs.email().get()));
+        Analytics.track("enter.searchGroups.Android", new Props("email", myPrefs.email().get()));
     }
 
     @Click(R.id.btnSearchGroups)
@@ -248,7 +247,7 @@ public class SearchGroupsActivity extends ActionBarActivity {
             Toast.makeText(this, "Ha ocurrido un problema", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Vinculado correctamente", Toast.LENGTH_LONG).show();
-            Analytics.track("Join Group - Android", new Props("email", myPrefs.email().get()));
+            Analytics.track("send.joinGroup.Android", new Props("email", myPrefs.email().get()));
         }
     }
 
@@ -281,7 +280,7 @@ public class SearchGroupsActivity extends ActionBarActivity {
             Toast.makeText(this, "Ha ocurrido un problema", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Se ha enviado tu solicitud", Toast.LENGTH_LONG).show();
-            Analytics.track("Request Group Sent - Android", new Props("email", myPrefs.email().get()));
+            Analytics.track("send.requestGroup.Android", new Props("email", myPrefs.email().get()));
         }
     }
 

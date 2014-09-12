@@ -111,7 +111,7 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         MediaUploader.NOTIFICATION_ENABLED = false;
 
         Analytics.onCreate(this);
-        Analytics.track("Monitor In - Android", new Props("email", myPrefs.email().get()));
+        Analytics.track("enter.monitor.Android", new Props("email", myPrefs.email().get()));
         loadData();
     }
 
@@ -333,7 +333,7 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         else
             i.putExtra("firstFinish", false);
 
-        Analytics.track("Ride Finished - Android", new Props("email", myPrefs.email().get()));
+        Analytics.track("send.rideFinished.Android", new Props("email", myPrefs.email().get()));
         startActivity(i);
         finish();
     }

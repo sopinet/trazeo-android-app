@@ -111,7 +111,7 @@ public class LoginSimpleActivity extends ActionBarActivity {
                 myPrefs.email().put(email.getText().toString());
                 myPrefs.pass().put(StringHelper.md5(password.getText().toString()));
                 Toast.makeText(this, "Ok", Toast.LENGTH_SHORT).show();
-                Analytics.track("Login - Android", new Props("email", myPrefs.email().get()));
+                Analytics.track("send.login.Android", new Props("email", myPrefs.email().get()));
                 startActivity(new Intent(this, SelectGroupActivity_.class));
                 finish();
             } else {

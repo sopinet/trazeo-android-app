@@ -51,7 +51,7 @@ public class NewGroupActivity extends ActionBarActivity{
     void init(){
         configureBar();
         Analytics.onCreate(this);
-        Analytics.track("New Group In - Android", new Props("email", myPrefs.email().get()));
+        Analytics.track("enter.newGroup.Android", new Props("email", myPrefs.email().get()));
     }
 
     private void configureBar() {
@@ -104,7 +104,7 @@ public class NewGroupActivity extends ActionBarActivity{
         if (new_group.state.equals("1")) {
             Toast.makeText(this, "El grupo ha sido creado correctamente", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, SelectGroupActivity_.class));
-            Analytics.track("New Group Created - Android", new Props("email", myPrefs.email().get()));
+            Analytics.track("send.newGroup.Android", new Props("email", myPrefs.email().get()));
             finish();
         } else {
             Toast.makeText(this, "Ese nombre ya está en uso", Toast.LENGTH_SHORT).show();
@@ -113,7 +113,7 @@ public class NewGroupActivity extends ActionBarActivity{
 
     private void buildHelpDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Cuando crees un nuevo grupo se creará por defecto como “Privado”, por lo que las personas que quieran unirse tendrán que solicitar tu permiso para hacerlo. Puedes cambiar la visibilidad a “Público” si quieres que cualquier usuario pueda unirse de forma sencilla. Recuerda poner un nombre significativo al grupo, para que sea fácil de encontrar por las personas que lo busquen. Poner el nombre del colegio destino y la zona de salida puede ser buena idea.")
+        builder.setMessage("Cuando crees un nuevo grupo como \"Privado\", las personas que quieran unirse tendrán que solicitar tu permiso para hacerlo. Puedes cambiar la visibilidad a \"Público\" si quieres que cualquier usuario pueda unirse de forma sencilla. O crearlo \"Oculto\" si prefieres que no pueda encontrarse. Recuerda poner un nombre significativo al grupo, para que sea fácil de encontrar por las personas que lo busquen. Poner el nombre del colegio destino y la zona de salida puede ser buena idea.")
                 .setCancelable(false)
                 .setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
