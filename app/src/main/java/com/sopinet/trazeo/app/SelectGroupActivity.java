@@ -203,38 +203,6 @@ public class SelectGroupActivity extends ActionBarActivity{
 
     @Background
     public void createRide(String l, String hasride) {
-
-        String[] groupsIds = new String[6]; // Aqui guardo los ids de los grupos en los que hay que comprobar acceso.
-        groupsIds[0] = "63";
-        groupsIds[1] = "21";
-        groupsIds[2] = "20";
-        groupsIds[3] = "19";
-        groupsIds[4] = "18";
-        groupsIds[5] = "37";
-
-        String[] emailsToFilter = new String[8]; // Aqui guardo los emails de los usuarios que pueden iniciar paseo en los grupos guardados en 'groupsIds'
-        emailsToFilter[0] = "prudennl92@gmail.com";
-        emailsToFilter[1] = "fermincabal94@gmail.com";
-        emailsToFilter[2] = "victornogpan@gmail.com";
-        emailsToFilter[3] = "clsouton@gmail.com";
-        emailsToFilter[4] = "laura.alberquilla@gmail.com";
-        emailsToFilter[5] = "lrodrigosanchez@gmail.com";
-        emailsToFilter[6] = "gemi87.jg@gmail.com";
-        emailsToFilter[7] = "elenacarrie@gmail.com";
-
-        boolean canInitRide = true;
-
-        for (String groupsId : groupsIds) {
-            if (l.equals(groupsId)) {
-                canInitRide = false;
-
-                for (String anEmailsToFilter : emailsToFilter) {
-                    if (myPrefs.email().get().equals(anEmailsToFilter))
-                        canInitRide = true;
-                }
-            }
-        }
-
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         String lat = "";
@@ -259,27 +227,27 @@ public class SelectGroupActivity extends ActionBarActivity{
         }
 
         myPrefs.id_group().put(l);
-        goGroup(result, hasride, canInitRide);
+        goGroup(result, hasride);
     }
 
     @UiThread
-    void goGroup(String result, String hasride, boolean canInitRide){
-        Log.d("TEMA", result);
-
+    void goGroup(String result, String hasride){
         final Type objectCPD = new TypeToken<CreateRide>(){}.getType();
         CreateRide createRide = new Gson().fromJson(result, objectCPD);
+
+        // No tiene permisos para iniciar el paseo
+        if (createRide.data.id_ride.equals("-1")) {
+            buildCantInitRideDialog();
+            return;
+        }
 
         myPrefs.id_ride().put(createRide.data.id_ride);
 
         if (hasride.equals("true")) {
             goActivitySee();
         } else {
-            if(canInitRide) {
-                myPrefs.id_ride_monitor().put(createRide.data.id_ride);
-                goActivityMonitor(true);
-            } else {
-                buildCantInitRideDialog();
-            }
+            myPrefs.id_ride_monitor().put(createRide.data.id_ride);
+            goActivityMonitor(true);
         }
     }
 
