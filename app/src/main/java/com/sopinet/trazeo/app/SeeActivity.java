@@ -5,10 +5,10 @@ import android.graphics.DashPathEffect;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.github.snowdream.android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.SimpleContent;
@@ -69,6 +69,9 @@ public class SeeActivity extends ActionBarActivity {
 
     @AfterViews
     void init() {
+
+        Log.d("Entrando en pantalla Ver Paseo\n");
+
         configureBar();
         data = "id_ride="+myPrefs.id_ride().get()+"&email="+myPrefs.email().get()+"&pass="+myPrefs.pass().get();
 

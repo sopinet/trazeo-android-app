@@ -3,9 +3,7 @@ package com.sopinet.trazeo.app;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,14 +13,12 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.ami.fundapter.BindDictionary;
-import com.ami.fundapter.extractors.StringExtractor;
+import com.github.snowdream.android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.MinimalJSON;
 import com.sopinet.android.nethelper.SimpleContent;
 import com.sopinet.trazeo.app.gson.Cities;
-import com.sopinet.trazeo.app.gson.Group;
 import com.sopinet.trazeo.app.gson.Groups;
 import com.sopinet.trazeo.app.helpers.CityGroupAdapter;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
@@ -37,7 +33,6 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 import io.segment.android.Analytics;
 import io.segment.android.models.Props;
@@ -68,6 +63,8 @@ public class SearchGroupsActivity extends ActionBarActivity {
 
     @AfterViews
     void init() {
+
+        Log.d("Entrando pantalla Buscar Grupos\n");
         configureBar();
         pdialog = new ProgressDialog(this);
         pdialog.setCancelable(false);
@@ -86,6 +83,7 @@ public class SearchGroupsActivity extends ActionBarActivity {
             pdialog.setCancelable(false);
             pdialog.setMessage("Buscando...");
             pdialog.show();
+            Log.d("Buscando grupos de una ciudad\n");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,6 +97,7 @@ public class SearchGroupsActivity extends ActionBarActivity {
             pdialog.setCancelable(false);
             pdialog.setMessage("Buscando...");
             pdialog.show();
+            Log.d("Buscando todos los grupos\n");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -160,7 +159,7 @@ public class SearchGroupsActivity extends ActionBarActivity {
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
-        Log.d("GROUPS", "GROUPS: " + result);
+        android.util.Log.d("GROUPS", "GROUPS: " + result);
         final Type objectCPD = new TypeToken<Groups>() {
         }.getType();
         this.groups = new Gson().fromJson(result, objectCPD);
@@ -172,33 +171,6 @@ public class SearchGroupsActivity extends ActionBarActivity {
         pdialog.dismiss();
         groupsListLayout.setVisibility(View.VISIBLE);
         citiesForm.setVisibility(View.GONE);
-        BindDictionary<Group> dict = new BindDictionary<Group>();
-        dict.addStringField(R.id.name,
-                new StringExtractor<Group>() {
-
-                    @Override
-                    public String getStringValue(Group group, int position) {
-                        return group.name;
-                    }
-                });
-
-        dict.addStringField(R.id.route,
-                new StringExtractor<Group>() {
-
-                    @Override
-                    public String getStringValue(Group group, int position) {
-                        return group.route.name;
-                    }
-                });
-
-        dict.addStringField(R.id.creator,
-                new StringExtractor<Group>() {
-
-                    @Override
-                    public String getStringValue(Group group, int position) {
-                        return group.route.admin_name;
-                    }
-                });
 
         for(int i = 0; i < groups.data.size(); i++) {
             if(groups.data.get(i).visibility.equals("2"))
@@ -230,7 +202,7 @@ public class SearchGroupsActivity extends ActionBarActivity {
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
-        Log.d("JOIN", "JOIN: " + result);
+        android.util.Log.d("JOIN", "JOIN: " + result);
 
         final Type objectCPD = new TypeToken<MinimalJSON>() {
         }.getType();
@@ -263,7 +235,7 @@ public class SearchGroupsActivity extends ActionBarActivity {
         } catch (SimpleContent.ApiException e) {
             e.printStackTrace();
         }
-        Log.d("REQUEST", "REQUEST: " + result);
+        android.util.Log.d("REQUEST", "REQUEST: " + result);
 
         final Type objectCPD = new TypeToken<MinimalJSON>() {
         }.getType();
@@ -312,6 +284,7 @@ public class SearchGroupsActivity extends ActionBarActivity {
                 break;
             case R.id.help:
                 buildHelpDialog();
+                Log.d("Leyendo ayuda Buscar\n");
                 break;
         }
         return true;

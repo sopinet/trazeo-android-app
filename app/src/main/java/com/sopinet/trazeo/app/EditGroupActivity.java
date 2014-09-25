@@ -5,16 +5,15 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.github.snowdream.android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sopinet.android.mediauploader.MinimalJSON;
 import com.sopinet.android.nethelper.NetHelper;
 import com.sopinet.android.nethelper.SimpleContent;
 import com.sopinet.trazeo.app.gson.EditGroup;
@@ -54,6 +53,9 @@ public class EditGroupActivity extends ActionBarActivity{
 
     @AfterViews
     void init(){
+
+        Log.d("Entrando en pantalla Editar Grupo\n");
+
         configureBar();
         Analytics.onCreate(this);
         Analytics.track("enter.editGroup.Android", new Props("email", myPrefs.email().get()));
@@ -95,7 +97,7 @@ public class EditGroupActivity extends ActionBarActivity{
             e.printStackTrace();
         }
 
-        Log.d("EDIT", "EDIT GROUP: " + result);
+        android.util.Log.d("EDIT", "EDIT GROUP: " + result);
 
         final Type objectCPD = new TypeToken<EditGroup>() {
         }.getType();
@@ -109,6 +111,7 @@ public class EditGroupActivity extends ActionBarActivity{
         pdialog.dismiss();
         if (edit_group.state.equals("1")) {
             Toast.makeText(this, "El grupo ha sido editado correctamente", Toast.LENGTH_SHORT).show();
+            Log.d("Grupo editado\n");
             startActivity(new Intent(this, SelectGroupActivity_.class));
             finish();
         } else if (edit_group.msg.equals("Name is already in use")){
@@ -146,6 +149,7 @@ public class EditGroupActivity extends ActionBarActivity{
                 break;
             case R.id.help:
                 buildHelpDialog();
+                Log.d("Leyendo ayuda Editar Grupo\n");
                 break;
         }
         return true;

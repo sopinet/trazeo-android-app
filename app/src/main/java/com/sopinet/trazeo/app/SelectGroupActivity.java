@@ -17,18 +17,15 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
-import com.ami.fundapter.BindDictionary;
-import com.ami.fundapter.extractors.StringExtractor;
+import com.github.snowdream.android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sopinet.android.nethelper.MinimalJSON;
 import com.sopinet.android.nethelper.SimpleContent;
 
 import org.androidannotations.annotations.AfterViews;
@@ -41,7 +38,6 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import com.sopinet.trazeo.app.gson.CreateRide;
-import com.sopinet.trazeo.app.gson.Group;
 import com.sopinet.trazeo.app.gson.Groups;
 import com.sopinet.trazeo.app.gson.TimestampData;
 import com.sopinet.trazeo.app.helpers.GroupAdapter;
@@ -104,6 +100,9 @@ public class SelectGroupActivity extends ActionBarActivity{
 
     @AfterViews
     void init() {
+
+        Log.d("Entrando en pantalla selección de grupos\n");
+
         this.localTimestamp = getCurrentTimestamp();
 
         Analytics.onCreate(this);
@@ -178,15 +177,6 @@ public class SelectGroupActivity extends ActionBarActivity{
             getMenuInflater().inflate(R.menu.select_group, mDynamicMenu);
             groups_layout.setVisibility(View.VISIBLE);
             no_groups_layout.setVisibility(View.GONE);
-            BindDictionary<Group> dict = new BindDictionary<Group>();
-            dict.addStringField(R.id.name,
-                    new StringExtractor<Group>() {
-
-                        @Override
-                        public String getStringValue(Group group, int position) {
-                            return group.name;
-                        }
-                    });
 
             GroupAdapter adapter = new GroupAdapter(this, R.layout.group_list_item, groups.data);
 
@@ -339,10 +329,12 @@ public class SelectGroupActivity extends ActionBarActivity{
             return true;
         } else if (id == R.id.refresh) {
             refreshGroups();
+            Log.d("Recargando grupos\n");
         } else if (id == R.id.new_group) {
             goNewGroup();
         } else if (id == R.id.help) {
             buildHelpDialog();
+            Log.d("Leyendo ayuda pantalla de grupos\n");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -445,6 +437,7 @@ public class SelectGroupActivity extends ActionBarActivity{
             TextView text = (TextView) dialog.findViewById(R.id.coach_text);
             text.setText(Html.fromHtml(getString(R.string.firstFinish)));
             text.setMovementMethod(LinkMovementMethod.getInstance());
+            Log.d("Finaliza Primer Paseo\n");
         }
         dialog.show();
     }
@@ -456,6 +449,8 @@ public class SelectGroupActivity extends ActionBarActivity{
         shareDialog.setContentView(R.layout.share_dialog);
         shareDialog.setCancelable(true);
         shareDialog.show();
+
+        Log.d("Diálogo Invitar abierto\n");
 
         final EditText etEmail = (EditText) shareDialog.findViewById(R.id.etEmail);
         Button cancelBtn = (Button) shareDialog.findViewById(R.id.cancelBtn);
@@ -501,6 +496,7 @@ public class SelectGroupActivity extends ActionBarActivity{
     @UiThread
     void showInviteResult() {
         Toast.makeText(this, "La invitación se ha enviado correctamente", Toast.LENGTH_LONG).show();
+        Log.d("Invitación enviada\n");
     }
 
     @Override

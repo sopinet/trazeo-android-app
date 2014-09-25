@@ -13,8 +13,6 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.ami.fundapter.BindDictionary;
-import com.ami.fundapter.extractors.StringExtractor;
 import com.sopinet.android.nethelper.SimpleContent;
 import com.sopinet.trazeo.app.gson.EChild;
 import com.sopinet.trazeo.app.helpers.ChildAdapter;
@@ -56,28 +54,6 @@ public class MonitorChildFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_monitor_child, container, false);
-
-        // Creamos diccionario
-        BindDictionary<EChild> dict = new BindDictionary<EChild>();
-        dict.addStringField(R.id.titleCHILD,
-                new StringExtractor<EChild>() {
-                    @Override
-                    public String getStringValue(EChild item, int position) {
-                        return item.nick;
-                    }
-                }
-        );
-        /*dict.addStringField(R.id.descriptionCHILD,
-            new StringExtractor<EChild>() {
-                @Override
-                public String getStringValue(EChild item, int position) {
-                    return item.gender + " - " + item.date_birth;
-                }
-            }); */
-
-        // Creamos adaptador
-        //FunDapter<EChild> adapter = new FunDapter<EChild>(getActivity(),
-        //        MonitorActivity.ride.data.group.childs, R.layout.child_item, dict);
 
         // Creamos adaptador
         ChildAdapter adapter = new ChildAdapter(getActivity(),

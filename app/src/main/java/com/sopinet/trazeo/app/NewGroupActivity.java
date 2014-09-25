@@ -5,13 +5,13 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.github.snowdream.android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.NetHelper;
@@ -49,6 +49,7 @@ public class NewGroupActivity extends ActionBarActivity{
 
     @AfterViews
     void init(){
+        Log.d("Entrando en Nuevo Grupo\n");
         configureBar();
         Analytics.onCreate(this);
         Analytics.track("enter.newGroup.Android", new Props("email", myPrefs.email().get()));
@@ -103,6 +104,7 @@ public class NewGroupActivity extends ActionBarActivity{
         pdialog.dismiss();
         if (new_group.state.equals("1")) {
             Toast.makeText(this, "El grupo ha sido creado correctamente", Toast.LENGTH_SHORT).show();
+            Log.d("Nuevo grupo creado\n");
             startActivity(new Intent(this, SelectGroupActivity_.class));
             Analytics.track("send.newGroup.Android", new Props("email", myPrefs.email().get()));
             finish();
@@ -140,6 +142,7 @@ public class NewGroupActivity extends ActionBarActivity{
                 break;
             case R.id.help:
                 buildHelpDialog();
+                Log.d("Leyendo ayuda en Nuevo Grupo\n");
                 break;
         }
         return true;

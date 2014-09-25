@@ -15,13 +15,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -30,12 +28,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ami.fundapter.BindDictionary;
-import com.ami.fundapter.extractors.StringExtractor;
+import com.github.snowdream.android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.mediauploader.HttpPostHelper;
@@ -262,8 +258,8 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
             }
 
             // Enviamos solicitud de fin de PASEO en Background
-
             sendFinishRide();
+            Log.d("Finaliza Paseo\n");
         }
     }
 
@@ -362,17 +358,6 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
     void showData() {
         gps = new GPS(this);
 
-        // Creamos diccionario
-        BindDictionary<EChild> dict = new BindDictionary<EChild>();
-        dict.addStringField(R.id.titleCHILD,
-                new StringExtractor<EChild>() {
-                    @Override
-                    public String getStringValue(EChild item, int position) {
-                        return item.nick;
-                    }
-                }
-        );
-
         // Creamos adaptador
         ChildAdapter adapter = new ChildAdapter(this,
                 R.layout.child_item, this.ride.data.group.childs, this);
@@ -395,8 +380,12 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         });
         pdialog.cancel();
 
-        if(firstRide)
+        if(firstRide) {
             onCoachMark();
+            Log.d("Inicia Primer Paseo\n");
+        } else {
+            Log.d("Inicia Paseo\n");
+        }
     }
 
     @Background
@@ -405,12 +394,14 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         if (echild.isSelected()) {
             echild.setSelected(true);
             url = myPrefs.url_api().get() + Var.URL_API_CHILDIN;
+            Log.d("Pulsa vincular niño\n");
         } else {
             echild.setSelected(false);
             url = myPrefs.url_api().get() + Var.URL_API_CHILDOUT;
+            Log.d("Pulsa desvincular niño\n");
         }
 
-        Log.d("ChangeChild", "ChangeChild: " + url);
+        android.util.Log.d("ChangeChild", "ChangeChild: " + url);
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);

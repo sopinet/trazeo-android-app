@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
+
+import com.github.snowdream.android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sopinet.android.nethelper.NetHelper;
@@ -76,6 +77,7 @@ public class AddChildrenGuide extends ActionBarActivity {
 
     @AfterViews
     void init() {
+        Log.d("Empieza / Entrando pantalla incorporar niños\n");
         showDialog("Cargando...");
         Analytics.onCreate(this);
         newChildren = new ArrayList<EChild>();
@@ -170,6 +172,7 @@ public class AddChildrenGuide extends ActionBarActivity {
             this.newChildren.add(child);
 
             childName.setText("");
+            Log.d("Añadiendo niño (Pantalla creación primeros niños)\n");
         }
     }
 
@@ -194,6 +197,7 @@ public class AddChildrenGuide extends ActionBarActivity {
             }
 
             sendNewChildren();
+            Log.d("Terminando de incorporar niños (pantalla creación primeros niños)\n");
         } else {
             Toast.makeText(this, "No hay conexión", Toast.LENGTH_LONG).show();
         }

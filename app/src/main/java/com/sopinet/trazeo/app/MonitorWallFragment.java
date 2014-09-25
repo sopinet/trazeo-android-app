@@ -10,8 +10,6 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.ami.fundapter.BindDictionary;
-import com.ami.fundapter.extractors.StringExtractor;
 import com.sopinet.trazeo.app.gson.EChild;
 import com.sopinet.trazeo.app.gson.EComment;
 import com.sopinet.trazeo.app.helpers.CommentAdapter;
@@ -52,17 +50,6 @@ public class MonitorWallFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_monitor_wall, container, false);
-
-        // Creamos diccionario
-        BindDictionary<EComment> dict = new BindDictionary<EComment>();
-        dict.addStringField(R.id.comment_body,
-                new StringExtractor<EComment>() {
-                    @Override
-                    public String getStringValue(EComment item, int position) {
-                        return item.body;
-                    }
-                }
-        );
 
         // Creamos adaptador
         // Si tenemos mensajes

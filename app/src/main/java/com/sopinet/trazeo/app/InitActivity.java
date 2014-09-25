@@ -3,25 +3,16 @@ package com.sopinet.trazeo.app;
 import android.app.Activity;
 import android.os.Handler;
 import android.content.Intent;
-import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import com.androidquery.service.MarketService;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.sopinet.android.nethelper.SimpleContent;
-import com.sopinet.trazeo.app.gson.MasterRide;
+import com.github.snowdream.android.util.Log;
+import com.sopinet.androidlogmailer.Mail;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
-import com.sopinet.trazeo.app.helpers.Var;
-
-import java.lang.reflect.Type;
-import java.sql.Timestamp;
-import java.util.Calendar;
 
 import io.segment.android.Analytics;
 
@@ -39,6 +30,8 @@ public class InitActivity extends Activity {
         email = myPrefs.email().get();
         if(myPrefs.url_api().get().equals(""))
             myPrefs.url_api().put("http://beta.trazeo.es/");
+
+        configureLogMailer();
 
         MarketService ms = new MarketService(this);
         ms.level(MarketService.REVISION).checkVersion();
@@ -62,6 +55,37 @@ public class InitActivity extends Activity {
             }
         }, SPLASH_DISPLAY_LENGHT);
 
+    }
+
+    public void configureLogMailer() {
+        Log.setEnabled(true);
+        Log.setTag("TRAZEO");
+        Log.setPath("/mnt/sdcard/trazeolog.txt");
+        Log.setPolicy(Log.LOG_ALL_TO_FILE);
+
+        // Este método permite obtener la excepción que ha detenido el hilo
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread thread, Throwable throwable) {
+                sendReportEmail(Log.getStackTraceString(throwable));
+            }
+        });
+    }
+
+    @Background
+    public void sendReportEmail(String error) {
+        Mail m = new Mail("notificaciones.sopinet@gmail.com", "bloblo08");
+        String[] toArr = {"davidml91dml@gmail.com"};
+        m.set_to(toArr);
+        m.set_from("notificaciones.sopinet@gmail.com");
+        m.set_subject("ERROR LOG Trazeo (Android-LogMailer) email: " + myPrefs.email().get());
+        m.setBody(error);
+        try {
+            m.addAttachment("/mnt/sdcard/trazeolog.txt");
+            m.send();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
