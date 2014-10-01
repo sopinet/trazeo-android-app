@@ -542,8 +542,17 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
             Context context = (Context) gps.dataList.get(i)[0];
             String[] data = (String[]) gps.dataList.get(i)[1];
 
-            data[9] = location.getLatitude() + "";
-            data[11] = location.getLongitude() + "";
+            try {
+                data[9] = location.getLatitude() + "";
+                data[11] = location.getLongitude() + "";
+            } catch (Exception e) {
+                try {
+                    data[9] = gps.getLastLocation().getLatitude() + "";
+                    data[11] = gps.getLastLocation().getLongitude() + "";
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
 
             String description = (String) gps.dataList.get(i)[2];
             String url = (String) gps.dataList.get(i)[3];

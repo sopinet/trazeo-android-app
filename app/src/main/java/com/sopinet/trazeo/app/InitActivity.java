@@ -74,7 +74,7 @@ public class InitActivity extends Activity {
 
     @Background
     public void sendReportEmail(String error) {
-        Mail m = new Mail("notificaciones.sopinet@gmail.com", "bloblo08");
+        Mail m = new Mail("notificaciones.sopinet@gmail.com", "");
         String[] toArr = {"davidml91dml@gmail.com"};
         m.set_to(toArr);
         m.set_from("notificaciones.sopinet@gmail.com");

@@ -152,15 +152,18 @@ public class SelectGroupActivity extends ActionBarActivity{
         }
 
         final Type objectCPD = new TypeToken<Groups>(){}.getType();
-
         this.groups = new Gson().fromJson(result, objectCPD);
 
-        if(groups.data != null && groups.data.size() > 0) {
-            for (int i = 0; i < groups.data.size(); i++) {
-                if (groups.data.get(i).hasride.equals("true") && groups.data.get(i).ride_id.equals(myPrefs.id_ride_monitor().get())) {
-                    goActivityMonitor(false);
+        try {
+            if (groups.data != null && groups.data.size() > 0) {
+                for (int i = 0; i < groups.data.size(); i++) {
+                    if (groups.data.get(i).hasride.equals("true") && groups.data.get(i).ride_id.equals(myPrefs.id_ride_monitor().get())) {
+                        goActivityMonitor(false);
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         
         showData(groups);
@@ -225,19 +228,23 @@ public class SelectGroupActivity extends ActionBarActivity{
         final Type objectCPD = new TypeToken<CreateRide>(){}.getType();
         CreateRide createRide = new Gson().fromJson(result, objectCPD);
 
-        // No tiene permisos para iniciar el paseo
-        if (createRide.data.id_ride.equals("-1")) {
-            buildCantInitRideDialog();
-            return;
-        }
+        try {
+            // No tiene permisos para iniciar el paseo
+            if (createRide.data.id_ride.equals("-1")) {
+                buildCantInitRideDialog();
+                return;
+            }
 
-        myPrefs.id_ride().put(createRide.data.id_ride);
+            myPrefs.id_ride().put(createRide.data.id_ride);
 
-        if (hasride.equals("true")) {
-            goActivitySee();
-        } else {
-            myPrefs.id_ride_monitor().put(createRide.data.id_ride);
-            goActivityMonitor(true);
+            if (hasride.equals("true")) {
+                goActivitySee();
+            } else {
+                myPrefs.id_ride_monitor().put(createRide.data.id_ride);
+                goActivityMonitor(true);
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Ha ocurrido un error", Toast.LENGTH_LONG).show();
         }
     }
 
