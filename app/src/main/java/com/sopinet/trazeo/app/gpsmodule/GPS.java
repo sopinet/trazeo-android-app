@@ -13,9 +13,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * Created by david on 24/06/14.
- */
 public class GPS {
     private IGPSActivity main;
 

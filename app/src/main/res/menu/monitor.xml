@@ -4,7 +4,7 @@
     tools:context="com.sopinet.trazeo.app.MainActivity" >
 
     <item android:id="@+id/action_close"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:icon="@drawable/ic_close_ride"
         android:title="Terminar paseo"
         app:showAsAction="always"
         />
