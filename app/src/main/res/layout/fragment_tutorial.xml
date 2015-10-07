@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/green_trazeo_0"
+    android:gravity="center_horizontal"
+    android:paddingLeft="16dip"
+    android:paddingRight="16dip">
+
+    <TextView
+        android:id="@+id/tutorial_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="@string/welcome"
+        android:textIsSelectable="false"
+        android:textStyle="bold"
+        android:textSize="35sp"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tutorial_image"
+        android:src="@drawable/welcome"
+        android:adjustViewBounds="true" />
+
+    <TextView
+        android:id="@+id/tutorial_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textIsSelectable="false"
+        android:text="@string/tutorial_desc_0"
+        android:textSize="16sp"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:layout_weight="1" />
+
+</LinearLayout>

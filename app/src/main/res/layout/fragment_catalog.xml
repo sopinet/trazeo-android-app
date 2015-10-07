@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/citiesForm"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_margin="@dimen/padding_default"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/catalog_points"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="25dip"
+        android:layout_marginTop="25dip"
+        android:layout_marginRight="25dip"
+        android:layout_marginBottom="15dip" />
+
+    <Spinner
+        android:id="@+id/citiesSpinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dip"
+        android:prompt="@string/visibility_prompt" />
+
+    <Button
+        android:id="@+id/btnSearchCalatog"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dip"
+        android:layout_marginRight="25dip"
+        android:background="@drawable/green_bar_button"
+        android:text="@string/search_btn"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+</LinearLayout>
+

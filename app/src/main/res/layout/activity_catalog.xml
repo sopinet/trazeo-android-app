@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/points_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+        <include layout="@layout/toolbar" />
+
+        <LinearLayout
+            android:id="@+id/catalogListLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/catalogList"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0sp"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="10dip"
+                android:scrollbarStyle="outsideOverlay"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/search_catalog_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.pnikosis.materialishprogress.ProgressWheel
+                android:id="@+id/catalogList_progress"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                app:barColor="@color/green_trazeo_5"
+                app:progressIndeterminate="true" />
+
+        </LinearLayout>
+
+    </LinearLayout>

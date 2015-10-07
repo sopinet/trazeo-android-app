@@ -1,0 +1,120 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/app_name"
+            android:paddingBottom="5dp"
+            android:src="@drawable/background" />
+
+        <ScrollView
+            android:id="@+id/edit_mysettings_form"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/padding_default">
+
+            <LinearLayout
+                android:id="@+id/mysettings_name_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/mysettings_name"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10sp"
+                    android:hint="@string/my_name"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+                <EditText
+                    android:id="@+id/mysettings_phone"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10sp"
+                    android:hint="@string/my_phone"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/mysettings_locality"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15sp"
+                    android:hint="@string/prompt_locality_group"
+                    android:imeOptions="actionDone"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+                <CheckBox
+                    android:id="@+id/mysettings_ismonitor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|right"
+                    android:layout_marginBottom="25dp"
+                    android:text="@string/is_monitor"
+                    android:textColor="@color/green_trazeo_6"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/btnChangePassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|right"
+                    android:clickable="true"
+                    android:text="@string/change_passwd"
+                    android:textColor="@color/button_text_green_orange"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnEditSettings"
+                    style="?android:textAppearanceSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/green_bar_button"
+                    android:text="@string/confirm_register"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/mysettings_progress"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.pnikosis.materialishprogress.ProgressWheel
+                android:id="@+id/selectgroup_progress_dialog"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                app:barColor="@color/green_trazeo_5"
+                app:progressIndeterminate="true" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+</LinearLayout>

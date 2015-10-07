@@ -1,143 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pre-dex-items>
+<items version="2" >
 
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/android-query-0.25.9-a4c5993b6aa394e5d4ba06b974094eea6597fe83.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/com.googlecode.android-query/android-query/0.25.9/fff82e4e1e56b60d6eb1d5487dbd3d3b526b635f/android-query-0.25.9.jar"
+        jar="C:\Users\Nacho\.gradle\caches\modules-2\files-2.1\com.nineoldandroids\library\2.4.0\e9b63380f3a242dbdbf103a2355ad7e43bad17cb\library-2.4.0.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="fff82e4e1e56b60d6eb1d5487dbd3d3b526b635f"/>
+        revision="21.1.2"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\library-2.4.0-4a5669250223d610853510fb78b6e3021dee0f5d.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/classes-7f1e8e43c7de918b201674922c67a5e46ef72b20.jar"
-        jar="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.1.0/classes.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\libs\osmbonuspack_v4.4.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28"/>
+        revision="21.1.2"
+        sha1="fbb5a090c29cc3dbde769e1cc1a7b51029f8bba1">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\osmbonuspack_v4.4-94ab8101d3dc0b210d53f7e36d141ee7afdc4e56.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/commons-lang3-3.1-dbbb13c8bfab2d09e8c14e42a3f834a31a407842.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.1/905075e6c80f206bbe6cf1e809d2caa69f420c76/commons-lang3-3.1.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\com.viewpagerindicator\library\2.4.1\classes.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="905075e6c80f206bbe6cf1e809d2caa69f420c76"/>
+        revision="21.1.2"
+        sha1="88e8e18d365173ad04a543d76c157e0b644f0b3f">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\classes-d40a66ea26cbe0612b7f7c7fea559b86492979a0.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/classes-4405963612063ba810d48978471215aaba4ed8e0.jar"
-        jar="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/exploded-aar/com.fortysevendeg.swipelistview/swipelistview/1.0-SNAPSHOT/classes.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\libs\analytics-android-0.6.5.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="4eb03b52e3192bb7b6a61fb2069e5955c594d58c"/>
+        revision="21.1.2"
+        sha1="75a9fb96b4ddf13600d98083d85b40d4ae86fa8c">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\analytics-android-0.6.5-3435b02ef919113ccd46789d114867cf9423b410.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/library-1.01-9d644cec614afbb8e7aed985d1ccae669c4d9540.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/com.github.amigold.fundapter2/library/1.01/5f67fda140d32c1c9e896d560b070952e5b1635b/library-1.01.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\trazeo-android\android-logmailer\unspecified\libs\activation.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="5f67fda140d32c1c9e896d560b070952e5b1635b"/>
+        revision="21.1.2"
+        sha1="d1257cbff6faa44c1f325ae0d9413522d4644383">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\activation-a501bf10854a49fde4fcfc3b76796b8ebd341935.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/classes-0ca59117893641889164c5d187e44c19c282fe20.jar"
-        jar="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/exploded-aar/eu.inmite.android.lib/android-styled-dialogs/1.1.2/classes.jar"
+        jar="C:\Users\Nacho\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.4.0\f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2\picasso-2.4.0.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="f08d50cb07664faae4a99d74de117b7adef5b82b"/>
+        revision="21.1.2"
+        sha1="f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\picasso-2.4.0-eceb9665f735b25788b461d0884c7832104b9fd8.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/androidannotations-api-3.0.1-c560ef2e6be612068cf15530c9ef650eee263b25.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/org.androidannotations/androidannotations-api/3.0.1/beb7e0a75c753383e7ef68c0e1639999db301c33/androidannotations-api-3.0.1.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\com.pnikosis\materialish-progress\1.2\classes.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="beb7e0a75c753383e7ef68c0e1639999db301c33"/>
+        revision="21.1.2"
+        sha1="050d4202403b5d7838e427c40b5c35450b192cd6">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\classes-0de1189539c740b3b5d4c33ce8650d7faf317d87.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/osmdroid-android-4.1-18682c233c469f25b096f2f4894746f8805edce2.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/org.osmdroid/osmdroid-android/4.1/60913edd9f91f63a5106e3bfc06b2fddda657303/osmdroid-android-4.1.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\trazeo-android\android-logmailer\unspecified\classes.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="60913edd9f91f63a5106e3bfc06b2fddda657303"/>
+        revision="21.1.2"
+        sha1="086e0708a541cfee266f447996b2be483eb9ddbd">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\classes-9188a3e8db0541d6a1b8845a38185493d93fe5d2.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/analytics-android-0.6.5-550550eb61461fa0633b92d78887bf30a18e7e0a.jar"
-        jar="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/libs/analytics-android-0.6.5.jar"
+        jar="C:\Users\Nacho\.gradle\caches\modules-2\files-2.1\com.github.kevinsawicki\http-request\5.6\168305b7a983142b6311a005f0ad96d3b34d92d\http-request-5.6.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="75a9fb96b4ddf13600d98083d85b40d4ae86fa8c"/>
+        revision="21.1.2"
+        sha1="0168305b7a983142b6311a005f0ad96d3b34d92d">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\http-request-5.6-2a74322bbe3ae0b4fd29970050ac3a9692cbbea4.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/classes-f8a2df56cbbe3fb01a20811ea2b9ec1b9fed5491.jar"
-        jar="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/exploded-aar/com.github.johnkil.android-progressfragment/progressfragment/1.4.0/classes.jar"
+        jar="C:\Users\Nacho\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3\5fc52c41ef0239d1093a1eb7c3697036183677ce\gson-2.3.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="8de4e8b73125d261ce4ab4a369a49c3fb4a7ab1d"/>
+        revision="21.1.2"
+        sha1="5fc52c41ef0239d1093a1eb7c3697036183677ce">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\gson-2.3-8cca211054a7ef4e61256860c66995a56bce0a60.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/log4j-1.2.14-fe265b4b1c17ed7bba6a6c1f7485525935cb13f7.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.14/3b254c872b95141751f414e353a25c2ac261b51/log4j-1.2.14.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\com.fortysevendeg.swipelistview\swipelistview\1.0-SNAPSHOT\classes.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="03b254c872b95141751f414e353a25c2ac261b51"/>
+        revision="21.1.2"
+        sha1="e4c70565b4247864e4577107e53f604de0ae56d3">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\classes-f63e01811ce68f9d70ca035187d4bb0d1a4d724a.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/gson-2.2.4-bb98c88df35eca3c2335c8e9b3167f340ed837e8.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.4/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar"
+        jar="E:\Android\Sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="a60a5e993c98c864010053cb901b7eab25306568"/>
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\release\support-annotations-21.0.3-7384b51d4b2f480e857c51dafc9e685b8c51142f.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/osmbonuspack_v4.4-6b1ea7d38ed7ef010420334c6096bdf524568344.jar"
-        jar="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/libs/osmbonuspack_v4.4.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\cn.pedant.sweetalert\library\1.3\classes.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="fbb5a090c29cc3dbde769e1cc1a7b51029f8bba1"/>
+        revision="21.1.2"
+        sha1="0c3529d9491be892952749d252ae1defa9b1f937">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\classes-dc15761f04d7d606ca3eb85760b3b291f621a823.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-8fbb103298a29871c6fa46172e650f3c924a2f71.jar"
-        jar="/home/hidabe/Programas/android/android-sdk-linux/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\trazeo-android\android-logmailer\unspecified\libs\mail.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
+        revision="21.1.2"
+        sha1="428e267abff0d10802ccde86b915da2c20471160">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\mail-10ac34baff58a6a038b04331693a021ec4c4cd5d.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/httpcore-4.3.2-aa7e3118c1349f1d858df12286de5b38d0302d6c.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.3.2/31fbbff1ddbf98f3aa7377c94d33b0447c646b6e/httpcore-4.3.2.jar"
+        jar="C:\Users\Nacho\.gradle\caches\modules-2\files-2.1\com.michaelpardo\activeandroid\3.1.0-SNAPSHOT\4ab7b0182975bc57c49efc5e0b3baa4a10e4ec08\activeandroid-3.1.0-SNAPSHOT.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="31fbbff1ddbf98f3aa7377c94d33b0447c646b6e"/>
+        revision="21.1.2"
+        sha1="4ab7b0182975bc57c49efc5e0b3baa4a10e4ec08">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\activeandroid-3.1.0-SNAPSHOT-ae49f5765b7f2719b5db46b91439ac405bf3ae43.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/http-request-5.6-126efee61fb6dd88da2190d000a7e4b68b7585cc.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/com.github.kevinsawicki/http-request/5.6/168305b7a983142b6311a005f0ad96d3b34d92d/http-request-5.6.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="0168305b7a983142b6311a005f0ad96d3b34d92d"/>
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-07642a8c207f19953bf494e2c7a4ba439ff2442d.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/classes-802c69d07a14c58aa86141bcb2203452a3779007.jar"
-        jar="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/exploded-aar/com.sopinet/android-mediauploader/2.0.4/classes.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="ee8f06b77ed7480c862ecf95256fc4bb86e127e1"/>
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\classes-e51ff70c90680c42f2b5353a2f0e47798b1be9c1.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/classes-db7fb8b97ecefad0017a3938d39fab9158aff768.jar"
-        jar="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/exploded-aar/com.sopinet/android-nethelper/1.0.2/classes.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\com.sopinet\android-nethelper\1.0.2\classes.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="a210ffa32cdfe229d73b935faa99715a8c724637"/>
+        revision="21.1.2"
+        sha1="a210ffa32cdfe229d73b935faa99715a8c724637">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\classes-bf766440b095e3bf0555bc2bcc633276773a33a9.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/classes-6e06476abcb1e59a70ccfa784ddb11bb05c7edfe.jar"
-        jar="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/4.4.52/classes.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\trazeo-android\android-logmailer\unspecified\libs\additionnal.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="3dfdf1db5ce5ea2999a5dcde8c8e650b02660059"/>
+        revision="21.1.2"
+        sha1="bd9e8dc422bb8c8405359947fe9f4282b49f57f4">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\additionnal-725af43d0ffb1115956300709bdb1c4b374b5dd1.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/httpmime-4.3.4-b74117d07f53b500ff968a7d10a4f9e33843c44f.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.3.4/54ffde537682aea984c22fbcf0106f21397c5f9b/httpmime-4.3.4.jar"
+        jar="C:\Users\Nacho\.gradle\caches\modules-2\files-2.1\org.androidannotations\androidannotations-api\3.2\89b33bb1e996eb2c4089f79d1b8651c71fe8e2d1\androidannotations-api-3.2.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="54ffde537682aea984c22fbcf0106f21397c5f9b"/>
+        revision="21.1.2"
+        sha1="89b33bb1e996eb2c4089f79d1b8651c71fe8e2d1">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\androidannotations-api-3.2-75b5a3d92d5c3b3434fb4a641d7475260656529d.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/slf4j-api-1.5.6-457526e7652e9d3d9b8b9433b288e40e7b5ffd6b.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.5.6/ec9b7142625dfa1dcaf22db99ecb7c555ffa714d/slf4j-api-1.5.6.jar"
+        jar="C:\Users\Nacho\.gradle\caches\modules-2\files-2.1\com.googlecode.android-query\android-query\0.25.9\fff82e4e1e56b60d6eb1d5487dbd3d3b526b635f\android-query-0.25.9.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="ec9b7142625dfa1dcaf22db99ecb7c555ffa714d"/>
+        revision="21.1.2"
+        sha1="fff82e4e1e56b60d6eb1d5487dbd3d3b526b635f">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\android-query-0.25.9-1dd9b29e6184127067e0d27634264e97b6e3e9e8.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/library-2.4.0-d9559fc69e01f6c9008800b7e8532138611727d8.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jar="C:\Users\Nacho\.gradle\caches\modules-2\files-2.1\com.loopj.android\android-async-http\1.4.6\a845a88238be0b5be9d238652c1bc0605ef91f52\android-async-http-1.4.6.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb"/>
+        revision="21.1.2"
+        sha1="a845a88238be0b5be9d238652c1bc0605ef91f52">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\android-async-http-1.4.6-2d45cab75934af2bbcc8bcc9b0fa78170ffda24f.jar" />
+    </item>
     <item
-        dex="/home/hidabe/AndroidStudioProjects/trazeo-android-app/app/build/intermediates/pre-dexed/debug/slf4j-log4j12-1.5.6-abe6c514301ab75977e03bc3f367e35e3e6448c9.jar"
-        jar="/home/hidabe/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-log4j12/1.5.6/688d569f0d3548f2bc7bf1648aba297312b0076a/slf4j-log4j12-1.5.6.jar"
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
         jumboMode="false"
-        revision="19.1.0"
-        sha1="688d569f0d3548f2bc7bf1648aba297312b0076a"/>
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\classes-ad93c9bdbc3e733e8a3809c591a283a25b808e31.jar" />
+    </item>
+    <item
+        jar="E:\Sopinet\projects\trazeo-android\app\build\intermediates\exploded-aar\com.google.android.gms\play-services\6.5.87\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
+        <dex dex="E:\Sopinet\projects\trazeo-android\app\build\intermediates\pre-dexed\debug\classes-73317e723d3e847a27ed36db2391bf1f8cdaa6a9.jar" />
+    </item>
 
-</pre-dex-items>
+</items>

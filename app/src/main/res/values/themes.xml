@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.MyTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- ...and here we setting appcompat’s color theming attrs -->
+        <item name="colorPrimary">@color/green_trazeo_0</item>
+        <item name="colorPrimaryDark">@color/green_trazeo_6</item>
+
+        <!-- colorAccent is used as the default value for colorControlActivated
+         which is used to tint widgets -->
+        <item name="colorAccent">@color/green_trazeo_0</item>
+
+        <!-- The rest of your attributes -->
+        <item name="android:textColorPrimary">@color/gray_dark</item>
+        <item name="android:textColor">@color/gray_dark</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowBackground">@color/green_trazeo_4</item>
+        <item name="android:editTextStyle">@style/custom_edittext</item>"
+        <item name="android:autoCompleteTextViewStyle">@style/custom_autocompleteedittext</item>
+    </style>
+</resources>

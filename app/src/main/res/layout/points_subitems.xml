@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:clickable="true"
+    android:orientation="vertical"
+    tools:context=".PointsActivity"
+    android:paddingLeft="20dp"
+    android:gravity="center_vertical">
+    <TextView
+        android:id="@+id/tv_child"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="13sp"
+        android:textColor="@color/common_signin_btn_light_text_default">
+    </TextView>
+
+</LinearLayout>

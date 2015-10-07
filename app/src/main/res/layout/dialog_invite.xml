@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent_invite_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_gray"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dip"
+        android:layout_marginRight="25dip"
+        android:background="@drawable/white_rounded_box"
+        android:orientation="vertical"
+        android:padding="15dip">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="clip_horizontal"
+            android:text="@string/invite_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/green_trazeo_5"
+            android:textSize="17sp"
+            android:layout_marginBottom="15dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:inputType="textEmailAddress">
+
+            <requestFocus />
+        </EditText>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dip">
+
+            <TextView
+                android:id="@+id/inviteOkButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dip"
+                android:clickable="true"
+                android:text="@string/send"
+                android:textColor="@color/button_text_green_orange"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:gravity="right|end" />
+
+            <TextView
+                android:id="@+id/inviteCancelButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dip"
+                android:clickable="true"
+                android:text="@string/cancel"
+                android:textColor="@color/button_text_green_orange"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="right|end" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

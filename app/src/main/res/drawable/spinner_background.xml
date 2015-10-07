@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item>
+                <shape>
+                    <solid android:color="@android:color/white" />
+                    <stroke android:width="2dip" android:color="@color/green_trazeo_5" />
+                    <corners android:radius="5dip" />
+                    <padding android:top="3dip" android:bottom="3dip" android:left="3dip" android:right="15dip" />
+                </shape>
+            </item>
+            <item>
+                <bitmap android:gravity="center_vertical|right" android:src="@drawable/ic_action_expand" />
+            </item>
+        </layer-list>
+    </item>
+</selector>

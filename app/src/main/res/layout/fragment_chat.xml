@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- MESSAGES -->
+
+    <ListView
+        android:id="@+id/chatMsgs"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0dip"
+        android:scrollbarStyle="outsideOverlay"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"
+        android:clipToPadding="false"
+        android:layout_above="@+id/textInput"
+        android:padding="10dp"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"/>
+
+    <!-- TEXT INPUT -->
+    <LinearLayout
+        android:id="@+id/textInput"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/green_trazeo_0">
+
+        <EditText
+            android:id="@+id/inputText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="9dip"
+            android:layout_marginBottom="9dip"
+            android:layout_marginLeft="9dip"
+            android:layout_marginStart="9dip"
+            android:textColor="#888"
+            android:inputType="textMultiLine"
+            android:padding="5dip"
+            android:background="@drawable/chat_edittext"/>
+
+        <Button
+            android:id="@+id/sendBtn"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="3"
+            android:text="@string/send_minus"
+            android:textAllCaps="false"
+            android:textSize="17sp"
+            android:textColor="@color/white"
+            android:background="@drawable/send_chat_btn"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

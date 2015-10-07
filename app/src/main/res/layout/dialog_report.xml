@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_gray"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dip"
+        android:layout_marginRight="25dip"
+        android:background="@drawable/white_rounded_box"
+        android:orientation="vertical"
+        android:padding="15dip">
+
+    <TextView
+        android:id="@+id/textREPORT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/report_title"
+        android:textColor="@color/green_trazeo_5"
+        android:inputType="text"
+        android:textSize="17dip"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginBottom="15dp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editREPORT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip">
+
+        <requestFocus />
+
+    </EditText>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dip">
+
+            <TextView
+                android:id="@+id/reportOkButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dip"
+                android:clickable="true"
+                android:text="@string/send"
+                android:textColor="@color/button_text_green_orange"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:gravity="right|end" />
+
+            <TextView
+                android:id="@+id/reportCancelButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dip"
+                android:clickable="true"
+                android:text="@string/cancel"
+                android:textColor="@color/button_text_green_orange"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="right|end" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

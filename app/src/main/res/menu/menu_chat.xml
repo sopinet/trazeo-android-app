@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.sopinet.trazeo.app.MembersActivity">
+
+    <item
+        android:id="@+id/action_members"
+        android:title="@string/title_activity_members"
+        android:icon="@drawable/members_action"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+</menu>

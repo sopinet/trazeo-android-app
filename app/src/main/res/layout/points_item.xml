@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_point"
+    android:layout_width="wrap_content"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_marginLeft="8dp"
+    android:paddingLeft="32dp"
+    android:paddingTop="8dp"
+    android:text="Test"
+    android:textSize="15sp"
+    android:textStyle="bold"
+    android:textColor="@color/common_signin_btn_light_text_focused"/>

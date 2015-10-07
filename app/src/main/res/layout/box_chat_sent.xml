@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/date_item" />
+
+    <LinearLayout
+        android:id="@+id/balloon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_marginStart="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/dateLy"
+        android:paddingTop="7dip"
+        android:paddingLeft="15dp"
+        android:paddingStart="15dp"
+        android:paddingRight="10dp"
+        android:paddingEnd="10dp"
+        android:background="@drawable/bubble_chat_right"
+        android:orientation="vertical"
+        android:gravity="bottom|end"
+        android:paddingBottom="7dp">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="5dp"
+                android:paddingEnd="5dp"
+                android:text="@string/app_name"
+                android:textSize="15sp"
+                android:textColor="#888"
+                android:layout_gravity="start"
+                android:layout_toLeftOf="@+id/msgInfo"
+                android:layout_toStartOf="@+id/msgInfo" />
+
+            <LinearLayout
+                android:id="@+id/msgInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:gravity="end"
+                android:paddingRight="7dp"
+                android:paddingEnd="7dp">
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="09:40"
+                    android:textSize="12sp"
+                    android:textColor="@color/gray_dark" />
+
+                <ImageView
+                    android:id="@+id/messageState"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/check_icon_not_sended" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>
