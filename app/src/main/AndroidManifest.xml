@@ -3,17 +3,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.sopinet.trazeo.app" >
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+
+    <permission
+        android:name="com.sopinet.trazeo.app.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.sopinet.trazeo.app.permission.C2D_MESSAGE" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
     <application
+        android:name=".TrazeoApplication"
         android:allowBackup="true"
         android:icon="@drawable/mascota3"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Trazeobar">
+        android:theme="@style/Theme.MyTheme"
+        tools:replace="android:icon" >
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="Trazeo587.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="1" />
+        <meta-data
+            android:name="AA_MODELS"
+            android:value="com.sopinet.trazeo.app.chat.model.Chat, com.sopinet.trazeo.app.chat.model.Message, com.sopinet.trazeo.app.chat.model.Group" />
+
         <activity
-            android:name="com.sopinet.trazeo.app.InitActivity_"
+            android:name=".InitActivity_"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_init"
-            android:screenOrientation="portrait"
-            android:theme="@style/FullscreenTheme" >
+            android:noHistory="true"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,68 +53,114 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.sopinet.trazeo.app.LoginSimpleActivity_"
+            android:name=".LoginSimpleActivity_"
             android:label="@string/title_activity_login_simple"
+            android:noHistory="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.sopinet.trazeo.app.RegisterActivity_"
+            android:name=".RegisterActivity_"
             android:label="@string/title_activity_register"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.sopinet.trazeo.app.SelectGroupActivity_"
-            android:label="@string/title_activity_select_group"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:name=".SelectGroupActivity_"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.sopinet.trazeo.app.MonitorActivity_"
+            android:name=".MonitorActivity_"
             android:exported="true"
             android:label="@string/title_activity_monitor"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.sopinet.trazeo.app.SeeActivity_"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_see" >
-        </activity>
+            android:name=".SeeActivity_"
+            android:label="@string/title_activity_see"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.sopinet.trazeo.app.EditGroupActivity_"
+            android:name=".EditGroupActivity_"
+            android:label="@string/title_activity_edit"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_edit" >
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.sopinet.trazeo.app.NewGroupActivity_"
+            android:name=".NewGroupActivity_"
+            android:label="@string/new_pedibus"
             android:screenOrientation="portrait"
-            android:label="Crear un nuevo grupo de pedibús">
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.sopinet.trazeo.app.SearchGroupsActivity_"
-            android:screenOrientation="portrait"
-            android:label="Busca pedibuses en tu ciudad">
-        </activity>
+            android:name=".SearchGroupsActivity_"
+            android:label="@string/pedibuses"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.sopinet.trazeo.app.AddChildrenGuide_"
+            android:name=".ChildrenActivity_"
+            android:label="@string/my_kids"
             android:screenOrientation="portrait"
-            android:label="Registro de niños">
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".PointsActivity_"
+            android:label="@string/my_points"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TutorialActivity_"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CatalogActivity_"
+            android:label="@string/title_activity_catalog"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MySettingsActivity_"
+            android:label="@string/my_settings_title"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".MyNotificationsActivity_"
+            android:label="@string/my_notifications_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".OtherServicesActivity_"
+            android:label="@string/title_activity_other_services"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MembersActivity_"
+            android:label="@string/title_activity_members"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".ChatActivity_"
+            android:label="@string/chat_button"
+            android:launchMode="singleTop"
+            android:parentActivityName=".SelectGroupActivity_"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SelectGroupActivity_" />
         </activity>
-        <receiver android:name="com.sopinet.android.mediauploader.ChangeConnectivity">
+
+        <service android:name=".gpsmodule.LocationService" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="@string/google_api_key" />
+
+        <receiver
+            android:name=".chat.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.sopinet.trazeo.app" />
             </intent-filter>
         </receiver>
-    </application>
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_LOGS"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
+        <service android:name=".chat.GcmIntentService" />
+
+    </application>
 
 </manifest>

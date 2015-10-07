@@ -1,41 +1,341 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="google_api_key"></string>
+    <string name="gcm_defaultSenderId"></string>
+
     <string name="app_name">Trazeo</string>
-    <string name="title_fragment_map">Mapa</string>
-    <string name="title_fragment_data">Datos</string>
-    <string name="title_fragment_children">Niños</string>
+    <string name="title_fragment_children">Niñ@s</string>
     <string name="title_fragment_wall">Muro</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Configuración</string>
     <string name="title_activity_init">Trazeo</string>
-    <string name="dummy_button">Trazeo, checking access</string>
     <string name="dummy_content">Trazeo</string>
     <string name="title_activity_login_simple">Acceso</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_select_group">Mis grupos de pedibus</string>
-    <string name="title_activity_monitor">Trazeo</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_select_group">Trazeo</string>
+    <string name="title_activity_monitor">Paseo en curso</string>
     <string name="action_disconnect">Desconectar</string>
     <string name="title_activity_finish_ride">FinishRideActivity</string>
-    <string name="title_activity_see">SeeActivity</string>
-    <string name="about">Acerca de...</string>
+    <string name="title_activity_see">Mapa del paseo</string>
+    <string name="about">Acerca de&#8230;</string>
     <string name="action_points">Mis puntos</string>
     <string name="confirm_register">Confirmar</string>
     <string name="prompt_password_repeat">Repetir contraseña</string>
     <string name="title_activity_register">Registro</string>
-    <string name="title_activity_edit">Editar la configuración del grupo</string>
+    <string name="title_activity_edit">Configuración del grupo</string>
     <string name="prompt_edit_group">Nombre del grupo</string>
     <string name="visibility_prompt">Visibilidad/Accesibilidad</string>
     <string name="provinces_prompt">Provincias</string>
     <string name="cities_prompt">Localidades</string>
     <string name="search_btn">Buscar</string>
     <string name="see_all_btn">Ver todos</string>
-    <string name="firstFinish"><![CDATA[Aquí finaliza tu primer paseo de prueba. Accediendo con tu correo y contraseña a la web <a href="http://www.trazeo.es">www.trazeo.es</a> podrás ver tus puntos y canjearlos por premios. Podrás hacer el seguimiento de los paseos de tu grupo cuando no lo acompañes e invitar a otras familias a unirse si así lo deseas.]]></string>
+    <string name="prompt_locality_group">Localidad</string>
+    <string name="new_child">Nuevo niñ@</string>
+    <string name="country_prompt">País</string>
+    <string name="schoolName">Centro educativo</string>
+    <string name="child_name_prompt">Nombre del niñ@</string>
+    <string name="gender_prompt">Género</string>
+    <string name="birth_date">Fecha de nacimiento</string>
+
+    <!-- Strings related to login -->
+    <string name="title_activity_login">Acceso</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">ContraseÃ±a</string>
+    <string name="action_sign_in">Acceder a Trazeo</string>
+    <string name="action_sign_in_short">Acceder</string>
+    <string name="action_register">Registrarme</string>
+    <string name="error_invalid_email">Email incorrecto</string>
+    <string name="try_again">IntÃ©ntalo de nuevo</string>
+    <string name="error_invalid_password">Tu clave es demasiado corta</string>
+    <string name="error_incorrect_password">Tu clave es invÃ¡lida</string>
+    <string name="error_field_required">Este campo es requerido</string>
+
 
     <string-array name="visibility_array">
         <item>Público</item>
         <item>Privado</item>
         <item>Oculto</item>
     </string-array>
+    <string-array name="gender_array">
+        <item>Niño</item>
+        <item>Niña</item>
+    </string-array>
+
+    <string name="terminar_paseo">Terminar paseo</string>
+
+    <!-- Selección de grupos / activity_select_group -->
+    <string name="crea_grupo">Crea tu primer grupo</string>
+    <string name="busca_pedibuses">Busca en tu ciudad</string>
+    <string name="vincular_pedibuses">Vincúlate a un grupo</string>
+    <string name="error_admin">Eres administrador del grupo, no te puedes desvincular de él</string>
+    <string name="send_invitation_ok">Invitación enviada</string>
+    <string name="insert_email">Introduce el email</string>
+    <string name="gps_desactived">GPS desactivado</string>
+    <string name="gps_desactived_desc">¿Deseas activarlo\npara comenzar el paseo?</string>
+    <string name="network_desactived">Ubicación desactivada</string>
+    <string name="network_desactived_desc">La ubicación por red móvil y Wi-Fi mejora la localización del paseo.\n¿Deseas activarla?</string>
+    <string name="both_desactived">GPS y Ubicación</string>
+    <string name="both_desactived_desc">¿Deseas activar el GPS y la ubicación por red móvil y Wi-Fi para comenzar el paseo?</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="are_you_sure">¿Estás seguro?</string>
+    <string name="you_unlink_group">Te desvincularás del grupo</string>
+    <string name="official_group">Este es un grupo oficial</string>
+    <string name="official_group_desc">Sólo los monitores pueden iniciar paseo. Puedes visualizar por donde va el grupo cuando esté en marcha</string>
+    <string name="info_select_group">Los grupos a los que estáis vinculados tus hij@s y tú aparecen aquí. Cuando quieras iniciar el paseo para ese grupo, pulsa sobre él. Te aparecerá el listado de todos los niñ@s que están dados de alta y podrás seleccionar a los que se vayan uniendo ese día al paseo, que son los que recibirán puntos por participar y cuyos padres serán notificados cuando los marques, desmarques y cuando llegues al destino</string>
+    <string name="info">Información</string>
+    <string name="finish_ride">Fin del paseo</string>
+    <string name="finish_ride_desc">Gracias por acompañar este paseo.\nAcabas de notificar a las familias de los participantes que han llegado bien.\nAñades 1 punto a tu cuenta. Si quieres canjear tus puntos por premios, accede al catálogo</string>
+    <string name="disconnect_desc">Cerrará la sesión actual</string>
+    <string name="understood">Entendido</string>
+    <string name="invitations">Invitaciones</string>
+    <string name="info_select_group_new">Ahora es el momento de crear tu primer grupo de paseo desde la barra de menú o vincularte a uno existente pulsando sobre el icono de la lupa.</string>
+    <string name="remove_group_desc">Eliminarás este grupo</string>
+    <string name="disjoin">DESVINCULAR</string>
+    <string name="join">VINCULAR</string>
+    <string name="child_doesnt_exist">Niñ@ no existe</string>
+    <string name="petition_denied">Petición denegada</string>
+    <string name="group_doesnt_exit">Este grupo ya no existe</string>
+    <string name="parent_not_tutor">El padre no es tutor del niño</string>
+    <string name="child_joined">Niñ@ vinculado correctamente</string>
+    <string name="child_disjoined">Niñ@ desvinculado correctamente</string>
+    <string name="child_on_group">Ya se encuentra vinculad@ al grupo</string>
+    <string name="send">ENVIAR</string>
+    <string name="send_minus">Enviar</string>
+    <string name="no_childs_in_grooup">No existen niñ@s vinculados a este grupo</string>
+    <string name="firstFinish"><![CDATA[Aquí finaliza tu primer paseo de prueba. En la sección Mis puntos podrás ver los puntos acumulados por participar y canjearlos por premios en el catálogo. Podrás hacer el seguimiento de los paseos de tu grupo cuando no lo acompañes e invitar a otras familias a unirse si así lo deseas.]]></string>
+    <string name="firstFinish2">Gracias por acompañar este paseo.\nAcabas de notificar a las familias de los participantes que han llegado bien.\nAñades 1 punto a tu cuenta. Si quieres canjear tus puntos por premios, accede al catálogo</string>
+    <string name="has_a_ride">No puedes iniciar un paseo mientras tengas otro paseo comenzado.\n Finaliza el paseo en curso antes de comenzar otro.</string>
+    <string name="init_ride">INICIAR PASEO</string>
+    <string name="ride_started">PASEO EN CURSO</string>
+    <string name="description">Descripción</string>
+    <string name="chat_button">CHAT</string>
+    <string name="chat_group">Chat de grupo</string>
+    <string name="option_not_yet">Pronto podrás comunicarte con los miembros de tu grupo desde este chat y recibir las notificaciones vía móvil</string>
+    <string name="sorry">Disponible próximamente</string>
+    <string name="not_permission">No tienes permisos para iniciar este paseo</string>
+    <string name="no_children">No tienes niñ@s registrados. Antes de vincularlos a un grupos debes registrarlos desde Mis niñ@s.</string>
+
+
+    <!-- Mis puntos -->
+    <string name="get_points">¿Cómo conseguir puntos?</string>
+    <string name="get_points_description">Cada una de las acciones que realizas en Trazeo te permite sumar puntos en tu cuenta:</string>
+    <string name="get_points_description1">- Cada día que uno de tus hij@s camine con Trazeo, sumarás 1 punto.</string>
+    <string name="get_points_description2">- Cada kilómetro que uno de tus hij@s camine con Trazeo, recibirás 1 punto más (con un máximo de 25 puntos por semana).</string>
+    <string name="get_points_description3">- Y si eres el acompañante o el monitor de un grupo, cada vez que guíes el paseo con la aplicación móvil recibirás 1 punto (con un máximo de 50 puntos al mes).</string>
+    <string name="get_points_description4">Además, cuando lleves a cabo algunas acciones o cuando colabores con Trazeo, te enviaremos un código que te permitirá sumar puntos directamente introduciéndolo en el espacio “Canjear Cupón” que hay en la pantalla de “Mis puntos”.</string>
+    <string name="where_exchange">¿Donde canjearlos?</string>
+    <string name="where_exchange_description">En el catálogo de Trazeo tienes a tu disposición un listado con los premios y descuentos que puedes canjear por los puntos conseguidos.\n\nElige el que más te guste a ti o a tus hij@s y pulsa sobre el botón “Canjear”.\n\nTe mandaremos información sobre cómo recibir tu premio. Y recuerda, esta lista seguirá creciendo.
+\n\nAdemás, cada una de estas acciones también te dan CIVIS en nuestra web amiga Civiclub.org, el club de las personas cívicas (mira las condiciones en la ayuda de Otros servicios en tu perfil).
+        \n\nSi necesitas más información, o si eres una empresa u organismo y quieres ofrecer premios y descuentos en Trazeo, puedes ponerte en contacto con nosotros en hola@trazeo.es</string>
+
+
+    <!-- Tutorial de inicio -->
+    <string name="welcome">¡Bienvenido!</string>
+    <string name="tutorial_desc_0">Trazeo es una aplicación que te servirá para que tus hij@s vayan al colegio de forma segura y sostenible, a la vez que tú organizas mejor tu tiempo</string>
+    <string name="tutorial_title_1">¡Miles de niñ@s se desplazan ya en pedibus cada mañana!</string>
+    <string name="tutorial_desc_1">Con Trazeo podrás crear, organizar y localizar en tiempo real grupos de pedibus. Un pedibus es un grupo de niñ@s pequeños que caminan al cole juntos acompañados por un adulto</string>
+    <string name="tutorial_title_2">Busca un grupo o invita a otros al tuyo</string>
+    <string name="tutorial_desc_2">Registra a tus hij@s y únete a un grupo ya creado en tu colegio, o créalo tú e invita a otros adultos de confianza que compartan tu mismo camino</string>
+    <string name="tutorial_title_3">Sigue al grupo y recibe notificaciones</string>
+    <string name="tutorial_desc_3">Cada mañana, si eres tú el adulto que acompaña al grupo, podrás geoposicionarlo y registrar las asistencias. Si no, podrás ver dónde está el grupo y recibir notificación de que han llegado</string>
+    <string name="tutorial_title_4">Gana puntos por participar y canjéalos por premios</string>
+    <string name="tutorial_desc_4">Cada vez que tus hij@s participan en un pedibus, ganáis puntos que puedes canjear en nuestro catálogo de premios. ¡Os recompensamos por vuestros hábitos saludables!</string>
+    <string name="go_button">COMENZAR</string>
+    <string name="go_button_group">Comienza registrando un grupo</string>
+    <string name="wait">Un momento</string>
+
+    <!-- Búsqueda de grupos / SearchGroup -->
+    <string name="info_search_group">Busca grupos activos en tu ciudad y únete a uno de ellos. En los grupos públicos tus hij@s y tú os incorporareis automáticamente al pulsar sobre el grupo. En los grupos privados, se le enviará un mensaje al administrador para que apruebe vuestra incorporación.</string>
+    <string name="search_groups">Busca pedibuses que ya estén caminando en tu ciudad</string>
+    <string name="link_group">Vincular</string>
+    <string name="send_group_petition">Solicitar</string>
+
+    <!-- Login -->
+    <string name="error_title">Error</string>
+    <string name="access_denied">Acceso denegado</string>
+    <string name="server_error">Vaya, parece que hay un problema con nuestra base de datos. Si sigue pasando, mándanos un correo a hola@trazeo.es para que lo resolvamos</string>
+    <string name="error_connection">Error de conexión</string>
+    <string name="error_connection_desc">Comprueba la conexión de datos</string>
+    <string name="loading">Cargando</string>
+    <string name="attention">Atención</string>
+    <string name="has_joined">Ya estás vinculado a este grupo</string>
+    <string name="has_succesful">Ya has pedido acceso a este grupo anteriormente</string>
+    <string name="group_not_exists">El grupo solicitado ya no existe.</string>
+    <string name="has_problem">Ha ocurrido un problema</string>
+    <string name="petition_sended">Petición enviada</string>
+    <string name="error_loading">Comprueba la conexión de datos</string>
+
+    <!-- Pantalla de paseo / Monitor -->
+    <string name="end_ride">Se terminará tu paseo actual</string>
+    <string name="end_ride_button">Terminar paseo</string>
+    <string name="notFirstFix">Aún no se ha establecido la localización, por tanto, los niños no se registrarán en el paseo. ¿Quieres terminar el paseo?</string>
+    <string name="position_not_sended">No se ha podido enviar la posición.</string>
+    <string name="out_ride">Fuera del paseo</string>
+    <string name="in_ride">En el paseo</string>
+    <string name="going_in_ride">Entrando en el paseo</string>
+    <string name="server_error_exit">Vaya, parece que hay un problema con nuestra base de datos. Si sales, el grupo se cerrará automáticamente en un máximo de 15 min.\n¿Deseas salir ahora?</string>
+    <string name="connection_error_exit">Vaya, parece que no tienes conexión de datos. Si sales, el grupo se cerrará automáticamente en un máximo de 15 min.\n¿Deseas salir ahora?</string>
+
+    <!-- Edit Group -->
+    <string name="info_edit_group">Sólo tú como administrador puedes cambiar la configuración del grupo. Si tu grupo es "Privado", las personas que quieran unirse tendrán que solicitar tu permiso para hacerlo. Si es "Público", cualquiera puede unirse de forma sencilla en cualquier momento. Recuerda poner un nombre significativo al grupo, para que sea fácil de encontrar por las personas que lo busquen. Poner el nombre del colegio destino y la zona de salida puede ser buena idea.</string>
+    <string name="name_used">Este nombre ya está en uso</string>
+
+    <!-- Menú desplegable grupo / groupAdapter -->
+    <string name="invite">Invitar a este grupo</string>
+    <string name="desvicule_group">Desvincularse de este grupo</string>
+    <string name="config">Configuración</string>
+    <string name="remove_group">Eliminar este grupo</string>
+    <string name="disjoin_child">Desvincular niñ@</string>
+    <string name="join_child">Vincular niñ@</string>
+    <string name="select_child">Seleccionar niñ@</string>
+    <string name="cancel">CANCELAR</string>
+
+    <!-- New Group -->
+    <string name="info_new_group">Cuando crees un nuevo grupo como "Privado", las personas que quieran unirse tendrán que solicitar tu permiso para hacerlo. Puedes cambiar la visibilidad a "Público" si quieres que cualquier usuario pueda unirse de forma sencilla. O crearlo "Oculto" si prefieres que no pueda encontrarse. Recuerda poner un nombre significativo al grupo, para que sea fácil de encontrar por las personas que lo busquen. Poner el nombre del colegio destino y la zona de salida puede ser buena idea.</string>
+
+    <!-- Register -->
+    <string name="email_used">Este email está en uso.</string>
+    <string name="fill_all">Rellena todos los campos</string>
+    <string name="pass_error">Las contraseñas no coinciden</string>
+    <string name="registering_user">Registrando usuario</string>
+    <string name="is_monitor">Soy monitor profesional</string>
+
+    <!-- ManageChildFragment -->
+    <string name="add_children">¿Deseas añadir otro niñ@?</string>
+    <string name="add_name">Introduce el nombre del niñ@</string>
+    <string name="accept_button">ACEPTAR</string>
+    <string name="children_tutorial_help">Una vez hayas registrado a tus niñ@s, se vincularán automáticamente al grupo que crees o al que te unas.\nDesde el menú desplegable de cada grupo, podrás vincular niñ@s que registres posteriormente o desvincular los que ya tienes en un grupo.</string>
+
+    <!-- ChildrenActivity Fragment -->
+    <string name="register_child">Registrar niñ@</string>
+    <string name="edit_child">Editar niñ@</string>
+    <string name="retry">Pulsa Aceptar para reintentar</string>
+    <string name="edit">Editar</string>
+    <string name="remove">Eliminar</string>
+    <string name="remove_child_desc">Eliminarás este niñ@</string>
+
+    <!-- Manifest -->
+    <string name="child_register">Registro de niñ@s</string>
+    <string name="new_pedibus">Nuevo grupo pedibus</string>
+    <string name="pedibuses">Pedibuses</string>
+    <string name="my_points">Mis Puntos</string>
+    <string name="my_points2">Mis Puntos: </string>
+
+    <!-- Report -->
+    <string name="report_title">Describe la incidencia</string>
+    <string name="report_sended">Reporte enviado!</string>
+
+    <!-- Invite Dialog -->
+    <string name="invite_title">Introduce el email de la persona a la que quieres invitar a unirse al grupo</string>
+    <string name="sending">Enviando invitación</string>
+
+    <!-- Change password dialog -->
+    <string name="change_password_title">Introduce la nueva contraseña</string>
+    <string name="sending_changes">Espera un momento</string>
+    <string name="error_invalid_passwd">La contraseña no es correcta</string>
+
+    <!-- Coach Step1 -->
+    <string name="coach1">Por ahora sólo tienes registrados a tus hijos, pero el listado crecerá si utilizas el grupo para organizarte con otras familias</string>
+    <string name="coach2">Cuando pulses sobre un niño y quede marcado, éste se considera incorporado al paseo y empieza a sumar puntos</string>
+    <string name="coach3">A su familia le llegará un mensaje y podrá ver el recorrido del grupo. Recuerda activar el GPS</string>
+    <string name="coach4">Cuando desmarques a un niño, se considera que ha llegado a su destino, a su familia le llegará un mensaje si lo ha configurado</string>
+    <string name="coach5">Cuando todos hayan llegado al destino, finaliza el paseo pulsando aquí arriba o en el botón Terminar paseo</string>
+    <string name="coach6">Obtendrás tus puntos, todos los miembros del grupo sabrán que habéis llegado y podrán ver un resumen</string>
+    <string name="finish">Finalizar</string>
+    <string name="continue_coach">Continuar</string>
+
+    <!-- Menus -->
+    <string name="guide">Guia rápida</string>
+    <string name="help">Ayuda</string>
+    <string name="refresh">Refrescar</string>
+    <string name="report">Reportar</string>
+    <string name="new_group">Nuevo grupo</string>
+    <string name="my_kids">Mis niñ@s</string>
+    <string name="search">Buscar grupos</string>
+
+    <!-- Catalog -->
+    <string name="info_search_catalog">En Trazeo te premiamos por los puntos que consigues caminando o acompañando a grupos. Busca el catálogo de puntos en tu ciudad y canjéalos por premios. Además también puedes canjearlos en nuestro catálogo de tiendas online.</string>
+    <string name="info_found_catalog">Canjea tu puntos pulsando sobre CANJEAR OFERTA.\nPuedes obtener más información sobre cada oferta pulsando sobre MÁS INFO</string>
+    <string name="title_activity_catalog">Catálogo de puntos</string>
+    <string name="catalog_points">Busca el catálogo de puntos de tu ciudad</string>
+    <string name="change_points">CANJEAR OFERTA</string>
+    <string name="more_info">MÁS INFO</string>
+    <string name="points">Puntos</string>
+    <string name="internet">Tiendas en Internet</string>
+    <string name="catalog_title">Catálogo </string>
+    <string name="catalog_petition">Se enviará la solicitud y recibirás un email con la oferta.</string>
+    <string name="points_changed">¡Hemos recibido tu solicitud de canjeo! Te llegará un correo con instrucciones para hacerlo efectivo en las próximas horas</string>
+
+    <!-- MySettingsActivity -->
+    <string name="my_profile_title">Mi perfil</string>
+    <string name="my_settings_title">Mi configuración</string>
+    <string name="my_settings_desc">Completa aquí la información de tu perfil.\nEl nombre que pongas será el que vea el resto de miembros. Rellena el teléfono para que la persona que acompañe al grupo te pueda avisar si es necesario.\nSi eres padre/madre/tutor de un niñ@, no marques la casilla "Soy monitor profesional".</string>
+    <string name="my_name">Nombre</string>
+    <string name="my_phone">Teléfono de contacto</string>
+    <string name="my_city">Localidad</string>
+    <string name="passwd">Contraseña</string>
+    <string name="confirm_passwd">Confirmar contraseña</string>
+    <string name="change_passwd">Cambiar la contraseña</string>
+    <string name="change_passwd_ok">Contraseña cambiada!</string>
+    <string name="error_fill_data">Completa todos los campos.</string>
+    <string name="access_denied_location">Comprueba que la localidad sea correcta.\nPuedes guiarte con desplegable el que aparece al escribir en el campo.</string>
+    <string name="passwd_changed_error">No se ha podido cambiar la contraseña.</string>
+
+    <!-- MyNotificationsactivity-->
+
+    <string name="my_notifications_title">Mis notificaciones</string>
+    <string name="info_my_notifications">Configura las notificaciones que quieres recibir por email.\nPor defecto te llegan sólo las más importantes: cuando el paseo termina y cuando alguien escribe en el muro del grupo.\nMarca \'Todos\' si quieres recibir también el inicio de paseo, la incorporación y salida del grupo de tu niñ@".\nElige \'Ninguno\' si no quieres recibir notificaciones.</string>
+    <string name="email">Email</string>
+    <string name="mobile">Dispositivo móvil</string>
+    <string name="email_option_1">Ninguno</string>
+    <string name="email_option_2">Sólo importantes</string>
+    <string name="email_option_3">Todos</string>
+    <string name="chats_option">Chats de grupo</string>
+    <string name="child_in_out_option">Entrada/Salida de niñ@s en grupo</string>
+    <string name="init_finish_ride_option">Inicio/Fin de paseo</string>
+    <string name="civiclub">Conexión con CiviClub</string>
+    <string name="civiclub_text">¿Quieres que tus puntos se envíen a CiviClub?</string>
+
+    <!-- Navigation Drawer -->
+    <string name="drawer_open">Abierto</string>
+    <string name="drawer_close">Cerrado</string>
+    
+    <string-array name="my_profile">
+        <item>Mis niñ@s</item>
+        <item>Mis puntos</item>
+        <item>Mi configuración</item>
+        <item>Mis notificaciones</item>
+        <item>Otros servicios</item>
+        <item>Guía rápida</item>
+    </string-array>
+
+    <!-- OtherServicesActivity -->
+    <string name="title_activity_other_services">Otros servicios</string>
+    <string name="other_services_desc">CiviClub.org es un club de personas cívicas donde los socios ganan puntos por tener un estilo de vida que fomente la solidaridad, los hábitos saludables y la sostenibilidad.\n
+Si ya eres socio de CiviClub y quieres que los puntos que sumas con Trazeo también se conviertan en Civis, selecciona Si en la opción de abajo y enviaremos todos tus puntos acumulados en la semana a CiviClub todos los lunes.\n
+Y si aún no eres usuario de CiviClub, selecciona la opción Si y date de alta en <a href="http://www.civiclub.org">www.civiclub.org</a> con el mismo correo con el que te hayas registrado en Trazeo.</string>
+    <string name="data_changed">Datos modificados!</string>
+
+    <!-- Points -->
+    <string name="user_points">Tus puntos:&#160;</string>
+
+    <!-- Use Term dialog -->
+    <string name="terms_title">Términos de uso</string>
+    <string name="terms_use">Para continuar debes aceptar los</string>
+    <string name="terms_use_link"><a href='http://trazeo.es/condiciones-generales-de-uso/'>términos y condiciones de uso de Trazeo</a></string>
+
+    <!-- See Activity -->
+    <string name="start_route">Inicio de ruta</string>
+    <string name="end_route">Fin de ruta</string>
+
+    <!-- GCM Service -->
+    <string name="gcm_ride_started">%1$s ha iniciado el paseo para el grupo %2$s.</string>
+    <string name="gcm_ride_finished">El paseo para el grupo %1$s ha finalizado.</string>
+    <string name="gcm_child_in">Tu niñ@ %1$s ha sido incorporado al paseo del grupo %2$s</string>
+    <string name="gcm_child_out">Tu niñ@ %1$s ha salido del paseo de %2$s y llegado a su destino sin incidencias.</string>
+
+    <!-- Members Activity -->
+    <string name="title_activity_members">Info. del grupo</string>
+    <string name="participants">Participantes</string>
 
 </resources>

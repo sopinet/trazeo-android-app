@@ -7,11 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.sopinet.trazeo.app.MonitorActivity;
-import com.sopinet.trazeo.app.MonitorChildFragment;
 import com.sopinet.trazeo.app.R;
 import com.sopinet.trazeo.app.gson.EChild;
 
@@ -21,78 +18,45 @@ public class ChildAdapter extends ArrayAdapter<EChild> {
 
     private ArrayList<EChild> echildList;
     private Context context;
-    private MonitorActivity monitorActivity;
 
     public ChildAdapter(Context context, int textViewResourceId,
-                           ArrayList<EChild> countryList, MonitorActivity monitorActivity) {
+                           ArrayList<EChild> countryList) {
         super(context, textViewResourceId, countryList);
-        this.echildList = new ArrayList<EChild>();
+        this.echildList = new ArrayList<>();
         this.echildList.addAll(countryList);
         this.context = context;
-        this.monitorActivity = monitorActivity;
     }
 
     private class ViewHolder {
         TextView title;
-        TextView description;
         CheckBox check;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        ViewHolder holder = null;
+        ViewHolder holder;
         Log.v("ConvertView", String.valueOf(position));
 
         if (convertView == null) {
-            LayoutInflater vi = (LayoutInflater)context.getSystemService(
+            LayoutInflater vi = (LayoutInflater) context.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.child_item, null);
+            convertView = vi.inflate(R.layout.child_item, parent, false);
 
             holder = new ViewHolder();
             holder.title = (TextView) convertView.findViewById(R.id.titleCHILD);
-            //holder.description = (TextView) convertView.findViewById(R.id.descriptionCHILD);
             holder.check = (CheckBox) convertView.findViewById(R.id.checkCHILD);
             convertView.setTag(holder);
-
-            /**
-            holder.check.setOnClickListener( new View.OnClickListener() {
-                public void onClick(View v) {
-                    CheckBox cb = (CheckBox) v ;
-                    EChild echild = (EChild) cb.getTag();
-                    Toast.makeText(context.getApplicationContext(),
-                            "Clicked on Checkbox: " + cb.getText() +
-                                    " is " + cb.isChecked(),
-                            Toast.LENGTH_LONG
-                    ).show();
-                    echild.setSelected(cb.isChecked());
-                }
-            });
-            **/
         }
         else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        final EChild echild = echildList.get(position);
+        EChild echild = echildList.get(position);
         holder.title.setText(echild.nick);
-        //holder.description.setText(echild.date_birth);
         holder.check.setChecked(echild.isSelected());
         holder.check.setTag(echild);
 
-        holder.check.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(echild.isSelected())
-                    echild.setSelected(false);
-                else
-                    echild.setSelected(true);
-                monitorActivity.changeChildShow(echild);
-                monitorActivity.changeChild(echild);
-            }
-        });
-
         return convertView;
-
     }
 }

@@ -1,11 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <color name="white">#fff</color>
+    <color name="gray_light">#ffededed</color>
+    <color name="gray_dark">#ff747474</color>
+    <color name="gray_dark_2">#ff373737</color>
     <color name="black_overlay">#66000000</color>
+    <color name="green_trazeo_7">#ff6eab28</color>
+    <color name="green_trazeo_6">#ff3e521c</color>
+    <color name="green_trazeo_5">#ff739935</color>
+    <color name="green_trazeo_4">#fff6fdee</color>
+    <color name="green_trazeo_3">#DCEDC8</color>
     <color name="green_trazeo_2">#cbca20</color>
     <color name="green_trazeo_1">#a8ba2e</color>
-    <color name="green_trazeo_0">#82a939</color>
+    <color name="green_trazeo_0">#ff607c2a</color>
+    <color name="green_trazeo_2_transparent">#a9cbca20</color>
     <color name="red_trazeo_0">#E3423E</color>
     <color name="red_trazeo_1">#D2322D</color>
-
+    <color name="orange">#ffd2701d</color>
+    <color name="blue">#ff2266d2</color>
+    <color name="transparent_gray">#34000000</color>
+    <color name="green_googleMaps">#82739935</color>
+    
 </resources>

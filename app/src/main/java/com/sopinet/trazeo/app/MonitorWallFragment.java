@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.sopinet.trazeo.app.gson.EChild;
 import com.sopinet.trazeo.app.gson.EComment;
+import com.sopinet.trazeo.app.gson.MasterWall;
 import com.sopinet.trazeo.app.helpers.CommentAdapter;
 
 import java.util.Collections;
@@ -24,6 +25,8 @@ public class MonitorWallFragment extends Fragment {
     private static final String Adata = "mdata";
     private String mdata;
     ListView listComments;
+
+    MasterWall wall;
 
     public static MonitorWallFragment newInstance(String data) {
         MonitorWallFragment fragment = new MonitorWallFragment();
@@ -53,9 +56,9 @@ public class MonitorWallFragment extends Fragment {
 
         // Creamos adaptador
         // Si tenemos mensajes
-        if (MonitorActivity.wall != null && MonitorActivity.wall.data != null) {
+        if (wall != null && wall.data != null) {
             CommentAdapter adapter = new CommentAdapter(root.getContext(),
-                    R.layout.comment_item, MonitorActivity.wall.data);
+                    R.layout.comment_item, wall.data);
 
             // Asignamos el adaptador a la vista
             listComments = (ListView) root.findViewById(R.id.listComments);

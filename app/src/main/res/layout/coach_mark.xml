@@ -20,7 +20,7 @@
             android:layout_width="80sp"
             android:layout_height="80sp"
             android:src="@drawable/white_arrow"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true" />
 
         <TextView
             android:id="@+id/coach_text"
@@ -50,7 +50,7 @@
             android:text="Entendido"
             android:layout_marginRight="25sp"
             android:layout_marginBottom="50sp"
-            android:background="@drawable/green_box"
+            android:background="@drawable/green_bar_button"
             android:textColor="@color/white"
             android:padding="20sp"/>
     </RelativeLayout>

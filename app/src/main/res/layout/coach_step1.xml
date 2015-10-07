@@ -26,9 +26,9 @@
                 android:layout_width="80sp"
                 android:layout_height="80sp"
                 android:src="@drawable/small_arrow_white"
-                android:layout_marginTop="70sp"
+                android:layout_marginTop="125dip"
                 android:visibility="gone"
-                android:layout_marginLeft="18sp"/>
+                android:layout_marginLeft="50dip" />
 
             <ImageView
                 android:id="@+id/coach_bell"
@@ -49,12 +49,12 @@
                 android:layout_marginLeft="18sp"/>
 
             <ImageView
-                android:id="@+id/coach_arrow_right"
+                android:id="@+id/coach_arrow_end"
                 android:layout_width="80sp"
                 android:layout_height="80sp"
-                android:src="@drawable/right_arrow_white"
+                android:src="@drawable/small_arrow_white"
                 android:visibility="gone"
-                android:layout_marginTop="70sp"
+                android:layout_marginTop="30sp"
                 android:layout_marginRight="34sp"/>
         </LinearLayout>
 
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/coach_arrow"
             android:layout_alignParentBottom="true"
-            android:text="Por ahora sólo tienes registrados a tus hijos, pero el listado crecerá si utilizas el grupo para organizarte con otras familias"
+            android:text="@string/coach1"
             android:textSize="20sp"
             android:textColor="@color/white"
             android:gravity="center"
@@ -83,11 +83,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:text="Continuar"
+            android:text="@string/continue_coach"
             android:layout_marginRight="20sp"
             android:layout_marginBottom="20sp"
-            android:background="@drawable/green_box"
+            android:background="@drawable/green_bar_button"
             android:textColor="@color/white"
+            android:textStyle="bold"
             android:padding="20sp"/>
     </RelativeLayout>
 </LinearLayout>

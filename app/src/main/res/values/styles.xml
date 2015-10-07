@@ -6,21 +6,31 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="FullscreenTheme" parent="android:Theme.NoTitleBar">
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="metaButtonBarStyle">@style/ButtonBar</item>
-        <item name="metaButtonBarButtonStyle">@style/ButtonBarButton</item>
+    <style name="Theme_Dialog" parent="android:Theme.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="ButtonBar">
-        <item name="android:paddingLeft">2dp</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingRight">2dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:background">@android:drawable/bottom_bar</item>
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
     </style>
 
-    <style name="ButtonBarButton" />
+    <style name="custom_edittext" parent="@android:style/Widget.EditText">
+        <item name="android:background">@drawable/box_border_green</item>
+        <item name="android:textColor">@color/gray_dark_2</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">10dip</item>
+        <item name="android:textColorHint">@color/gray_dark</item>
+    </style>
+
+    <style name="custom_autocompleteedittext" parent="@android:style/Widget.AutoCompleteTextView">
+        <item name="android:background">@drawable/box_border_green</item>
+        <item name="android:textColor">@color/gray_dark_2</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">10dip</item>
+        <item name="android:textColorHint">@color/gray_dark</item>
+        <item name="android:dropDownItemStyle">@style/Widget.AppCompat.DropDownItem.Spinner</item>
+    </style>
 
 </resources>

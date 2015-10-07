@@ -19,7 +19,7 @@ public class CommentAdapter extends ArrayAdapter<EComment> {
     public CommentAdapter(Context context, int textViewResourceId,
                         ArrayList<EComment> countryList) {
         super(context, textViewResourceId, countryList);
-        this.ecommentList = new ArrayList<EComment>();
+        this.ecommentList = new ArrayList<>();
         this.ecommentList.addAll(countryList);
         this.context = context;
     }
@@ -32,12 +32,12 @@ public class CommentAdapter extends ArrayAdapter<EComment> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        ViewHolder holder = null;
+        ViewHolder holder;
 
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater)context.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.comment_item, null);
+            convertView = vi.inflate(R.layout.comment_item, parent, false);
 
             holder = new ViewHolder();
             holder.author_name = (TextView) convertView.findViewById(R.id.comment_author);

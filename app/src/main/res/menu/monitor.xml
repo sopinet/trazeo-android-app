@@ -3,26 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sopinet.trazeo.app.MainActivity" >
 
-    <item android:id="@+id/action_close"
-        android:icon="@drawable/ic_close_ride"
-        android:title="Terminar paseo"
-        app:showAsAction="always"
-        />
+    <item android:id="@+id/action_chat"
+        android:title="@string/chat_group"
+        android:icon="@drawable/chat_action"
+        android:orderInCategory="100"
+        app:showAsAction="always"/>
 
     <item android:id="@+id/action_report"
-        android:title="Reportar"
+        android:title="@string/report"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        />
-
-    <item android:id="@+id/action_disconnect"
-        android:title="@string/action_disconnect"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        />
-
-    <!-- <item android:id="@+id/acerca_de"
-        android:title="@string/about"
-        android:orderInCategory="100"
-        app:showAsAction="never" /> -->
+        app:showAsAction="never"/>
 </menu>

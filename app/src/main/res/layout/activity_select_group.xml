@@ -1,89 +1,80 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.sopinet.trazeo.app.SelectGroupActivity">
 
-    <LinearLayout
-        android:id="@+id/groups_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:layout_weight="1">
+    <include layout="@layout/toolbar" />
 
-        <ListView
-            android:id="@+id/listSelectGroup"
-            android:layout_width="fill_parent"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10.0sp"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="10.0sp">
-        </ListView>
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/app_name"
+            android:paddingBottom="5dp"
+            android:src="@drawable/background" />
 
-    </LinearLayout>
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/fl_select_group"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.sopinet.trazeo.app.helpers.SlidingTabLayout
+                    android:id="@+id/sliding_tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/group_pager"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/left_drawer"
+                android:layout_width="280dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="@color/green_trazeo_4"
+                android:choiceMode="singleChoice"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp" />
+
+        </android.support.v4.widget.DrawerLayout>
+
+    </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/no_groups_layout"
+        android:id="@+id/select_group_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_weight="1">
+        android:visibility="gone">
 
-        <Button
-            android:id="@+id/btnBegin"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@drawable/green_box"
-            android:textStyle="bold"
-            android:text="Empieza"
-            android:textColor="@android:color/white"
-            android:gravity="center"
-            android:layout_weight="1"/>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#555"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:paddingLeft="10sp"
-                android:paddingTop="10sp"
-                android:text="Bienvenido a Trazeo"/>
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#666"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:paddingLeft="10sp"
-                android:paddingTop="5sp"
-                android:text="1.- Pulsa 'Empieza' y se creará un grupo automáticamente\n\n2.- Registra a tus hijos\n\n3.- Realiza un primer paseo de prueba y obtén tus primeros puntos\n\n4.- Si quieres que tu grupo crezca, invita a otras familias a participar."/>
-
-        </LinearLayout>
+        <com.pnikosis.materialishprogress.ProgressWheel
+            android:id="@+id/selectgroup_progress_dialog"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:barColor="@color/green_trazeo_5"
+            app:progressIndeterminate="true" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/btnSearch"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/green_box"
-        android:textStyle="bold"
-        android:clickable="true"
-        android:text="Busca pedibuses en tu ciudad"
-        android:textColor="@android:color/white"
-        android:gravity="center"
-        android:padding="10dp"
-        android:layout_weight="10"/>
 
 </LinearLayout>

@@ -1,23 +1,28 @@
 package com.sopinet.trazeo.app;
 
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.widget.AutoCompleteTextView;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sopinet.android.mediauploader.MinimalJSON;
-import com.sopinet.android.nethelper.SimpleContent;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.sopinet.android.nethelper.NetHelper;
 import com.sopinet.android.nethelper.StringHelper;
 import com.sopinet.trazeo.app.gson.Login;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
-import com.sopinet.trazeo.app.helpers.Var;
+import com.sopinet.trazeo.app.helpers.RestClient;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -26,17 +31,22 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 
-import io.segment.android.Analytics;
-import io.segment.android.models.Props;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
-@EActivity(R.layout.register_activity)
+
+@EActivity(R.layout.activity_register)
 public class RegisterActivity extends ActionBarActivity{
 
     @ViewById
-    AutoCompleteTextView email;
+    Toolbar toolbar;
+
+    @ViewById
+    EditText email;
 
     @ViewById
     EditText password;
@@ -47,13 +57,16 @@ public class RegisterActivity extends ActionBarActivity{
     @Pref
     MyPrefs_ myPrefs;
 
-    ProgressDialog pdialog;
+    SweetAlertDialog pDialog;
 
     @AfterViews
     void init(){
+        setSupportActionBar(toolbar);
         configureBar();
-        Analytics.onCreate(this);
-        Analytics.track("enter.register.Android", new Props("email", myPrefs.email().get()));
+        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(getResources().getColor(R.color.green_trazeo_5));
+        pDialog.setTitleText(getString(R.string.registering_user));
+        pDialog.setCancelable(false);
     }
 
     private void configureBar() {
@@ -70,107 +83,171 @@ public class RegisterActivity extends ActionBarActivity{
 
         switch(check){
             case 0:
-                pdialog = new ProgressDialog(this);
-                pdialog.setCancelable(false);
-                pdialog.setMessage("Registrando tu usuario...");
-                pdialog.show();
-                sendRegistration();
+                openTermsDialog();
                 break;
             case 1:
-                Toast.makeText(this, "Debes rellenar todos los campos", Toast.LENGTH_LONG).show();
+                new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(getString(R.string.error_title))
+                        .setContentText(getString(R.string.fill_all))
+                        .setConfirmText(getString(R.string.accept_button))
+                        .show();
                 break;
             case 2:
-                Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
+                new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(getString(R.string.error_title))
+                        .setContentText(getString(R.string.pass_error))
+                        .setConfirmText(getString(R.string.accept_button))
+                        .show();
+                break;
+            case 3:
+                new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(getString(R.string.error_title))
+                        .setContentText(getString(R.string.error_invalid_email))
+                        .setConfirmText(getString(R.string.accept_button))
+                        .show();
                 break;
         }
     }
 
     private int checkCorrectInput(){
         int check = 0;
-
-        if(email.getText().toString().equals("") ||
-                password.getText().toString().equals("") ||
+        if(password.getText().toString().equals("") ||
                 confirmPassword.getText().toString().equals(""))
             check = 1;
         else if(!password.getText().toString().equals(confirmPassword.getText().toString()))
             check = 2;
+        else if(!isValidEmail(email.getText().toString()))
+            check = 3;
 
         return check;
     }
 
+    private boolean isValidEmail(CharSequence target) {
+        return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    }
+
     @Background
     void sendRegistration(){
-        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
-        String data = "username=" + email.getText().toString();
-        data += "&password=" + StringHelper.md5(password.getText().toString());
-        String result = "";
-        try {
-            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_REGISTER, data);
-        } catch (SimpleContent.ApiException e) {
-            e.printStackTrace();
+        if (NetHelper.isOnline(this)) {
+            RequestParams params = new RequestParams();
+            params.put("username", email.getText().toString());
+            params.put("password", StringHelper.md5(password.getText().toString()));
+
+            RestClient.syncPost(RestClient.URL_API + RestClient.URL_API_REGISTER, params, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d("REGISTER", "REGISTER: " + response.toString());
+                    final Type objectCPD = new TypeToken<Login>() {}.getType();
+                    Login register = new Gson().fromJson(response.toString(), objectCPD);
+                    showResult(register);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    pDialog.dismiss();
+                    showError();
+                    Log.d("ERROR", "REGISTER ERROR: " + errorResponse.toString());
+                    //com.github.snowdream.android.util.Log.d("ERROR", "Sin conexión de datos.");
+                }
+            });
         }
+    }
 
-        Log.d("REGISTER", "REGISTER: " + result);
-        final Type objectCPD = new TypeToken<Login>() {
-        }.getType();
-        Login register = new Gson().fromJson(result, objectCPD);
-
-        showResult(register);
+    @UiThread
+    void showError() {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText(getString(R.string.error_connection))
+                .setContentText(getString(R.string.error_connection_desc))
+                .setConfirmText(getString(R.string.accept_button))
+                .show();
     }
 
     @UiThread
     void showResult(Login register){
-        pdialog.dismiss();
+        pDialog.dismiss();
         if (register.state.equals("1")) {
             myPrefs.user_id().put(register.data.id);
             myPrefs.email().put(email.getText().toString());
             myPrefs.pass().put(StringHelper.md5(password.getText().toString()));
-            startActivity(new Intent(this, SelectGroupActivity_.class));
-            Analytics.track("send.newUser.Android", new Props("email", myPrefs.email().get()));
+            myPrefs.new_user().put(0);
+            myPrefs.rideTutorial().put(true);
+            Intent i = new Intent(this, LoginSimpleActivity_.class);
+            i.putExtra("autologin", true);
+            startActivity(i);
             finish();
         } else {
-            Toast.makeText(this, "Ya existe un usuario con ese email", Toast.LENGTH_SHORT).show();
+            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(getString(R.string.error_title))
+                    .setContentText(getString(R.string.email_used))
+                    .setConfirmText(getString(R.string.accept_button))
+                    .show();
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.register_menu, menu);
-        return true;
+    @UiThread
+    public void openTermsDialog() {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View customDialogView = factory.inflate(R.layout.dialog_terms,
+                (ViewGroup) findViewById(R.id.parent_dialog_terms));
+
+        final Dialog dialog = new Dialog(this, R.style.Theme_Dialog);
+        dialog.setContentView(customDialogView);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        TextView btnAccept = (TextView) dialog.getWindow().findViewById(R.id.acceptTermsButton);
+        TextView btnCancel = (TextView) dialog.getWindow().findViewById(R.id.cancelTermsButton);
+        TextView tvUseTermsLink =(TextView) dialog.getWindow().findViewById(R.id.tvUseTermsLink);
+
+        tvUseTermsLink.setMovementMethod(LinkMovementMethod.getInstance());
+
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                pDialog.show();
+                sendRegistration();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }});
+
+        dialog.show();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 startActivity(new Intent(this, LoginSimpleActivity_.class));
-                break;
+                overridePendingTransition(R.anim.activity_close_translate, R.anim.activity_close_scale);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Analytics.activityStart(this);
     }
 
     @Override
     protected void onPause() {
-        Analytics.activityPause(this);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Analytics.activityResume(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Analytics.activityStop(this);
     }
 }

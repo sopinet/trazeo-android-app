@@ -3,34 +3,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sopinet.trazeo.app.SelectGroupActivity" >
 
-    <item android:id="@+id/refresh"
+    <item android:id="@+id/action_search"
         android:enabled="true"
-        android:title="Refrescar"
-        android:icon="@drawable/ic_action_refresh"
+        android:title="@string/search"
+        android:icon="@drawable/ic_action_search"
         android:orderInCategory="100"
         app:showAsAction="always" />
 
     <item android:id="@+id/help"
         android:enabled="true"
-        android:title="Ayuda"
         android:icon="@drawable/ic_action_help"
+        android:title="@string/help"
         android:orderInCategory="100"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item android:id="@+id/new_group"
         android:enabled="true"
-        android:title="Nuevo grupo"
-        android:icon="@drawable/ic_action_new"
+        android:icon="@drawable/new_group"
+        android:title="@string/new_group"
         android:orderInCategory="100"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/refresh"
+        android:enabled="true"
+        android:title="@string/refresh"
+        android:icon="@drawable/ic_action_refresh"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 
     <item android:id="@+id/action_disconnect"
         android:title="@string/action_disconnect"
         android:orderInCategory="100"
         app:showAsAction="never" />
-
-    <!-- <item android:id="@+id/acerca_de"
-        android:title="@string/about"
-        android:orderInCategory="100"
-        app:showAsAction="never" /> -->
 </menu>

@@ -50,7 +50,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_weight="2">
+                android:layout_weight="2"
+                android:padding="5dip">
 
                 <ImageView
                     android:id="@+id/down_banner0"
@@ -58,7 +59,8 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/sopinetlogo"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"/>
+                    android:layout_margin="5dp"
+                    android:padding="5dip" />
                 <ImageView
                     android:id="@+id/down_banner1"
                     android:layout_width="fill_parent"

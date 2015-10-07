@@ -1,25 +1,21 @@
 package com.sopinet.trazeo.app;
 
-import java.lang.reflect.Type;
-import java.sql.Timestamp;
-import java.util.Date;
-
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.NotificationManager;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
-import android.location.LocationManager;
+import android.os.Handler;
+import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -29,392 +25,444 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.snowdream.android.util.Log;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.sopinet.android.mediauploader.HttpPostHelper;
-import com.sopinet.android.mediauploader.MediaUploader;
-import com.sopinet.android.nethelper.SimpleContent;
-import com.sopinet.trazeo.app.gpsmodule.GPS;
-import com.sopinet.trazeo.app.gpsmodule.IGPSActivity;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.sopinet.android.nethelper.NetHelper;
+import com.sopinet.trazeo.app.chat.model.Group;
+import com.sopinet.trazeo.app.gpsmodule.LocationService;
 import com.sopinet.trazeo.app.gson.EChild;
 import com.sopinet.trazeo.app.gson.MasterRide;
-import com.sopinet.trazeo.app.gson.MasterWall;
 import com.sopinet.trazeo.app.helpers.ChildAdapter;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
-import com.sopinet.trazeo.app.helpers.Var;
+import com.sopinet.trazeo.app.helpers.RestClient;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import io.segment.android.Analytics;
-import io.segment.android.models.Props;
+import java.lang.reflect.Type;
+import java.sql.Timestamp;
+import java.util.Date;
 
-@EActivity(R.layout.fragment_monitor_child)
-public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+@EActivity(R.layout.activity_monitor)
+public class MonitorActivity extends ActionBarActivity {
+
+    @ViewById
+    Button btnClose;
+
+    @ViewById
+    LinearLayout monitor_progress_dialog;
+
+    @ViewById
+    LinearLayout monitor_group;
+
+    @ViewById
+    Toolbar toolbar;
 
     @Extra
     String cancel;
 
-    @Extra
-    boolean firstRide;
-
     @Pref
     public MyPrefs_ myPrefs;
 
-    public static MasterRide ride;
-    public static MasterWall wall;
+    @Extra
+    String myProfileName;
 
-    String data = null;
-    String sendPointUrl = null;
+    @Extra
+    String groupId;
 
-    ProgressDialog pdialog;
+    Group group;
+
+    @Extra
+    long serverTimestamp;
+
+    @Extra
+    long localTimestamp;
+
+    @StringRes
+    String server_error;
+
+    @StringRes
+    String error_connection;
+
+    @StringRes
+    String error_connection_desc;
+
+    @StringRes
+    String server_error_exit;
+
+    @StringRes
+    String connection_error_exit;
+
+    @StringRes
+    String position_not_sended;
+
+    SweetAlertDialog pDialog;
+
+    @InstanceState
+    MasterRide ride;
 
     ListView listChildren;
 
-    private GPS gps;
+    @InstanceState
+    int step;
 
-    private double longitude;
-    private double latitude;
+    LocationService mService;
+    boolean mBound = false;
 
-    private int step;
 
     @AfterViews
     void init() {
+
+        setSupportActionBar(toolbar);
         this.configureBar();
 
-        data = "id_ride=" + myPrefs.id_ride().get() + "&email=" + myPrefs.email().get() + "&pass=" + myPrefs.pass().get();
-        this.sendPointUrl = myPrefs.url_api().get() + Var.URL_API_SENDPOSITION;
+        group = Group.getGroupById(groupId);
 
         if (cancel != null && cancel.equals("1")) {
             showCancelDialog();
         }
-        pdialog = new ProgressDialog(this);
-        pdialog.setCancelable(false);
-        pdialog.setMessage("Cargando...");
-        pdialog.show();
 
-        MediaUploader.MODE = "any";
-        MediaUploader.SENDINGCONTEXT = "com.sopinet.trazeo.app";
-        MediaUploader.SENDINGCLASS = "com.sopinet.trazeo.app.MonitorActivity_";
-        MediaUploader.RES_OK = "json";
-        MediaUploader.NOTIFICATION_ENABLED = false;
+        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(getResources().getColor(R.color.green_trazeo_5));
+        pDialog.setTitleText(getString(R.string.wait));
+        pDialog.setCancelable(false);
 
-        Analytics.onCreate(this);
-        Analytics.track("enter.monitor.Android", new Props("email", myPrefs.email().get()));
+        showProgressDialog(true);
         loadData();
+
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCancelDialog();
+            }
+        });
+
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, LocationService.class);
+        intent.putExtra("groupId", groupId);
+        startService(intent);
+        bindService(intent, mConnection, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+    }
+
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            LocationService.LocalBinder binder = (LocationService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+
+    };
 
     @UiThread
     void showCancelDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Trazeo: Terminar paseo");
-        builder.setMessage("Se terminará tu paseo actual, ¿Estás seguro?")
-                .setCancelable(false)
-                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        finishRide(1);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        dialog.cancel();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
+        if (NetHelper.isOnline(this)) {
+            String message = getString(R.string.end_ride);
 
-    @UiThread
-    void showDisconnectDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Trazeo: Desconectar");
-        builder.setMessage("Se terminará tu paseo actual y desconectarás tu usuario de la aplicación, ¿Estás seguro?")
-                .setCancelable(false)
-                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        myPrefs.url_api().put("http://beta.trazeo.es/");
-                        finishRide(2);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        dialog.cancel();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
+            if (mBound && !mService.isDataSended()) {
+                message = getString(R.string.notFirstFix);
+            }
+
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.are_you_sure))
+                    .setContentText(message)
+                    .setCancelText(getString(R.string.yes))
+                    .setConfirmText(getString(R.string.no))
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            finishRide();
+                            sDialog.dismiss();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
+                        }
+                    })
+                    .show();
+        } else {
+            showError(error_connection, false);
+        }
     }
 
     @UiThread
     void showReportDialog() {
-        LayoutInflater li = LayoutInflater.from(this);
-        View reportDialog = li.inflate(R.layout.report_dialog, null);
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View customDialogView = factory.inflate(
+                R.layout.dialog_report, (ViewGroup) findViewById(R.id.layout_root));
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setView(reportDialog);
-        final EditText userInput = (EditText) reportDialog.findViewById(R.id.editREPORT);
+        final Dialog dialog = new Dialog(this, R.style.Theme_Dialog);
+        dialog.setContentView(customDialogView);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
 
-        alertDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // TODO: ENVIAR LA INFO AL SERVIDOR
-                                dialog.cancel();
-                                showWaitDialog();
-                                sendReport(userInput.getText().toString());
-                            }
-                        }
-                )
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        }
-                );
+        final EditText userInput = (EditText) dialog.findViewById(R.id.editREPORT);
+        TextView reportOkButton = (TextView) dialog.findViewById(R.id.reportOkButton);
 
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        reportOkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!userInput.getText().toString().trim().equals("")) {
+                    dialog.cancel();
+                    showWaitDialog();
+                    sendReport(userInput.getText().toString());
+                }
+            }
+        });
+        TextView reportCancelButton = (TextView) dialog.findViewById(R.id.reportCancelButton);
+        reportCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
 
-        // show it
-        alertDialog.show();
+        dialog.show();
     }
 
-    @Background
     void sendReport(String text) {
-        SimpleContent sc = new SimpleContent(this, "trazeo", 0);
-        String sdata = data;
-        sdata += "&text=" + text;
+        Location location = mService.getLocation();
+        RequestParams params = new RequestParams();
+        params.add("id_ride", group.ride_id);
+        params.add("email", myPrefs.email().get());
+        params.add("pass", myPrefs.pass().get());
+        params.add("text", text);
+        params.add("latitude", String.valueOf(location.getLatitude()));
+        params.add("longitude", String.valueOf(location.getLongitude()));
 
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        String lat = "";
-        String lon = "";
-        if (location != null) {
-            lat = String.valueOf(location.getLatitude());
-            lon = String.valueOf(location.getLongitude());
-        }
+        RestClient.post(RestClient.URL_API + RestClient.URL_API_SENDREPORT, params, new JsonHttpResponseHandler() {
 
-        sdata += "&latitude=" + lat;
-        sdata += "&longitude=" + lon;
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                showReportOK();
+            }
 
-        String result = "";
-        try {
-            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_SENDREPORT, sdata);
-        } catch (SimpleContent.ApiException e) {
-            e.printStackTrace();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        showReportOK();
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                pDialog.dismiss();
+                showError(error_connection_desc, false);
+            }
+        });
     }
 
     @UiThread
     void showReportOK() {
-        //wait.dismiss();
-        pdialog.cancel();
-        Toast.makeText(this, "El reporte ha sido enviado con éxito.", Toast.LENGTH_LONG).show();
+        pDialog.dismiss();
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText(getString(R.string.report_sended))
+                .setConfirmText(getString(R.string.accept_button))
+                .show();
     }
 
-    public void finishRide(int requestCode) {
-        if (requestCode == 1 || requestCode == 2) {
-            // Mensaje de inicio de detención de PASEO
-            showWaitDialog();
+    /**
+     * Finaliza un paseo
+     */
+    public void finishRide() {
 
-            // stopService(SelectGroupActivity.intentGPS);  // TODO: No estoy seguro de que esto sea necesario
-
-            // Cancelamos la ALARMA
-            /*String data_service = "email=" + myPrefs.email().get();
-            data_service += "&pass=" + myPrefs.pass().get();
-            data_service += "&id_ride=" + myPrefs.id_ride().get();
-
-            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            Intent i = new Intent(this, OsmLocPullReceiver.class);
-            i.putExtra("url", myPrefs.url_api().get() + Var.URL_API_SENDPOSITION);
-            i.putExtra("data", data_service);
-
-            PendingIntent pi;
-            pi = PendingIntent.getBroadcast(this, 0, i, FLAG_UPDATE_CURRENT);
-            am.cancel(pi);*/
-
-            // Eliminamos las ficaciones
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(200);
-            //notificationManager.cancel(201);
-
-            // Deslogueamos (si es necesario)
-            if (requestCode == 2) {
-                myPrefs.email().put("");
-                myPrefs.pass().put("");
-                myPrefs.user_id().put("");
-            }
-
-            // Enviamos solicitud de fin de PASEO en Background
-            sendFinishRide();
-            Log.d("Finaliza Paseo\n");
-        }
-    }
-
-    @Background
-    void sendFinishRide() {
-        //SimpleContent sc = new SimpleContent(this, "trazeo", 1);
-        //String result = "";
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        showProgressDialog(true);
         String lat = "";
         String lon = "";
-        if (location != null) {
-            lat = String.valueOf(location.getLatitude());
-            lon = String.valueOf(location.getLongitude());
+        if (mBound) {
+            Location location = mService.getLocation();
+            if (location != null) {
+                lat = String.valueOf(location.getLatitude());
+                lon = String.valueOf(location.getLongitude());
+            }
+            mService.stop();
         }
 
-        String finishRideData[] = new String[12];
-        finishRideData[0] = "id_ride";
-        finishRideData[1] = myPrefs.id_ride().get();
-        finishRideData[2] = "email";
-        finishRideData[3] = myPrefs.email().get();
-        finishRideData[4] = "pass";
-        finishRideData[5] = myPrefs.pass().get();
-        finishRideData[6] = "latitude";
-        finishRideData[7] = lat + "";
-        finishRideData[8] = "longitude";
-        finishRideData[9] = lon + "";
-        finishRideData[10] = "createat";
-        finishRideData[11] = calculateTimestamp().toString();
-        HttpPostHelper.send(MonitorActivity.this, finishRideData, "Final de paseo", myPrefs.url_api().get() + Var.URL_API_RIDE_FINISH);
-        myPrefs.id_ride().put("-1");
-        myPrefs.id_ride_monitor().put("-1");
-        gps.stopGPS();
+        // Enviamos solicitud de fin de PASEO en Background
+        final RequestParams params = new RequestParams();
+        params.put("id_ride", group.ride_id);
+        params.put("email", myPrefs.email().get());
+        params.put("pass", myPrefs.pass().get());
+        params.put("latitude", lat + "");
+        params.put("longitude", lon + "");
+        params.put("createat", calculateTimestamp().toString());
 
-        /*String fdata = data;
-        fdata += "&latitude=" + lat;
-        fdata += "&longitude=" + lon;
+        RestClient.post(RestClient.URL_API + RestClient.URL_API_RIDE_FINISH, params, new JsonHttpResponseHandler() {
 
-        try {
-            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_RIDE_FINISH, fdata);
-            myPrefs.id_ride().put("-1");
-            myPrefs.id_ride_monitor().put("-1");
-            gps.stopGPS();
-        } catch (SimpleContent.ApiException e) {
-            e.printStackTrace();
-        }*/
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                gotoSelect();
+            }
 
-        //Log.d("TEMA", result);
-        gotoSelect();
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                gotoSelect();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                showErrorWithExit(connection_error_exit);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                showErrorWithExit(server_error_exit);
+            }
+        });
+    }
+
+    @UiThread
+    public void showProgressDialog(boolean isActive) {
+        if (isActive) {
+            monitor_group.setVisibility(View.GONE);
+            monitor_progress_dialog.setVisibility(View.VISIBLE);
+        } else {
+            monitor_group.setVisibility(View.VISIBLE);
+            monitor_progress_dialog.setVisibility(View.GONE);
+        }
     }
 
     @UiThread
     void showWaitDialog() {
-        pdialog.setMessage("Espera...");
-        pdialog.show();
+        pDialog.show();
     }
 
     @UiThread
     void gotoSelect() {
-        pdialog.cancel();
-        Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show();
+        Group myGroup = Group.getGroupById(group.id);
+        myGroup.ride_id = "-1";
+        myGroup.rideCreator = "";
+        myGroup.save();
         Intent i = new Intent(this, SelectGroupActivity_.class);
-
-        if(firstRide)
-            i.putExtra("firstFinish", true);
-        else
-            i.putExtra("firstFinish", false);
-
-        Analytics.track("send.rideFinished.Android", new Props("email", myPrefs.email().get()));
-        startActivity(i);
+        setResult(RESULT_OK, i);
         finish();
     }
 
-    @Background
     void loadData() {
-        SimpleContent sc = new SimpleContent(this, "trazeo", 3);
-        String result = "";
+        RequestParams params = new RequestParams();
+        params.add("id_ride", group.ride_id);
+        params.add("email", myPrefs.email().get());
+        params.add("pass", myPrefs.pass().get());
 
-        try {
-            result = sc.postUrlContent(myPrefs.url_api().get() + Var.URL_API_RIDE_DATA, data);
-        } catch (SimpleContent.ApiException e) {
-            e.printStackTrace();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        RestClient.post(RestClient.URL_API + RestClient.URL_API_RIDE_DATA, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String result = response.toString();
+                Type objectCPDRide = new TypeToken<MasterRide>() {}.getType();
+                try {
+                    ride = new Gson().fromJson(result, objectCPDRide);
+                } catch (JsonSyntaxException e) {
+                    e.printStackTrace();
+                    ride = new MasterRide();
+                }
+                showData();
+            }
 
-        final Type objectCPDRide = new TypeToken<MasterRide>() {
-        }.getType();
-        this.ride = new Gson().fromJson(result, objectCPDRide);
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+            }
 
-        showData();
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                showError(error_connection_desc, true);
+            }
+        });
     }
 
     @UiThread
     void showData() {
-        gps = new GPS(this);
 
         // Creamos adaptador
         ChildAdapter adapter = new ChildAdapter(this,
-                R.layout.child_item, this.ride.data.group.childs, this);
+                R.layout.child_item, ride.data.group.childs);
 
         // Asignamos el adaptador a la vista
         listChildren = (ListView) findViewById(R.id.listChildren);
-
-        listChildren.setAdapter(adapter);
-
         listChildren.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                final EChild echild = (EChild) adapterView.getItemAtPosition(position);
+                EChild echild = (EChild) adapterView.getItemAtPosition(position);
                 CheckBox checkbox = (CheckBox) view.findViewById(R.id.checkCHILD);
                 checkbox.setChecked(!checkbox.isChecked());
                 echild.setSelected(checkbox.isChecked());
                 changeChild(echild);
-                changeChildShow(echild);
             }
         });
-        pdialog.cancel();
+        listChildren.setAdapter(adapter);
 
-        if(firstRide) {
+        showProgressDialog(false);
+
+        if (myPrefs.rideTutorial().get()) {
             onCoachMark();
-            Log.d("Inicia Primer Paseo\n");
-        } else {
-            Log.d("Inicia Paseo\n");
+            myPrefs.rideTutorial().put(false);
         }
     }
 
-    @Background
     public void changeChild(EChild echild) {
-        String url = "";
+        String url = RestClient.URL_API;
         if (echild.isSelected()) {
             echild.setSelected(true);
-            url = myPrefs.url_api().get() + Var.URL_API_CHILDIN;
-            Log.d("Pulsa vincular niño\n");
+            url += RestClient.URL_API_CHILDIN;
         } else {
             echild.setSelected(false);
-            url = myPrefs.url_api().get() + Var.URL_API_CHILDOUT;
-            Log.d("Pulsa desvincular niño\n");
+            url += RestClient.URL_API_CHILDOUT;
         }
 
         android.util.Log.d("ChangeChild", "ChangeChild: " + url);
 
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         String lat = "";
         String lon = "";
-        if (location != null) {
-            lat = String.valueOf(location.getLatitude());
-            lon = String.valueOf(location.getLongitude());
+        Location location = null;
+
+        if (mBound) {
+            location = mService.getLocation();
+            if (location != null) {
+                lat = String.valueOf(location.getLatitude());
+                lon = String.valueOf(location.getLongitude());
+            }
         }
 
         String childChangeData[] = new String[14];
         childChangeData[0] = "id_ride";
-        childChangeData[1] = myPrefs.id_ride().get();
+        childChangeData[1] = group.ride_id;
         childChangeData[2] = "email";
         childChangeData[3] = myPrefs.email().get();
         childChangeData[4] = "pass";
@@ -428,23 +476,46 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         childChangeData[12] = "createat";
         childChangeData[13] = calculateTimestamp().toString();
 
-        if(gps.isFixed() && lat != "" && lon != "" ) {
-            HttpPostHelper.send(MonitorActivity.this, childChangeData, "Evento vincular/desvincular niño", url);
-            //changeChildShow(echild);
+        if (location != null) {
+
+            RequestParams params = new RequestParams();
+            params.put("id_ride", group.ride_id);
+            params.put("email", myPrefs.email().get());
+            params.put("pass", myPrefs.pass().get());
+            params.put("id_child", echild.id);
+            params.put("latitude", lat + "");
+            params.put("longitude", lon + "");
+            params.put("createat", calculateTimestamp().toString());
+
+            restClientChangeChild(url, params);
+        // Si no hay conexión GPS, almacena los datos en una colección
         } else {
-            gps.addData(MonitorActivity.this, childChangeData, "Evento vincular/desvincular niño", url, echild);
-            Log.d("DATALIST", "DATALIST: " + gps.dataList.size());
+            if (mBound) {
+                mService.addData(MonitorActivity.this, childChangeData, "Evento vincular/desvincular niño", url, echild);
+            }
         }
     }
 
-    public void changeChildShow(EChild echild) {
-        String msg = "";
-        if (echild.isSelected()) {
-            msg = "(" + echild.nick + ")" + " Niño registrado en este Paseo";
-        } else {
-            msg = "(" + echild.nick + ")" + " Niño desvinculado del Paseo";
-        }
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+
+
+    private void restClientChangeChild(final String url, final RequestParams params) {
+        RestClient.post(url, params, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // Retry on 30 seg
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        restClientChangeChild(url, params);
+                    }
+                }, 30000);
+            }
+        });
     }
 
     @Override
@@ -457,18 +528,28 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_close:
             case android.R.id.home:
                 showCancelDialog();
-                break;
-            case R.id.action_disconnect:
-                showDisconnectDialog();
-                break;
+                return true;
             case R.id.action_report:
                 showReportDialog();
-                break;
+                return true;
+            case R.id.action_chat:
+                if (!group.id.equals("")) {
+                    Intent i = new Intent(this, ChatActivity_.class);
+                    i.putExtra("username", myProfileName);
+                    i.putExtra("groupId", group.id);
+                    startActivity(i);
+                    return true;
+                }
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        showCancelDialog();
     }
 
     private void configureBar() {
@@ -479,101 +560,71 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    @Background
-    public void sendPoint(double lon, double lat){
-        String sendPointData[] = new String[12];
-        sendPointData[0] = "id_ride";
-        sendPointData[1] = myPrefs.id_ride().get();
-        sendPointData[2] = "email";
-        sendPointData[3] = myPrefs.email().get();
-        sendPointData[4] = "pass";
-        sendPointData[5] = myPrefs.pass().get();
-        sendPointData[6] = "latitude";
-        sendPointData[7] = lat + "";
-        sendPointData[8] = "longitude";
-        sendPointData[9] = lon + "";
-        sendPointData[10] = "createat";
-        sendPointData[11] = calculateTimestamp().toString();
-        HttpPostHelper.send(MonitorActivity.this, sendPointData, "Enviando posición", this.sendPointUrl);
-
-        /*SimpleContent sc = new SimpleContent(this, "trazeo", 0);
-        String sendPointData = this.data;
-        sendPointData = sendPointData.concat("&latitude=" + lat);
-        sendPointData = sendPointData.concat("&longitude=" + lon);
-        Log.d("TEMA", "DATA_SENDPOINT: " + sendPointData);
-        String result = "";
-        try {
-            result = sc.postUrlContent(this.sendPointUrl, sendPointData);
-        } catch (SimpleContent.ApiException e) {
-            e.printStackTrace();
-        }
-
-        final Type objectCPD = new TypeToken<LastPoint>() {
-        }.getType();
-        LastPoint lastPoint = new Gson().fromJson(result, objectCPD);
-
-        if (lastPoint != null && lastPoint.data != null) {
-            myPrefs.end_ride().put(lastPoint.data.updated_at);
-        }*/
-    }
-
     @Override
     protected void onResume() {
-        //if(gps != null) gps.resumeGPS();
         super.onResume();
-        Analytics.activityResume(this);
     }
 
-    @Override
-    public void locationChanged(double longitude, double latitude) {
-        Log.d("GPSMODULE", "Longitude: " + longitude);
-        Log.d("GPSMODULE", "Latitude: " + latitude);
-
-        sendPoint(longitude, latitude);
-    }
-
-    @Override
-    public void gpsFirstFix(Location location){
-
-        String latt = "";
-        String lonn = "";
-
-        for(int i = 0; i < gps.dataList.size(); i++){
-            Context context = (Context) gps.dataList.get(i)[0];
-            String[] data = (String[]) gps.dataList.get(i)[1];
-
-            try {
-                data[9] = location.getLatitude() + "";
-                data[11] = location.getLongitude() + "";
-            } catch (Exception e) {
-                try {
-                    data[9] = gps.getLastLocation().getLatitude() + "";
-                    data[11] = gps.getLastLocation().getLongitude() + "";
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-            String description = (String) gps.dataList.get(i)[2];
-            String url = (String) gps.dataList.get(i)[3];
-            EChild echild = (EChild) gps.dataList.get(i)[4];
-
-            HttpPostHelper.send(context, data, description, url);
+    @UiThread
+    public void showError(String message, final boolean back) {
+        monitor_group.setVisibility(View.VISIBLE);
+        monitor_progress_dialog.setVisibility(View.GONE);
+        if (!isFinishing()) {
+            new SweetAlertDialog(MonitorActivity.this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(error_connection)
+                    .setContentText(message)
+                    .setConfirmText(getString(R.string.accept_button))
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            if (back) {
+                                Intent i = new Intent(MonitorActivity.this, SelectGroupActivity_.class);
+                                setResult(RESULT_CANCELED, i);
+                            }
+                            finish();
+                        }
+                    })
+                    .show();
         }
     }
 
-    public Timestamp calculateTimestamp(){
+    @UiThread
+    public void showErrorWithExit(String message) {
+        new SweetAlertDialog(MonitorActivity.this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(error_connection)
+                .setContentText(message)
+                .setCancelText(getString(R.string.yes))
+                .setConfirmText(getString(R.string.no))
+                .showCancelButton(true)
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        gotoSelect();
+                        sDialog.dismiss();
+                    }
+                })
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                        showProgressDialog(false);
+                    }
+                }).show();
+    }
+
+    private Timestamp calculateTimestamp() {
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
-        
-        long result = SelectGroupActivity.serverTimestamp.getTime() +
-                (SelectGroupActivity.getCurrentTimestamp().getTime() - SelectGroupActivity.localTimestamp.getTime());
-        timestamp.setTime(result);
-
+        try {
+            long result = serverTimestamp + System.currentTimeMillis() - localTimestamp;
+            timestamp.setTime(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return timestamp;
     }
 
-    private void onCoachMark(){
+    private void onCoachMark() {
         // Tutorial
         this.step = 0;
         final Dialog dialog = new Dialog(this);
@@ -588,7 +639,7 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         final ImageView small_arrow = (ImageView) dialog.findViewById(R.id.coach_arrow_1);
         final ImageView coach_bell = (ImageView) dialog.findViewById(R.id.coach_bell);
         final ImageView coach_gps = (ImageView) dialog.findViewById(R.id.coach_gps);
-        final ImageView right_arrow = (ImageView) dialog.findViewById(R.id.coach_arrow_right);
+        final ImageView end_arrow = (ImageView) dialog.findViewById(R.id.coach_arrow_end);
 
         masterView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -597,32 +648,32 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
                 switch (step) {
                     case 1:
                         small_arrow.setVisibility(View.VISIBLE);
-                        text.setText("Cuando pulses sobre un niño y quede marcado, éste se considera incorporado al paseo y empieza a sumar puntos.");
+                        text.setText(getString(R.string.coach2));
                         break;
                     case 2:
                         small_arrow.setVisibility(View.GONE);
                         images.setGravity(Gravity.CENTER_HORIZONTAL);
                         coach_bell.setVisibility(View.VISIBLE);
                         coach_gps.setVisibility(View.VISIBLE);
-                        text.setText("A su familia le llegará un mensaje y podrá ver el recorrido del grupo. Recuerda activar el GPS");
+                        text.setText(getString(R.string.coach3));
                         break;
                     case 3:
                         small_arrow.setVisibility(View.VISIBLE);
                         images.setGravity(Gravity.NO_GRAVITY);
                         coach_bell.setVisibility(View.GONE);
                         coach_gps.setVisibility(View.GONE);
-                        text.setText("Cuando desmarques a un niño, se considera que ha llegado a su destino, a su familia le llegará un mensaje si lo ha configurado");
+                        text.setText(getString(R.string.coach4));
                         break;
                     case 4:
                         small_arrow.setVisibility(View.GONE);
-                        images.setGravity(Gravity.RIGHT);
-                        right_arrow.setVisibility(View.VISIBLE);
-                        text.setText("Cuando todos hayan llegado al destino, finaliza el paseo pulsando aquí arriba");
+                        images.setGravity(Gravity.LEFT);
+                        end_arrow.setVisibility(View.VISIBLE);
+                        text.setText(getString(R.string.coach5));
                         break;
                     case 5:
-                        right_arrow.setVisibility(View.GONE);
-                        text.setText("Obtendrás tus puntos, todos los miembros del grupo sabrán que habéis llegado y podrán ver un resumen");
-                        masterView.setText("Finalizar");
+                        end_arrow.setVisibility(View.GONE);
+                        text.setText(getString(R.string.coach6));
+                        masterView.setText(getString(R.string.finish));
                         break;
                     case 6:
                         dialog.dismiss();
@@ -632,21 +683,4 @@ public class MonitorActivity extends ActionBarActivity implements IGPSActivity {
         dialog.show();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Analytics.activityStart(this);
-    }
-
-    @Override
-    protected void onPause() {
-        Analytics.activityPause(this);
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Analytics.activityStop(this);
-    }
 }

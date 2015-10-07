@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.sopinet.trazeo.app.SearchGroupsActivity">
+    tools:context="com.sopinet.trazeo.app.SelectGroupActivity" >
 
     <item android:id="@+id/help"
         android:enabled="true"
-        android:title="Ayuda"
+        android:title="@string/help"
         android:icon="@drawable/ic_action_help"
         android:orderInCategory="100"
         app:showAsAction="always" />

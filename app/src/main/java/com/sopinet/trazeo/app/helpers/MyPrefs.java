@@ -1,11 +1,10 @@
 package com.sopinet.trazeo.app.helpers;
 
+import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
+import org.androidannotations.annotations.sharedpreferences.DefaultInt;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 
-/**
- * Created by hidabe on 21/04/14.
- */
 @SharedPref(value=SharedPref.Scope.UNIQUE)
 public interface MyPrefs {
     @DefaultString("")
@@ -14,28 +13,45 @@ public interface MyPrefs {
     @DefaultString("")
     String email();
 
-    // The field age will have default value 42
     @DefaultString("")
     String pass();
 
     @DefaultString("")
-    String id_ride();
+    String notifications();
 
     @DefaultString("")
-    String ini_ride();
+    String civiclubNotifications();
 
     @DefaultString("")
-    String end_ride();
+    String notificationsId();
 
     @DefaultString("")
-    String id_group();
+    String civiclubNotificationsId();
 
     @DefaultString("")
-    String url_api();
+    String myPoints();
+
+    @DefaultBoolean(false)
+    boolean isMonitor();
+
+    @DefaultBoolean(false)
+    boolean rideTutorial();
+
+    @DefaultInt(-1)
+    int new_user();
+
+    @DefaultBoolean(true)
+    boolean childInOutNotification();
+
+    @DefaultBoolean(true)
+    boolean RaidInOutNotification();
+
+    @DefaultBoolean(true)
+    boolean chatsNotification();
 
     @DefaultString("")
-    String id_ride_monitor();
+    String device_id();
 
-    // The field lastUpdated will have default value 0
-    long lastUpdated();
+    @DefaultString("")
+    String res_id();
 }
