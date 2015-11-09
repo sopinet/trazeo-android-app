@@ -145,7 +145,7 @@ public class GcmIntentService extends IntentService {
             //String notifications = sharedPreferences.getString("status_notifications", "on");
             String sounds = sharedPreferences.getString("sounds", "on");
 
-            if (sounds != null && sounds.equals("on")) {
+            if (sounds.equals("on")) {
                 mBuilder.setSound(alarmSound);
             }
 
@@ -192,7 +192,7 @@ public class GcmIntentService extends IntentService {
                         String[] splitted = text.split(";");
                         memberName = splitted[0];
                         if (!group.rideCreator.equals("owner"))
-                        group.ride_id = splitted[1];
+                            group.ride_id = splitted[1];
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }

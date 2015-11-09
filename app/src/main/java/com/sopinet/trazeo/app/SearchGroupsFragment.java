@@ -18,8 +18,6 @@ import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import io.segment.android.Analytics;
-import io.segment.android.models.Props;
 
 public class SearchGroupsFragment extends Fragment {
     private static final String CITIES = "cities";
@@ -94,8 +92,6 @@ public class SearchGroupsFragment extends Fragment {
         setHasOptionsMenu(true);
         this.context = (SearchGroupsActivity) getActivity();
         this.myPrefs = context.myPrefs;
-        Analytics.onCreate(getActivity());
-        Analytics.track("enter.searchGroups.Android", new Props("email", myPrefs.email().get()));
     }
 
     private void buildHelpDialog() {

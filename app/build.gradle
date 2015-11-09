@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 20
-        versionCode 90
-        versionName "1.33"
+        versionCode 91
+        versionName "1.35"
     }
 
     buildTypes {
@@ -17,10 +17,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-
-    productFlavors {
-
     }
 
     packagingOptions {

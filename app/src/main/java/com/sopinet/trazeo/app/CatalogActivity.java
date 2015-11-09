@@ -33,8 +33,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import io.segment.android.Analytics;
-import io.segment.android.models.Props;
+
 
 @EActivity(R.layout.activity_catalog)
 public class CatalogActivity extends ActionBarActivity {
@@ -70,8 +69,6 @@ public class CatalogActivity extends ActionBarActivity {
         configureBar();
         catalogListLayout.setVisibility(View.GONE);
         search_catalog_layout.setVisibility(View.VISIBLE);
-        Analytics.onCreate(this);
-        Analytics.track("enter.searchCatalog.Android", new Props("email", myPrefs.email().get()));
         obtainGroups(city);
     }
 
@@ -288,24 +285,20 @@ public class CatalogActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Analytics.activityStart(this);
     }
 
     @Override
     protected void onPause() {
-        Analytics.activityPause(this);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Analytics.activityResume(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Analytics.activityStop(this);
     }
 }

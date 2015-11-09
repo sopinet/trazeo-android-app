@@ -208,11 +208,17 @@ public class SelectGroupFragment extends Fragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Group group = Group.getGroupById(id_group);
+                group.rideCreator = "owner";
+                group.save();
                 showError(error_loading);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Group group = Group.getGroupById(id_group);
+                group.rideCreator = "owner";
+                group.save();
                 showError(server_error);
             }
         });

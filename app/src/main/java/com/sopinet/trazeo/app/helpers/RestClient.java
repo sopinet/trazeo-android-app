@@ -71,8 +71,12 @@ public class RestClient {
 
     private static AsyncHttpClient syncClient = new SyncHttpClient();
 
-  /*  static {
-        syncClient.allowRetryExceptionClass(IOException.class);
+    static {
+
+        syncClient.setConnectTimeout(60000);
+        client.setConnectTimeout(60000);
+
+       /* syncClient.allowRetryExceptionClass(IOException.class);
         syncClient.allowRetryExceptionClass(IllegalArgumentException.class);
         syncClient.allowRetryExceptionClass(ConnectTimeoutException.class);
         syncClient.allowRetryExceptionClass(SocketTimeoutException.class);
@@ -86,8 +90,8 @@ public class RestClient {
         client.allowRetryExceptionClass(SocketTimeoutException.class);
         client.allowRetryExceptionClass(UnknownHostException.class);
         client.allowRetryExceptionClass(ConnectionPoolTimeoutException.class);
-        client.setMaxRetriesAndTimeout(15000,5000);
-    }*/
+        client.setMaxRetriesAndTimeout(15000,5000);*/
+    }
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(url, params, responseHandler);

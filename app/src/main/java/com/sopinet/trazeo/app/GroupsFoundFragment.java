@@ -33,8 +33,6 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import io.segment.android.Analytics;
-import io.segment.android.models.Props;
 
 public class GroupsFoundFragment extends Fragment {
     private static final String FROMCITY = "fromCity";
@@ -223,7 +221,6 @@ public class GroupsFoundFragment extends Fragment {
         } else if (state.state.equals("-1")) {
             showErrorDialog();
         } else {
-            Analytics.track("send.joinGroup.Android", new Props("email", myPrefs.email().get()));
             Intent i = new Intent(context, SelectGroupActivity_.class);
             getActivity().setResult(Activity.RESULT_OK, i);
             getActivity().finish();
@@ -311,7 +308,6 @@ public class GroupsFoundFragment extends Fragment {
                     .setTitleText(getString(R.string.petition_sended))
                     .setConfirmText(getString(R.string.accept_button))
                     .show();
-            Analytics.track("send.requestGroup.Android", new Props("email", myPrefs.email().get()));
         }
     }
 
