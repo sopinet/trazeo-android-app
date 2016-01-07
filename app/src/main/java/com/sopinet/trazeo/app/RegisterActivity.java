@@ -2,7 +2,7 @@ package com.sopinet.trazeo.app;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -31,16 +31,16 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.apache.http.Header;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import cz.msebera.android.httpclient.Header;
 
 
 @EActivity(R.layout.activity_register)
-public class RegisterActivity extends ActionBarActivity{
+public class RegisterActivity extends AppCompatActivity {
 
     @ViewById
     Toolbar toolbar;

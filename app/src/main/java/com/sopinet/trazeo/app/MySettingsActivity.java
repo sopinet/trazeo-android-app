@@ -2,7 +2,7 @@ package com.sopinet.trazeo.app;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -42,7 +42,6 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,10 +49,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import cz.msebera.android.httpclient.Header;
 
 
 @EActivity(R.layout.activity_my_settings)
-public class MySettingsActivity extends ActionBarActivity {
+public class MySettingsActivity extends AppCompatActivity {
 
     @Pref
     MyPrefs_ myPrefs;

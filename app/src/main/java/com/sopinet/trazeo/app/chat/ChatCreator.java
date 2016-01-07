@@ -9,11 +9,12 @@ import com.sopinet.trazeo.app.chat.model.Chat;
 import com.sopinet.trazeo.app.chat.model.Group;
 import com.sopinet.trazeo.app.helpers.RestClient;
 
-import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
 
 
 public class ChatCreator {

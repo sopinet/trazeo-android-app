@@ -2,7 +2,7 @@ package com.sopinet.trazeo.app;
 
 import android.content.Intent;
 import android.provider.Settings.Secure;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,17 +37,17 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import cz.msebera.android.httpclient.Header;
 
 
 @EActivity(R.layout.activity_login)
-public class LoginSimpleActivity extends ActionBarActivity
+public class LoginSimpleActivity extends AppCompatActivity
     implements ChatListener{
 
     @ViewById

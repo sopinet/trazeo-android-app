@@ -25,7 +25,6 @@ import com.sopinet.trazeo.app.helpers.CityGroupAdapter;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.RestClient;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
@@ -33,6 +32,7 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import cz.msebera.android.httpclient.Header;
 
 public class GroupsFoundFragment extends Fragment {
     private static final String FROMCITY = "fromCity";

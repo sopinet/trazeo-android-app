@@ -5,8 +5,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,7 +38,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 @EActivity(R.layout.activity_select_group)
-public class SelectGroupActivity extends ActionBarActivity{
+public class SelectGroupActivity extends AppCompatActivity {
 
     @Pref
     public MyPrefs_ myPrefs;

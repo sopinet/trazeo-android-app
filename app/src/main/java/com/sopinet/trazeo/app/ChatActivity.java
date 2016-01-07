@@ -2,7 +2,7 @@ package com.sopinet.trazeo.app;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +18,6 @@ import com.sopinet.trazeo.app.chat.ChatAdapter;
 import com.sopinet.trazeo.app.chat.ChatCreator;
 import com.sopinet.trazeo.app.chat.ChatFragment;
 import com.sopinet.trazeo.app.chat.ChatListener;
-import com.sopinet.trazeo.app.chat.ChatUtils;
 import com.sopinet.trazeo.app.chat.GcmIntentService;
 import com.sopinet.trazeo.app.chat.model.Group;
 import com.sopinet.trazeo.app.chat.model.Message;
@@ -35,7 +34,6 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,9 +43,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import cz.msebera.android.httpclient.Header;
 
 @EActivity(R.layout.activity_chat)
-public class ChatActivity extends ActionBarActivity
+public class ChatActivity extends AppCompatActivity
     implements ChatListener {
 
     @Pref

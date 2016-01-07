@@ -2,7 +2,7 @@ package com.sopinet.trazeo.app;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,17 +26,18 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.apache.http.Header;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import cz.msebera.android.httpclient.Header;
 
 
 @EActivity(R.layout.activity_catalog)
-public class CatalogActivity extends ActionBarActivity {
+public class CatalogActivity extends AppCompatActivity {
 
 
     @Pref

@@ -1,6 +1,6 @@
 package com.sopinet.trazeo.app;
 
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -19,7 +19,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.util.ArrayList;
 
 @EActivity(R.layout.activity_members)
-public class MembersActivity extends ActionBarActivity {
+public class MembersActivity extends AppCompatActivity {
 
     @Pref
     MyPrefs_ myPrefs;

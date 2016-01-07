@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.androidquery.service.MarketService;
 import com.google.android.gms.common.ConnectionResult;
@@ -23,7 +24,7 @@ import java.io.IOException;
 
 
 @EActivity(R.layout.activity_init)
-public class InitActivity extends ActionBarActivity {
+public class InitActivity extends AppCompatActivity {
 
     @Pref
     public static MyPrefs_ myPrefs;

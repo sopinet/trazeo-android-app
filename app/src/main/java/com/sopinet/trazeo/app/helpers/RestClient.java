@@ -5,12 +5,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.SyncHttpClient;
 
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.ConnectionPoolTimeoutException;
 
-import java.io.IOException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 
 public class RestClient {
 
@@ -75,22 +70,6 @@ public class RestClient {
 
         syncClient.setConnectTimeout(60000);
         client.setConnectTimeout(60000);
-
-       /* syncClient.allowRetryExceptionClass(IOException.class);
-        syncClient.allowRetryExceptionClass(IllegalArgumentException.class);
-        syncClient.allowRetryExceptionClass(ConnectTimeoutException.class);
-        syncClient.allowRetryExceptionClass(SocketTimeoutException.class);
-        syncClient.allowRetryExceptionClass(UnknownHostException.class);
-        syncClient.allowRetryExceptionClass(ConnectionPoolTimeoutException.class);
-        syncClient.setMaxRetriesAndTimeout(15000,5000);
-
-        client.allowRetryExceptionClass(IOException.class);
-        client.allowRetryExceptionClass(IllegalArgumentException.class);
-        client.allowRetryExceptionClass(ConnectTimeoutException.class);
-        client.allowRetryExceptionClass(SocketTimeoutException.class);
-        client.allowRetryExceptionClass(UnknownHostException.class);
-        client.allowRetryExceptionClass(ConnectionPoolTimeoutException.class);
-        client.setMaxRetriesAndTimeout(15000,5000);*/
     }
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {

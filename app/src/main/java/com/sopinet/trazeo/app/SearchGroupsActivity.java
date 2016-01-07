@@ -2,7 +2,7 @@ package com.sopinet.trazeo.app;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 @EActivity(R.layout.activity_search_groups)
-public class SearchGroupsActivity extends ActionBarActivity {
+public class SearchGroupsActivity extends AppCompatActivity {
 
     @Pref
     MyPrefs_ myPrefs;

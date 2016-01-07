@@ -2,7 +2,7 @@ package com.sopinet.trazeo.app;
 
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,7 +23,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 @EActivity(R.layout.activity_tutorial)
-public class TutorialActivity extends ActionBarActivity {
+public class TutorialActivity extends AppCompatActivity {
 
     @Pref
     MyPrefs_ myPrefs;

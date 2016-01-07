@@ -2,7 +2,7 @@ package com.sopinet.trazeo.app;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -19,7 +19,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 @EActivity(R.layout.activity_points)
-public class PointsActivity extends ActionBarActivity{
+public class PointsActivity extends AppCompatActivity {
 
     @Pref
     MyPrefs_ myPrefs;

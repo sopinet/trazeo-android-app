@@ -48,7 +48,6 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -57,6 +56,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import cz.msebera.android.httpclient.Header;
 
 @EActivity(R.layout.activity_monitor)
 public class MonitorActivity extends ActionBarActivity {
