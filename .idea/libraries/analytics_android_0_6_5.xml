@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="analytics-android-0.6.5">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/libs/analytics-android-0.6.5.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

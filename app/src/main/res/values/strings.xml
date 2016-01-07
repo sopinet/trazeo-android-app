@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="google_api_key"></string>
-    <string name="gcm_defaultSenderId"></string>
+    <string name="google_api_key">AIzaSyAsI9Adpz3FV4WXNQW3IXrDJz1Wt3TRny4</string>
+    <string name="gcm_defaultSenderId">117653870600</string>
 
     <string name="app_name">Trazeo</string>
     <string name="title_fragment_children">Niñ@s</string>
@@ -39,14 +39,14 @@
     <!-- Strings related to login -->
     <string name="title_activity_login">Acceso</string>
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">ContraseÃ±a</string>
+    <string name="prompt_password">Contraseña</string>
     <string name="action_sign_in">Acceder a Trazeo</string>
     <string name="action_sign_in_short">Acceder</string>
     <string name="action_register">Registrarme</string>
     <string name="error_invalid_email">Email incorrecto</string>
-    <string name="try_again">IntÃ©ntalo de nuevo</string>
+    <string name="try_again">Inténtalo de nuevo</string>
     <string name="error_invalid_password">Tu clave es demasiado corta</string>
-    <string name="error_incorrect_password">Tu clave es invÃ¡lida</string>
+    <string name="error_incorrect_password">Tu clave es inválida</string>
     <string name="error_field_required">Este campo es requerido</string>
 
 

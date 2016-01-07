@@ -156,7 +156,7 @@ public class ChatActivity extends ActionBarActivity
         params.put("from", myPrefs.res_id().get());
         params.put("chatid", group.chat.id);
         params.put("type", GcmIntentService.TEXT);
-        params.put("time", ChatUtils.formatDateNormal(message.time));
+        params.put("time", message.time);
         params.put("text", message.text);
 
         RestClient.post(RestClient.URL_API + RestClient.URL_API_CHAT_REPLY, params, new JsonHttpResponseHandler() {
@@ -189,6 +189,11 @@ public class ChatActivity extends ActionBarActivity
                 if (adapter != null) {
                     adapter.updateStateOfMessage(noticeMessage);
                 }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
     }
