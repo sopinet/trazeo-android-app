@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -34,6 +35,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.json.JSONObject;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -181,8 +183,10 @@ public class ChildrenActivity extends AppCompatActivity{
         RestClient.post(RestClient.URL_API + RestClient.URL_API_GET_CHILDREN, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
                 final Type objectCPD = new TypeToken<Children>() {}.getType();
-                children = new Gson().fromJson(response.toString(), objectCPD);
+                children = gson.fromJson(response.toString(), objectCPD);
                 showUserChildren(childrenList, progressView);
             }
 

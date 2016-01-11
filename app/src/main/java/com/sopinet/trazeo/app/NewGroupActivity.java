@@ -12,6 +12,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -33,6 +34,7 @@ import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.json.JSONObject;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -146,7 +148,9 @@ public class NewGroupActivity extends AppCompatActivity {
                 String result = response.toString();
 
                 final Type objectCPD = new TypeToken<EditGroup>() {}.getType();
-                new_group = new Gson().fromJson(result, objectCPD);
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                new_group = gson.fromJson(result, objectCPD);
 
                 Group group = new Group(new_group.data.id, new_group_name.getText().toString());
                 group.save();
@@ -204,7 +208,9 @@ public class NewGroupActivity extends AppCompatActivity {
                 String result = response.toString();
                 final Type objectCPD = new TypeToken<Locations>() {
                 }.getType();
-                locations = new Gson().fromJson(result, objectCPD);
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                locations = gson.fromJson(result, objectCPD);
                 showLocalities();
             }
 

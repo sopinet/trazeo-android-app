@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -51,6 +52,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -387,7 +389,9 @@ public class MonitorActivity extends ActionBarActivity {
                 String result = response.toString();
                 Type objectCPDRide = new TypeToken<MasterRide>() {}.getType();
                 try {
-                    ride = new Gson().fromJson(result, objectCPDRide);
+                    Gson gson = new GsonBuilder()
+                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                    ride = gson.fromJson(result, objectCPDRide);
                 } catch (JsonSyntaxException e) {
                     e.printStackTrace();
                     ride = new MasterRide();

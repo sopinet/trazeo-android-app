@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -46,6 +47,7 @@ import org.androidannotations.annotations.UiThread;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -227,7 +229,9 @@ public class SelectGroupFragment extends Fragment {
     @UiThread
     void goGroup(String result, Group group) {
         final Type objectCPD = new TypeToken<CreateRide>() {}.getType();
-        CreateRide createRide = new Gson().fromJson(result, objectCPD);
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+        CreateRide createRide = gson.fromJson(result, objectCPD);
 
         try {
             // No tiene permisos para iniciar el paseo
@@ -278,7 +282,9 @@ public class SelectGroupFragment extends Fragment {
                 String result = response.toString();
                 final Type objectCPD = new TypeToken<Groups>() {
                 }.getType();
-                groups = new Gson().fromJson(result, objectCPD);
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                groups = gson.fromJson(result, objectCPD);
 
                 for (Group group : groups.data) {
                     Group myGroup = Group.getGroupById(group.id);
@@ -359,7 +365,9 @@ public class SelectGroupFragment extends Fragment {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 final Type objectCPD = new TypeToken<Children>() {
                 }.getType();
-                Children children = new Gson().fromJson(response.toString(), objectCPD);
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                Children children = gson.fromJson(response.toString(), objectCPD);
                 showJoinDisjoinChildDialog(children, id_group, join);
             }
 
@@ -728,7 +736,9 @@ public class SelectGroupFragment extends Fragment {
                 String result = response.toString();
                 final Type objectCPD = new TypeToken<MyPoints>() {
                 }.getType();
-                MyPoints points = new Gson().fromJson(result, objectCPD);
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                MyPoints points = gson.fromJson(result, objectCPD);
                 myPrefs.myPoints().put(points.data.points);
             }
 

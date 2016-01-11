@@ -5,17 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.sopinet.trazeo.app.gson.EChild;
-import com.sopinet.trazeo.app.gson.EComment;
 import com.sopinet.trazeo.app.gson.MasterWall;
 import com.sopinet.trazeo.app.helpers.CommentAdapter;
-
-import java.util.Collections;
 
 /**
  * Created by david on 19/05/14.

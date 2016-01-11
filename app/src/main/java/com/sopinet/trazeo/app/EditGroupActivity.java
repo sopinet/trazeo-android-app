@@ -12,6 +12,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -32,6 +33,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.json.JSONObject;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -116,9 +118,11 @@ public class EditGroupActivity extends AppCompatActivity{
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 String result = response.toString();
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
                 final Type objectCPD = new TypeToken<Locations>() {
                 }.getType();
-                locations = new Gson().fromJson(result, objectCPD);
+                locations = gson.fromJson(result, objectCPD);
                 showLocalities();
             }
 
@@ -186,9 +190,10 @@ public class EditGroupActivity extends AppCompatActivity{
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 android.util.Log.d("EDIT", "EDIT GROUP: " + response.toString());
-
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
                 final Type objectCPD = new TypeToken<EditGroup>() {}.getType();
-                EditGroup edit_group = new Gson().fromJson(response.toString(), objectCPD);
+                EditGroup edit_group = gson.fromJson(response.toString(), objectCPD);
 
                 Group group = Group.getGroupById(edit_group.data.id);
 

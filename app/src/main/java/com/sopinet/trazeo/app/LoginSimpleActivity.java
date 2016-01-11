@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -40,6 +41,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -146,9 +148,10 @@ public class LoginSimpleActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     String result = response.toString();
-
+                    Gson gson = new GsonBuilder()
+                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
                     final Type objectCPD = new TypeToken<Login>() {}.getType();
-                    Login login = new Gson().fromJson(result, objectCPD);
+                    Login login = gson.fromJson(result, objectCPD);
                     showResult(login);
                 }
 
@@ -233,7 +236,9 @@ public class LoginSimpleActivity extends AppCompatActivity
                 String result = response.toString();
                 final Type objectCPD = new TypeToken<Cities>() {
                 }.getType();
-                cities = new Gson().fromJson(result, objectCPD);
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                cities = gson.fromJson(result, objectCPD);
                 if (countDataLoaded == POSTS) {
                     startApp();
                 }
@@ -258,7 +263,9 @@ public class LoginSimpleActivity extends AppCompatActivity
                 String result = response.toString();
                 final Type objectCPD = new TypeToken<Cities>() {
                 }.getType();
-                catalogCities = new Gson().fromJson(result, objectCPD);
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                catalogCities = gson.fromJson(result, objectCPD);
                 catalogCities.data.add("Online");
                 if (countDataLoaded == POSTS) {
                     startApp();
@@ -283,7 +290,9 @@ public class LoginSimpleActivity extends AppCompatActivity
                 String resultTimestamp = response.toString();
                 final Type objectTimeStamp = new TypeToken<TimestampData>() {
                 }.getType();
-                timestampData = new Gson().fromJson(resultTimestamp, objectTimeStamp);
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                timestampData = gson.fromJson(resultTimestamp, objectTimeStamp);
                 if (countDataLoaded == POSTS) {
                     startApp();
                 }
@@ -307,7 +316,9 @@ public class LoginSimpleActivity extends AppCompatActivity
                 String result = response.toString();
                 final Type objectCPD = new TypeToken<Groups>() {
                 }.getType();
-                groups = new Gson().fromJson(result, objectCPD);
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                groups = gson.fromJson(result, objectCPD);
                 saveGroupsInDB(); // Guardo los grupos en la base de datos
             }
 
@@ -329,7 +340,9 @@ public class LoginSimpleActivity extends AppCompatActivity
                 String result = response.toString();
                 final Type objectCPD = new TypeToken<MyProfile>() {
                 }.getType();
-                myProfile = new Gson().fromJson(result, objectCPD);
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                myProfile = gson.fromJson(result, objectCPD);
                 myPrefs.myPoints().put(myProfile.data.points);
                 myPrefs.isMonitor().put(myProfile.data.use_like.equals("monitor"));
 
@@ -356,7 +369,9 @@ public class LoginSimpleActivity extends AppCompatActivity
                 String result = response.toString();
                 final Type objectCPD = new TypeToken<Notifications>() {
                 }.getType();
-                Notifications notifications = new Gson().fromJson(result, objectCPD);
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                Notifications notifications = gson.fromJson(result, objectCPD);
                 if (notifications.data.size() == 2) {
                     myPrefs.notifications().put(notifications.data.get(0).value);
                     myPrefs.civiclubNotifications().put(notifications.data.get(1).value);

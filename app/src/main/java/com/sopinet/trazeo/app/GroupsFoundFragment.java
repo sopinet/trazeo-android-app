@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -27,6 +28,7 @@ import com.sopinet.trazeo.app.helpers.RestClient;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -135,8 +137,10 @@ public class GroupsFoundFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 android.util.Log.d("GROUPS", "GROUPS: " + response.toString());
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
                 Type objectCPD = new TypeToken<Groups>() {}.getType();
-                groups = new Gson().fromJson(response.toString(), objectCPD);
+                groups = gson.fromJson(response.toString(), objectCPD);
                 showGroups();
             }
 
@@ -201,8 +205,10 @@ public class GroupsFoundFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 android.util.Log.d("JOIN", "JOIN: " + response.toString());
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
                 Type objectCPD = new TypeToken<MinimalJSON>() {}.getType();
-                MinimalJSON state = new Gson().fromJson(response.toString(), objectCPD);
+                MinimalJSON state = gson.fromJson(response.toString(), objectCPD);
                 GroupsFoundFragment.this.showJoinResult(state);
             }
 
@@ -240,7 +246,9 @@ public class GroupsFoundFragment extends Fragment {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 android.util.Log.d("REQUEST", "REQUEST: " + response.toString());
                 final Type objectCPD = new TypeToken<MinimalJSON>() {}.getType();
-                MinimalJSON state = new Gson().fromJson(response.toString(), objectCPD);
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                MinimalJSON state = gson.fromJson(response.toString(), objectCPD);
                 GroupsFoundFragment.this.showRequestResult(state);
             }
 
