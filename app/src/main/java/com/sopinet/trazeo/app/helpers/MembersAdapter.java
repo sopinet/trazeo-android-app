@@ -52,6 +52,7 @@ public class MembersAdapter extends ArrayAdapter<Member> {
 
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.tvMemberName);
+            holder.childs = (TextView) convertView.findViewById(R.id.tvMemberChilds);
             holder.phone = (LinearLayout) convertView.findViewById(R.id.llPhone);
             convertView.setTag(holder);
         } else {
@@ -59,6 +60,7 @@ public class MembersAdapter extends ArrayAdapter<Member> {
         }
 
         holder.name.setText(getItem(position).name);
+        holder.childs.setText(getItem(position).childrensToString());
         holder.phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,6 +75,7 @@ public class MembersAdapter extends ArrayAdapter<Member> {
 
     private class ViewHolder {
         TextView name;
+        TextView childs;
         LinearLayout phone;
     }
 }

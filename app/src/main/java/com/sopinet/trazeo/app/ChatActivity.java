@@ -21,6 +21,7 @@ import com.sopinet.trazeo.app.chat.ChatListener;
 import com.sopinet.trazeo.app.chat.GcmIntentService;
 import com.sopinet.trazeo.app.chat.model.Group;
 import com.sopinet.trazeo.app.chat.model.Message;
+import com.sopinet.trazeo.app.gson.Child;
 import com.sopinet.trazeo.app.gson.Member;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 import com.sopinet.trazeo.app.helpers.RestClient;
@@ -212,13 +213,35 @@ public class ChatActivity extends AppCompatActivity
         RestClient.post(RestClient.URL_API + RestClient.URL_API_MEMBERS, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                String result;
+                JSONArray result;
                 try {
-                    result = response.getString("data");
-                    Type objectCPD = new TypeToken<ArrayList<Member>>() {}.getType();
-                    ArrayList<Member> membersList = new Gson().fromJson(result, objectCPD);
+                    result = response.getJSONArray("data");
                     members = new ArrayList<>();
-                    members.addAll(membersList);
+                    for (int i = 0; i < result.length(); i++) {
+                        JSONObject jsonObject = result.getJSONObject(i);
+                        String name = "";
+                        String mobile = "";
+                        try {
+                            name = jsonObject.getString("name");
+                        } catch (JSONException ex) {
+                            ex.printStackTrace();
+                        }
+                        try {
+                            mobile = jsonObject.getString("mobile");
+                        } catch (JSONException ex) {
+                            ex.printStackTrace();
+                        }
+                        Member member = new Member(name, mobile);
+                        try {
+                            JSONArray childrens = jsonObject.getJSONArray("childrens");
+                            for (int j = 0; j < childrens.length(); j++) {
+                                member.childrens.add(new Child(childrens.get(j) + ""));
+                            }
+                        } catch (JSONException ex) {
+                            ex.printStackTrace();
+                        }
+                        members.add(member);
+                    }
 
                     if (!isGetMembersFirstTime) {
                         isGetMembersFirstTime = true;

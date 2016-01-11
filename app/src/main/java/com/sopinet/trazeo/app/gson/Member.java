@@ -4,20 +4,43 @@ package com.sopinet.trazeo.app.gson;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Member implements Parcelable{
     public String name = "";
     public String mobile = "";
+    public ArrayList<Child> childrens;
 
     public Member(String name, String phone) {
         this.name = name;
         this.mobile = phone;
+        childrens = new ArrayList<>();
     }
 
     public Member(Parcel in) {
         name = in.readString();
         mobile = in.readString();
+        childrens = in.createTypedArrayList(Child.CREATOR);
+    }
+
+    public String childrensToString() {
+        String result = "";
+        if (childrens != null) {
+            result = "(";
+            for (int i = 0; i < childrens.size(); i++) {
+                if (i == childrens.size() -1) {
+                    result += childrens.get(i).name.trim();
+                } else {
+                    result += childrens.get(i).name + ", ";
+                }
+            }
+            result += ")";
+        }
+        if (result.equals("()")) {
+            result = "";
+        }
+        return result;
     }
 
     @Override
@@ -29,6 +52,7 @@ public class Member implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(mobile);
+        dest.writeTypedList(childrens);
     }
 
     public static final Parcelable.Creator<Member> CREATOR
