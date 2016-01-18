@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sopinet.trazeo.app.SelectGroupActivity" >
 
+    <item android:id="@+id/filter"
+        android:enabled="true"
+        android:title="@string/help"
+        android:icon="@drawable/ic_filter"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+
     <item android:id="@+id/help"
         android:enabled="true"
         android:title="@string/help"

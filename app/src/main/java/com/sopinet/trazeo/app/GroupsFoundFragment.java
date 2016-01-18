@@ -11,8 +11,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -49,8 +52,13 @@ public class GroupsFoundFragment extends Fragment {
     LinearLayout groupsListLayout;
     ListView groupsList;
     LinearLayout search_group_layout;
+    LinearLayout filterSpinner;
+    Spinner spinnerToolbar;
 
     Groups groups;
+    ArrayList<Group> groupsFiltered;
+    ArrayList<String> schools;
+
 
     public static GroupsFoundFragment newInstance(boolean fromCity, String city) {
         GroupsFoundFragment fragment = new GroupsFoundFragment();
@@ -80,6 +88,7 @@ public class GroupsFoundFragment extends Fragment {
         setHasOptionsMenu(true);
         context = (SearchGroupsActivity) getActivity();
         myPrefs = context.myPrefs;
+        schools = new ArrayList<>();
         obtainGroups(fromCity, city);
     }
 
@@ -91,7 +100,10 @@ public class GroupsFoundFragment extends Fragment {
         groupsListLayout = (LinearLayout) root.findViewById(R.id.groupsListLayout);
         groupsList = (ListView) root.findViewById(R.id.groupsList);
         search_group_layout = (LinearLayout) root.findViewById(R.id.search_group_layout);
+        filterSpinner = (LinearLayout) root.findViewById(R.id.filterSpinner);
+        spinnerToolbar = (Spinner) root.findViewById(R.id.spinnerToolbar);
 
+        filterSpinner.setVisibility(View.GONE);
         progressDialog(true);
 
         return root;
@@ -100,7 +112,7 @@ public class GroupsFoundFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.search_groups, menu);
+        inflater.inflate(R.menu.groups_found, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -111,9 +123,80 @@ public class GroupsFoundFragment extends Fragment {
             case R.id.help:
                 buildHelpDialog();
                 return true;
+            case R.id.filter:
+                if (schools.size() > 0) {
+                    if (filterSpinner.getVisibility() == View.VISIBLE) {
+                        setFilterLayout(false);
+                        setGroupFilter(context.getString(R.string.school_filter));
+                        spinnerToolbar.setSelection(0);
+                    } else {
+                        setFilterLayout(true);
+                    }
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    void setupSpinner() {
+        schools.add(context.getString(R.string.school_filter));
+        for (Group group : groups.data) {
+            if (!group.school.trim().equals("")) {
+               if (!schoolExists(group.school)) {
+                   schools.add(group.school);
+               }
+            }
+        }
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+                R.layout.simple_spinner_row, schools);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerToolbar.setAdapter(dataAdapter);
+        spinnerToolbar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setGroupFilter(spinnerToolbar.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private boolean schoolExists(String school) {
+        for (String sch : schools) {
+            if (school.equals(sch)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * Shows / hides filter bar
+     * @param visible visible
+     */
+    public void setFilterLayout(boolean visible) {
+        if (visible) {
+            filterSpinner.setVisibility(View.VISIBLE);
+        } else {
+            filterSpinner.setVisibility(View.GONE);
+        }
+    }
+
+    private void setGroupFilter(String school) {
+        groupsFiltered.clear();
+        if (!school.equals(context.getString(R.string.school_filter))) {
+            for (Group group : groups.data) {
+                if (group.school.equals(school)) {
+                    groupsFiltered.add(group);
+                }
+            }
+        } else {
+            groupsFiltered.addAll(groups.data);
+        }
+        showGroups();
     }
 
     void obtainGroups(boolean fromCity, String city) {
@@ -141,22 +224,32 @@ public class GroupsFoundFragment extends Fragment {
                         .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
                 Type objectCPD = new TypeToken<Groups>() {}.getType();
                 groups = gson.fromJson(response.toString(), objectCPD);
+                groupsFiltered = new ArrayList<>();
+                groupsFiltered.addAll(groups.data);
+
+                // TODO remove test
+                groups.data.get(0).school = "Colegio prueba 1";
+                groups.data.get(1).school = "Colegio prueba 1";
+                groups.data.get(2).school = "Colegio prueba 2";
+                groups.data.get(3).school = "Colegio prueba 1";
+
+
                 showGroups();
+                setupSpinner();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 showErrorBackDialog();
             }
-
         });
     }
 
     void showGroups() {
-        if (groups != null && groups.data != null) {
+        if (groupsFiltered != null) {
 
             ArrayList<Group> cityGroups = new ArrayList<>();
-            for (Group group : groups.data) {
+            for (Group group : groupsFiltered) {
                 if(group.visibility == null || !group.visibility.equals("2"))
                     cityGroups.add(group);
             }

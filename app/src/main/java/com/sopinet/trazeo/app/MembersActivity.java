@@ -10,6 +10,8 @@ import com.sopinet.trazeo.app.gson.Member;
 import com.sopinet.trazeo.app.helpers.MembersAdapter;
 import com.sopinet.trazeo.app.helpers.MyPrefs_;
 
+import junit.framework.Assert;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -41,13 +43,15 @@ public class MembersActivity extends AppCompatActivity {
     @AfterViews
     void init() {
         configureToolBar();
-        tvMembersSize.setText(members.size() + "");
+        String memberSize = members.size() + "";
+        tvMembersSize.setText(memberSize);
         adapter = new MembersAdapter(this, R.layout.member_item, members);
         lvMembers.setAdapter(adapter);
     }
 
     private void configureToolBar() {
         setSupportActionBar(toolbar);
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

@@ -32,6 +32,8 @@ public class SearchGroupsActivity extends AppCompatActivity {
 
     FragmentManager fragmentManager;
 
+
+
     @AfterViews
     void init() {
         setSupportActionBar(toolbar);
@@ -45,6 +47,7 @@ public class SearchGroupsActivity extends AppCompatActivity {
     }
 
     private void configureBar() {
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);

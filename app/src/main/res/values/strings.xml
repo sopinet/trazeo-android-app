@@ -114,7 +114,7 @@
     <string name="sorry">Disponible próximamente</string>
     <string name="not_permission">No tienes permisos para iniciar este paseo</string>
     <string name="no_children">No tienes niñ@s registrados. Antes de vincularlos a un grupos debes registrarlos desde Mis niñ@s.</string>
-
+    <string name="school_filter">Filtrar por colegios</string>
 
     <!-- Mis puntos -->
     <string name="get_points">¿Cómo conseguir puntos?</string>

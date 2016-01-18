@@ -7,6 +7,28 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/filterSpinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green_trazeo_0"
+        android:orientation="vertical">
+
+        <Spinner
+            android:id="@+id/spinnerToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/spinner_background"
+            android:gravity="center_vertical"
+            android:overlapAnchor="false"
+            android:paddingLeft="8dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/groupsListLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

@@ -29,7 +29,6 @@
             android:drawSelectorOnTop="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="5dip"
             android:popupBackground="@drawable/spinner_dropdown"
             android:background="@drawable/spinner_background" />
 

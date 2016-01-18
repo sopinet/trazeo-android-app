@@ -7,7 +7,7 @@
                     <solid android:color="@android:color/white" />
                     <stroke android:width="2dip" android:color="@color/green_trazeo_5" />
                     <corners android:radius="5dip" />
-                    <padding android:top="3dip" android:bottom="3dip" android:left="3dip" android:right="15dip" />
+                    <padding android:right="10dip" />
                 </shape>
             </item>
             <item>
