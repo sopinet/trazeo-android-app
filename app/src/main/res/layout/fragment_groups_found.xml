@@ -1,49 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/filterSpinner"
+    <ListView
+        android:id="@+id/groupsList"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/green_trazeo_0"
-        android:orientation="vertical">
-
-        <Spinner
-            android:id="@+id/spinnerToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/spinner_background"
-            android:gravity="center_vertical"
-            android:overlapAnchor="false"
-            android:paddingLeft="8dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/groupsListLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical">
-
-        <ListView
-            android:id="@+id/groupsList"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="10dip"
-            android:scrollbarStyle="outsideOverlay"
-            android:padding="10dp" />
-
-    </LinearLayout>
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10dip"
+        android:scrollbarStyle="outsideOverlay"
+        android:padding="10dp" />
 
     <LinearLayout
         android:id="@+id/search_group_layout"
@@ -62,4 +30,26 @@
 
     </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/filterSpinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green_trazeo_0"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <Spinner
+            android:id="@+id/spinnerToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/spinner_background"
+            android:gravity="center_vertical"
+            android:overlapAnchor="false"
+            android:paddingLeft="8dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp" />
+
+    </LinearLayout>
+</FrameLayout>

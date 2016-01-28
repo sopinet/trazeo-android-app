@@ -11,6 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -49,7 +51,6 @@ public class GroupsFoundFragment extends Fragment {
     private String city;
     private SearchGroupsActivity context;
 
-    LinearLayout groupsListLayout;
     ListView groupsList;
     LinearLayout search_group_layout;
     LinearLayout filterSpinner;
@@ -58,6 +59,12 @@ public class GroupsFoundFragment extends Fragment {
     Groups groups;
     ArrayList<Group> groupsFiltered;
     ArrayList<String> schools;
+
+    //Animations
+    Animation slide_down;
+    Animation slide_up;
+
+    boolean isSetupSpinnerFirstTime = true;
 
 
     public static GroupsFoundFragment newInstance(boolean fromCity, String city) {
@@ -97,16 +104,21 @@ public class GroupsFoundFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_groups_found, container, false);
 
-        groupsListLayout = (LinearLayout) root.findViewById(R.id.groupsListLayout);
         groupsList = (ListView) root.findViewById(R.id.groupsList);
         search_group_layout = (LinearLayout) root.findViewById(R.id.search_group_layout);
         filterSpinner = (LinearLayout) root.findViewById(R.id.filterSpinner);
         spinnerToolbar = (Spinner) root.findViewById(R.id.spinnerToolbar);
 
-        filterSpinner.setVisibility(View.GONE);
+        setupAnimations();
         progressDialog(true);
 
         return root;
+    }
+
+    void setupAnimations() {
+        //Load animation
+        slide_down = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down);
+        slide_up = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up);
     }
 
     @Override
@@ -156,6 +168,9 @@ public class GroupsFoundFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setGroupFilter(spinnerToolbar.getSelectedItem().toString());
+                if (!isSetupSpinnerFirstTime)
+                    setFilterLayout(false);
+                isSetupSpinnerFirstTime = false;
             }
 
             @Override
@@ -180,7 +195,9 @@ public class GroupsFoundFragment extends Fragment {
     public void setFilterLayout(boolean visible) {
         if (visible) {
             filterSpinner.setVisibility(View.VISIBLE);
+            filterSpinner.startAnimation(slide_down);
         } else {
+            filterSpinner.startAnimation(slide_up);
             filterSpinner.setVisibility(View.GONE);
         }
     }
@@ -227,13 +244,6 @@ public class GroupsFoundFragment extends Fragment {
                 groupsFiltered = new ArrayList<>();
                 groupsFiltered.addAll(groups.data);
 
-                // TODO remove test
-                groups.data.get(0).school = "Colegio prueba 1";
-                groups.data.get(1).school = "Colegio prueba 1";
-                groups.data.get(2).school = "Colegio prueba 2";
-                groups.data.get(3).school = "Colegio prueba 1";
-
-
                 showGroups();
                 setupSpinner();
             }
@@ -277,10 +287,10 @@ public class GroupsFoundFragment extends Fragment {
 
     void progressDialog(boolean enabled) {
         if (enabled) {
-            groupsListLayout.setVisibility(View.GONE);
+            groupsList.setVisibility(View.GONE);
             search_group_layout.setVisibility(View.VISIBLE);
         } else {
-            groupsListLayout.setVisibility(View.VISIBLE);
+            groupsList.setVisibility(View.VISIBLE);
             search_group_layout.setVisibility(View.GONE);
         }
     }
