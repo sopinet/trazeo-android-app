@@ -2,6 +2,7 @@ package com.sopinet.trazeo.app;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -66,12 +67,13 @@ public class RegisterActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         configureBar();
         pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(getResources().getColor(R.color.green_trazeo_5));
+        pDialog.getProgressHelper().setBarColor(ContextCompat.getColor(this, R.color.green_trazeo_5));
         pDialog.setTitleText(getString(R.string.registering_user));
         pDialog.setCancelable(false);
     }
 
     private void configureBar() {
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
@@ -113,13 +115,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     private int checkCorrectInput(){
         int check = 0;
-        if(password.getText().toString().equals("") ||
-                confirmPassword.getText().toString().equals(""))
-            check = 1;
-        else if(!password.getText().toString().equals(confirmPassword.getText().toString()))
-            check = 2;
-        else if(!isValidEmail(email.getText().toString()))
+        if (!isValidEmail(email.getText().toString().trim()))
             check = 3;
+        else if (password.getText().toString().trim().equals("") ||
+                confirmPassword.getText().toString().trim().equals(""))
+            check = 1;
+        else if(!password.getText().toString().trim().equals(confirmPassword.getText().toString().trim()))
+            check = 2;
 
         return check;
     }
@@ -132,8 +134,8 @@ public class RegisterActivity extends AppCompatActivity {
     void sendRegistration(){
         if (NetHelper.isOnline(this)) {
             RequestParams params = new RequestParams();
-            params.put("username", email.getText().toString());
-            params.put("password", StringHelper.md5(password.getText().toString()));
+            params.put("username", email.getText().toString().trim());
+            params.put("password", StringHelper.md5(password.getText().toString().trim()));
 
             RestClient.syncPost(RestClient.URL_API + RestClient.URL_API_REGISTER, params, new JsonHttpResponseHandler() {
                 @Override
@@ -180,9 +182,13 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         } else {
+            String error = getString(R.string.email_used);
+            if (register.msg.equals(getString(R.string.ce_email_used))) {
+                error = getString(R.string.email_used);
+            }
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText(getString(R.string.error_title))
-                    .setContentText(getString(R.string.email_used))
+                    .setContentText(error)
                     .setConfirmText(getString(R.string.accept_button))
                     .show();
         }

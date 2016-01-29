@@ -154,7 +154,7 @@ public class GroupsFoundFragment extends Fragment {
     void setupSpinner() {
         schools.add(context.getString(R.string.school_filter));
         for (Group group : groups.data) {
-            if (!group.school.trim().equals("")) {
+            if (group.school != null && !group.school.trim().equals("")) {
                if (!schoolExists(group.school)) {
                    schools.add(group.school);
                }
@@ -206,7 +206,7 @@ public class GroupsFoundFragment extends Fragment {
         groupsFiltered.clear();
         if (!school.equals(context.getString(R.string.school_filter))) {
             for (Group group : groups.data) {
-                if (group.school.equals(school)) {
+                if (group.school != null && group.school.equals(school)) {
                     groupsFiltered.add(group);
                 }
             }
@@ -296,31 +296,50 @@ public class GroupsFoundFragment extends Fragment {
     }
 
 
-    public void joinGroup(String id_group) {
-        progressDialog(true);
-        RequestParams params = new RequestParams();
-        params.put("email", myPrefs.email().get());
-        params.put("pass", myPrefs.pass().get());
-        params.put("id_group", id_group);
+    public void joinGroup(final String id_group) {
+        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(getString(R.string.attention))
+                .setContentText(getString(R.string.are_you_sure))
+                .setConfirmText(getString(R.string.cancel))
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                })
+                .setCancelText(getString(R.string.accept_button))
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                        progressDialog(true);
+                        RequestParams params = new RequestParams();
+                        params.put("email", myPrefs.email().get());
+                        params.put("pass", myPrefs.pass().get());
+                        params.put("id_group", id_group);
 
-        RestClient.post(RestClient.URL_API + RestClient.URL_API_JOIN_GROUP, params, new JsonHttpResponseHandler() {
+                        RestClient.post(RestClient.URL_API + RestClient.URL_API_JOIN_GROUP, params, new JsonHttpResponseHandler() {
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                android.util.Log.d("JOIN", "JOIN: " + response.toString());
-                Gson gson = new GsonBuilder()
-                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
-                Type objectCPD = new TypeToken<MinimalJSON>() {}.getType();
-                MinimalJSON state = gson.fromJson(response.toString(), objectCPD);
-                GroupsFoundFragment.this.showJoinResult(state);
-            }
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                android.util.Log.d("JOIN", "JOIN: " + response.toString());
+                                Gson gson = new GsonBuilder()
+                                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                                Type objectCPD = new TypeToken<MinimalJSON>() {}.getType();
+                                MinimalJSON state = gson.fromJson(response.toString(), objectCPD);
+                                GroupsFoundFragment.this.showJoinResult(state);
+                            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                GroupsFoundFragment.this.showErrorDialog();
-            }
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                GroupsFoundFragment.this.showErrorDialog();
+                            }
 
-        });
+                        });
+                    }
+                })
+                .show();
+
     }
 
     void showJoinResult(MinimalJSON state){
@@ -336,31 +355,49 @@ public class GroupsFoundFragment extends Fragment {
         }
     }
 
-    public void requestGroup(String id_group) {
-        progressDialog(true);
-        RequestParams params = new RequestParams();
-        params.put("email", myPrefs.email().get());
-        params.put("pass", myPrefs.pass().get());
-        params.put("id_group", id_group);
+    public void requestGroup(final String id_group) {
+        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(getString(R.string.attention))
+                .setContentText(getString(R.string.are_you_sure))
+                .setConfirmText(getString(R.string.cancel))
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                       sweetAlertDialog.dismiss();
+                    }
+                })
+                .setCancelText(getString(R.string.accept_button))
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                        progressDialog(true);
+                        RequestParams params = new RequestParams();
+                        params.put("email", myPrefs.email().get());
+                        params.put("pass", myPrefs.pass().get());
+                        params.put("id_group", id_group);
 
-        RestClient.post(RestClient.URL_API + RestClient.URL_API_REQUEST_GROUP, params, new JsonHttpResponseHandler() {
+                        RestClient.post(RestClient.URL_API + RestClient.URL_API_REQUEST_GROUP, params, new JsonHttpResponseHandler() {
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                android.util.Log.d("REQUEST", "REQUEST: " + response.toString());
-                final Type objectCPD = new TypeToken<MinimalJSON>() {}.getType();
-                Gson gson = new GsonBuilder()
-                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
-                MinimalJSON state = gson.fromJson(response.toString(), objectCPD);
-                GroupsFoundFragment.this.showRequestResult(state);
-            }
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                android.util.Log.d("REQUEST", "REQUEST: " + response.toString());
+                                final Type objectCPD = new TypeToken<MinimalJSON>() {}.getType();
+                                Gson gson = new GsonBuilder()
+                                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
+                                MinimalJSON state = gson.fromJson(response.toString(), objectCPD);
+                                GroupsFoundFragment.this.showRequestResult(state);
+                            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                GroupsFoundFragment.this.showErrorDialog();
-            }
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                GroupsFoundFragment.this.showErrorDialog();
+                            }
 
-        });
+                        });
+                    }
+                })
+                .show();
     }
 
 

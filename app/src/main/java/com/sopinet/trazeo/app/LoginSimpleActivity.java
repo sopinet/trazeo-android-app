@@ -140,8 +140,8 @@ public class LoginSimpleActivity extends AppCompatActivity
                 params.put("email", myPrefs.email().get());
                 params.put("pass", myPrefs.pass().get());
             } else {
-                params.put("email", email.getText().toString());
-                params.put("pass", StringHelper.md5(password.getText().toString()));
+                params.put("email", email.getText().toString().trim());
+                params.put("pass", StringHelper.md5(password.getText().toString().trim()));
             }
 
             RestClient.post(RestClient.URL_API + RestClient.URL_API_LOGIN, params, new JsonHttpResponseHandler() {
@@ -193,8 +193,8 @@ public class LoginSimpleActivity extends AppCompatActivity
             if (login.state.equals("1")) {
                 if (!autologin) {
                     myPrefs.user_id().put(login.data.id);
-                    myPrefs.email().put(email.getText().toString());
-                    myPrefs.pass().put(StringHelper.md5(password.getText().toString()));
+                    myPrefs.email().put(email.getText().toString().trim());
+                    myPrefs.pass().put(StringHelper.md5(password.getText().toString().trim()));
                 }
 
                 registerDevice();
@@ -266,7 +266,10 @@ public class LoginSimpleActivity extends AppCompatActivity
                 Gson gson = new GsonBuilder()
                         .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
                 catalogCities = gson.fromJson(result, objectCPD);
-                catalogCities.data.add("Online");
+
+                if (catalogCities != null && catalogCities.data != null) {
+                    catalogCities.data.add("Online");
+                }
                 if (countDataLoaded == POSTS) {
                     startApp();
                 }
@@ -343,8 +346,13 @@ public class LoginSimpleActivity extends AppCompatActivity
                 Gson gson = new GsonBuilder()
                         .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
                 myProfile = gson.fromJson(result, objectCPD);
-                myPrefs.myPoints().put(myProfile.data.points);
-                myPrefs.isMonitor().put(myProfile.data.use_like.equals("monitor"));
+
+                try {
+                    myPrefs.myPoints().put(myProfile.data.points);
+                    myPrefs.isMonitor().put(myProfile.data.use_like.equals("monitor"));
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
 
                 if (countDataLoaded == POSTS) {
                     startApp();
@@ -372,7 +380,7 @@ public class LoginSimpleActivity extends AppCompatActivity
                 Gson gson = new GsonBuilder()
                         .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC).create();
                 Notifications notifications = gson.fromJson(result, objectCPD);
-                if (notifications.data.size() == 2) {
+                if (notifications != null && notifications.data != null && notifications.data.size() == 2) {
                     myPrefs.notifications().put(notifications.data.get(0).value);
                     myPrefs.civiclubNotifications().put(notifications.data.get(1).value);
                     myPrefs.notificationsId().put(notifications.data.get(0).setting.id);
@@ -430,7 +438,7 @@ public class LoginSimpleActivity extends AppCompatActivity
 
     @Background
     void saveGroupsInDB() {
-        if(groups.data.size() > 0) {
+        if(groups != null && groups.data != null && groups.data.size() > 0) {
             ChatCreator chatCreator = new ChatCreator(this, true);
             for(Group group : groups.data) {
                 Group myGroup = Group.getGroupById(group.id);

@@ -43,7 +43,7 @@
     <string name="action_sign_in">Acceder a Trazeo</string>
     <string name="action_sign_in_short">Acceder</string>
     <string name="action_register">Registrarme</string>
-    <string name="error_invalid_email">Email incorrecto</string>
+    <string name="error_invalid_email">Introduce una dirección de email válida.</string>
     <string name="try_again">Inténtalo de nuevo</string>
     <string name="error_invalid_password">Tu clave es demasiado corta</string>
     <string name="error_incorrect_password">Tu clave es inválida</string>
@@ -194,7 +194,7 @@
     <string name="info_new_group">Cuando crees un nuevo grupo como "Privado", las personas que quieran unirse tendrán que solicitar tu permiso para hacerlo. Puedes cambiar la visibilidad a "Público" si quieres que cualquier usuario pueda unirse de forma sencilla. O crearlo "Oculto" si prefieres que no pueda encontrarse. Recuerda poner un nombre significativo al grupo, para que sea fácil de encontrar por las personas que lo busquen. Poner el nombre del colegio destino y la zona de salida puede ser buena idea.</string>
 
     <!-- Register -->
-    <string name="email_used">Este email está en uso.</string>
+    <string name="email_used">Este email ya se encuentra registrado.</string>
     <string name="fill_all">Rellena todos los campos</string>
     <string name="pass_error">Las contraseñas no coinciden</string>
     <string name="registering_user">Registrando usuario</string>
@@ -337,5 +337,8 @@ Y si aún no eres usuario de CiviClub, selecciona la opción Si y date de alta e
     <!-- Members Activity -->
     <string name="title_activity_members">Info. del grupo</string>
     <string name="participants">Participantes</string>
+
+    <!-- CODE ERRORS -->
+    <string name="ce_email_used">Email is already in use</string>
 
 </resources>
